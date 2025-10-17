@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create('package_menus', function (Blueprint $table) {
+            $table->id();
+            $table->string('category'); // buffet, tumpeng, nasi_box, snack
+            $table->string('name');
+            $table->string('package_type'); // silver, gold, platinum
+            $table->decimal('price', 10, 2);
+            $table->integer('min_order');
+            $table->text('description')->nullable();
+            $table->json('menu_items');
+            $table->string('image_path')->nullable();
+            $table->boolean('is_available')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('package_menus');
+    }
+};
