@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/home.css') }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,72 +25,59 @@
   </script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
-    [x-cloak] {
-      display: none !important;
-    }
-
-    .max-h-24 {
-      max-height: 6rem;
-      transition: max-height 0.3s ease-out;
-    }
-    
-    /* Custom scrollbar on notifications */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #fb923c;
-      border-radius: 3px;
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
     }
   </style>
 </head>
+
 <body class="bg-gray-50 font-sans text-gray-900">
 
-   <!-- Navbar -->
+  <!-- Navbar -->
   @include('partials.navbar')
 
   <!-- Main container -->
   <main class="h-screen overflow-y-auto scroll-smooth">
     <!-- Hero Section (Home) -->
-    <section id="home" class="snap-start h-screen flex items-center relative overflow-hidden">
+    <section id="beranda" class="snap-start h-screen flex items-center relative overflow-hidden">
       <!-- Background image slider with overlay -->
       <div class="absolute inset-0 z-0">
         <div class="relative w-full h-full" x-data="imageSlider()">
           <!-- Image 1 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
-               :class="{'opacity-100 scale-125': activeSlide === 1, 'opacity-0': activeSlide !== 1}">
+            :class="{'opacity-100 scale-125': activeSlide === 1, 'opacity-0': activeSlide !== 1}">
             <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background 1" class="w-full h-full object-cover">
           </div>
           <!-- Image 2 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
-               :class="{'opacity-100 scale-125': activeSlide === 2, 'opacity-0': activeSlide !== 2}">
+            :class="{'opacity-100 scale-125': activeSlide === 2, 'opacity-0': activeSlide !== 2}">
             <img src="{{ asset('foto/buffet.jpg') }}" alt="Background 2" class="w-full h-full object-cover">
           </div>
           <!-- Image 3 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
-               :class="{'opacity-100 scale-125': activeSlide === 3, 'opacity-0': activeSlide !== 3}">
+            :class="{'opacity-100 scale-125': activeSlide === 3, 'opacity-0': activeSlide !== 3}">
             <img src="{{ asset('foto/bg.jpg') }}" alt="Background 3" class="w-full h-full object-cover">
           </div>
           <!-- Overlay -->
           <div class="absolute inset-0 bg-black opacity-60"></div>
         </div>
       </div>
-      
+
       <!-- Content -->
       <div class="container mx-auto px-4 relative z-10">
         <div class="backdrop-blur-sm bg-white/20 rounded-lg shadow-lg overflow-hidden w-full flex flex-col md:flex-row">
           <div class="w-full md:w-1/2 flex flex-col justify-center p-6 md:p-8 text-center md:text-left">
             <h2 class="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-2 leading-tight text-white">
-              Cari Catering Murah?<br/>
+              Cari Catering Murah?<br />
               <span>Rejosari Catering Solusinya</span>
             </h2>
             <div class="mt-6 flex justify-center md:justify-start space-x-4">
-              <a href="#contact" class="inline-flex items-center px-6 py-3 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition">Pesan Sekarang</a>
+              <a href="#menu" class="inline-flex items-center px-6 py-3 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition">Pesan Sekarang</a>
             </div>
           </div>
           <div class="hidden md:block md:w-1/2 relative">
@@ -101,7 +90,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="snap-start min-h-screen flex items-center relative">
+    <section id="tentang" class="snap-start min-h-screen flex items-center relative">
       <!-- Background with overlay -->
       <div class="absolute inset-0 z-0">
         <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover opacity-80">
@@ -116,11 +105,11 @@
               <div class="w-24 md:w-32 h-1 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 mx-auto mt-3 md:mt-4 rounded-full"></div>
             </h2>
           </div>
-          
+
           <div class="space-y-8">
-              <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-center mb-8">
-                <img src="{{ asset('foto/rejosari.jpg') }}" alt="Rejosari Catering" class="w-full md:w-1/3 h-48 md:h-auto rounded-lg shadow-xl object-cover transform hover:scale-105 transition-transform duration-300">
-                <div class="flex-1 bg-gradient-to-br from-white via-white to-orange-50 rounded-lg shadow-lg p-4 md:p-6 border-t-4 border-orange-500" x-data="{ expanded: false }" x-cloak>
+            <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-center mb-8">
+              <img src="{{ asset('foto/rejosari.jpg') }}" alt="Rejosari Catering" class="w-full md:w-1/3 h-48 md:h-auto rounded-lg shadow-xl object-cover transform hover:scale-105 transition-transform duration-300">
+              <div class="flex-1 bg-gradient-to-br from-white via-white to-orange-50 rounded-lg shadow-lg p-4 md:p-6 border-t-4 border-orange-500" x-data="{ expanded: false }" x-cloak>
                 <h3 class="text-2xl md:text-4xl font-playfair font-bold mb-6 text-gray-800 leading-tight flex items-center">
                   <span class="w-1.5 md:w-2 h-6 md:h-8 bg-orange-500 rounded-full mr-3 md:mr-4"></span>
                   Sejarah Rejosari Catering
@@ -128,7 +117,7 @@
                 <div class="relative">
                   <div class="text-black leading-relaxed space-y-4 text-sm md:text-xl" :class="{ 'max-h-32 overflow-hidden': !expanded }">
                     <p class="text-justify text-black text-base md:text-xl font-poppins">
-                      <span class="font-bold text-black">Rejosari Catering</span> didirikan pada Tahun <span class="font-bold text-black">2000</span> oleh Ibu H Suratmi dengan visi menjadi penyedia layanan catering terpercaya di Kota Weleri dan Sekitarnya. 
+                      <span class="font-bold text-black">Rejosari Catering</span> didirikan pada Tahun <span class="font-bold text-black">2000</span> oleh Ibu H Suratmi dengan visi menjadi penyedia layanan catering terpercaya di Kota Weleri dan Sekitarnya.
                       Berawal dari dapur rumah sederhana di Weleri, kini telah berkembang menjadi salah satu layanan catering terkemuka di Kabupaten Kendal dan Sekitarnya.
                       Penamaan rejosari sendiri diambil dari kata <span class="font-bold text-gray-800">Rejo</span> dan <span class="font-bold text-gray-800">Sari</span> yang memiliki arti masing-masing. Nama Rejosari, <span class="font-bold text-gray-800">Rejo</span> istilahnya pusat kemewahan, sedangkan <span class="font-bold text-gray-800">Sari</span> berarti keindahan. Keunggulan dari Katering Rejosari adalah memiliki harga yang murah dan rasa yang enak dibandingkan katering lainnya.
                     </p>
@@ -143,10 +132,9 @@
                       </p>
                     </div>
                   </div>
-                  <button 
+                  <button
                     @click="expanded = !expanded"
-                    class="mt-4 text-orange-500 hover:text-orange-600 font-medium transition-colors duration-200"
-                  >
+                    class="mt-4 text-orange-500 hover:text-orange-600 font-medium transition-colors duration-200">
                     <span x-text="expanded ? 'Lihat lebih sedikit' : 'Lihat selengkapnya'"></span>
                   </button>
                 </div>
@@ -173,10 +161,10 @@
                 <!-- Elemen dekoratif -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full -mr-16 -mt-16 opacity-30"></div>
                 <div class="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 rounded-full -ml-20 -mb-20 opacity-30"></div>
-                
+
                 <!-- Border Accent -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-orange-300"></div>
-                
+
                 <!-- Konten -->
                 <div class="relative z-10 space-y-8">
                   <!-- Bagian Komitmen -->
@@ -186,7 +174,7 @@
                       <div class="flex-1">
                         <h4 class="text-sm md:text-xl font-semibold text-black mb-1.5 md:mb-3">Komitmen Kami</h4>
                         <p class="text-sm md:text-xl text-black leading-relaxed">
-                          Komitmen kami adalah menghadirkan cita rasa autentik dengan standar kualitas tinggi. Setiap hidangan diolah 
+                          Komitmen kami adalah menghadirkan cita rasa autentik dengan standar kualitas tinggi. Setiap hidangan diolah
                           dengan bahan-bahan segar pilihan dan resep yang telah teruji selama bertahun-tahun.
                         </p>
                       </div>
@@ -199,53 +187,51 @@
                       <span class="w-1.5 h-6 bg-orange-500 rounded-full mr-3"></span>
                       Rejosari Catering melayani berbagai acara seperti:
                     </p>
-                    
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Pernikahan</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Acara Kantor dan Seminar</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Syukuran dan Pengajian</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Arisan dan Gathering</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Pesta Ulang Tahun</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Akikah</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Acara Keluarga</span>
-                      </div>
-                      <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span class="text-xl">Dan Lain-lain...</span>
-                      </div>
+
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Pernikahan</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Acara Kantor dan Seminar</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Syukuran dan Pengajian</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Arisan dan Gathering</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Pesta Ulang Tahun</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Akikah</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Acara Keluarga</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                      <span class="text-xl">Dan Lain-lain...</span>
                     </div>
                   </div>
                 </div>
               </div>
-              </div>
-            </div>
-
-            <div class="text-center mt-8">
-              <a href="#contact" class="inline-flex items-center px-6 py-3 bg-[#86765a] text-white font-semibold rounded-full hover:bg-[#6d5e48] transition">
-                Hubungi Kami
-              </a>
             </div>
           </div>
         </div>
+
+        <div class="mt-6 flex justify-center md:justify-start space-x-4">
+          <a href="#kontak" class="inline-flex items-center px-6 py-3 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition">Hubungi Kami</a>
+        </div>
+      </div>
+      </div>
       </div>
     </section>
 
@@ -256,13 +242,12 @@
         <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
-      
+
       <!-- Content -->
       <div class="container mx-auto px-4 relative z-10 py-16 md:py-0">
         <div class="text-center mb-12">
-          <span class="block text-lg font-montserrat font-medium tracking-wider text-amber-300 mb-2">Pilihan Menu Kami</span>
           <h2 class="text-3xl md:text-5xl font-playfair font-bold text-white relative inline-block">
-            Menu Spesial
+            Pilihan Menu
             <div class="w-32 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 mx-auto mt-4 rounded-full"></div>
           </h2>
         </div>
@@ -285,17 +270,17 @@
                     <svg class="w-4 h-4 md:w-5 md:h-5 text-amber-500 mr-1.5 md:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>7-15 menu pilihan</span>
+                    <span>35+ Menu Pilihan</span>
                   </div>
                   <div class="flex items-center text-xs md:text-sm text-gray-600">
                     <svg class="w-4 h-4 md:w-5 md:h-5 text-amber-500 mr-1.5 md:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Termasuk peralatan & pelayan</span>
+                    <span>Termasuk Peralatan</span>
                   </div>
                 </div>
                 <div class="mt-4 md:mt-6 flex items-center justify-between">
-                  <span class="text-amber-800 font-montserrat font-semibold text-xs md:text-sm">Mulai Rp 25rb/porsi</span>
+                  <span class="text-amber-800 font-montserrat font-semibold text-xs md:text-sm">Mulai Rp 30rb/porsi</span>
                   <span class="inline-flex items-center text-orange-500 text-xs md:text-sm font-medium hover:text-orange-600">
                     Lihat Menu
                     <svg class="w-3 h-3 md:w-4 md:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,7 +291,7 @@
               </div>
             </a>
           </div>
-          
+
           <!-- Tumpeng -->
           <div class="group">
             <a href="{{ route('menu.tumpeng') }}" class="block transition transform hover:-translate-y-1">
@@ -453,16 +438,16 @@
                     </svg>
                     <span>Aneka jus & minuman tradisional</span>
                   </div>
-                <div class="mt-4 md:mt-6 flex items-center justify-between">
-                  <span class="text-amber-800 font-montserrat font-semibold text-xs md:text-sm">Mulai Rp 8rb/porsi</span>
-                  <span class="inline-flex items-center text-orange-500 text-xs md:text-sm font-medium hover:text-orange-600">
-                    Lihat Menu
-                    <svg class="w-3 h-3 md:w-4 md:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </span>
+                  <div class="mt-4 md:mt-6 flex items-center justify-between">
+                    <span class="text-amber-800 font-montserrat font-semibold text-xs md:text-sm">Mulai Rp 8rb/porsi</span>
+                    <span class="inline-flex items-center text-orange-500 text-xs md:text-sm font-medium hover:text-orange-600">
+                      Lihat Menu
+                      <svg class="w-3 h-3 md:w-4 md:h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-              </div>
             </a>
           </div>
         </div>
@@ -470,145 +455,145 @@
     </section>
 
     <!-- Gallery (full) -->
-    <section id="gallery" class="snap-start min-h-screen flex flex-col relative">
+    <section id="galeri" class="snap-start min-h-screen flex flex-col relative">
       <!-- Background image with overlay -->
       <div class="absolute inset-0 z-0">
         <img src="{{ asset('foto/buffet.jpg') }}" alt="Background" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-black/1000 backdrop-blur-sm"></div> <!-- Ganti Background Blur sesuai kebutuhan-->
+        <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
-      
+
       <!-- Content -->
       <div class="relative z-10 container mx-auto max-w-7xl px-4 py-12">
-        <div class="backdrop-blur-lg bg-black/20 py-8 px-6 rounded-2xl shadow-2xl border border-white/10 mb-8">
+        <div class="backdrop-blur-md bg-white/30 py-8 px-6 rounded-2xl shadow-2xl mb-8 border border-white/20">
           <div class="flex flex-col items-center gap-4 mb-8">
-            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-white text-center">
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold text-white text-center drop-shadow-lg">
               Galeri Foto
               <div class="h-1 w-24 mx-auto mt-2 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"></div>
             </h2>
-            <p class="text-center font-montserrat text-orange-100 max-w-2xl">Koleksi foto hidangan terbaik kami untuk berbagai acara istimewa Anda</p>
+            <p class="text-center font-montserrat text-white drop-shadow max-w-2xl">Koleksi foto hidangan terbaik kami untuk berbagai acara istimewa Anda</p>
           </div>
-        
-        <!-- Gallery Category Tabs -->
-        <div class="py-4 px-3 rounded-2xl shadow-lg mb-8 bg-white/10 backdrop-blur-sm">
-          <!-- Mobile scroll indicator -->
-          <div class="md:hidden text-center mb-2">
-            <span class="inline-flex items-center text-gray-400 text-xs">
-              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-              Geser untuk melihat menu
-            </span>
+
+          <!-- Gallery Category Tabs -->
+          <div class="mb-8">
+            <!-- Mobile scroll indicator -->
+            <div class="md:hidden text-center mb-2">
+              <span class="inline-flex items-center text-white/80 text-xs">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                Geser untuk melihat menu
+              </span>
+            </div>
+            <div class="overflow-x-auto hide-scrollbar">
+              <div class="flex md:flex-wrap md:justify-center gap-2 pb-2" style="min-width: max-content;">
+                <button class="category-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 md:px-6 py-2 font-montserrat font-semibold text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="all">Semua</button>
+                <button class="category-btn backdrop-blur-sm bg-white/30 text-white px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap border border-white/20" data-category="buffet">Buffet</button>
+                <button class="category-btn backdrop-blur-sm bg-white/30 text-white px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap border border-white/20" data-category="tumpeng">Tumpeng</button>
+                <button class="category-btn backdrop-blur-sm bg-white/30 text-white px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap border border-white/20" data-category="nasi-box">Nasi Box</button>
+                <button class="category-btn backdrop-blur-sm bg-white/30 text-white px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap border border-white/20" data-category="snack">Snack</button>
+                <button class="category-btn backdrop-blur-sm bg-white/30 text-white px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap border border-white/20" data-category="minuman">Es & Minuman</button>
+              </div>
+            </div>
           </div>
-          <div class="overflow-x-auto hide-scrollbar">
-            <div class="flex md:flex-wrap md:justify-center gap-2 pb-2" style="min-width: max-content;">
-              <button class="category-btn bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 md:px-6 py-2 font-montserrat font-semibold text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="all">Semua</button>
-              <button class="category-btn bg-white/90 text-gray-700 px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="buffet">Buffet</button>
-              <button class="category-btn bg-white/90 text-gray-700 px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="tumpeng">Tumpeng</button>
-              <button class="category-btn bg-white/90 text-gray-700 px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="nasi-box">Nasi Box</button>
-              <button class="category-btn bg-white/90 text-gray-700 px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="snack">Snack</button>
-              <button class="category-btn bg-white/90 text-gray-700 px-4 md:px-6 py-2 font-montserrat font-medium text-sm rounded-full hover:bg-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-category="minuman">Es & Minuman</button>
+
+          <!-- Gallery Grid with enhanced hover effects -->
+          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Buffet Items -->
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="buffet">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Buffet" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                <h3 class="text-white font-playfair font-bold text-2xl transform -translate-y-4 group-hover:translate-y-0 transition-all duration-500">Buffet</h3>
+              </div>
+            </div>
+
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="buffet">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Buffet 2" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Buffet Standar</h3>
+                <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Menu standar 7 item masakan Indonesia</p>
+              </div>
+            </div>
+
+            <!-- Tumpeng Items -->
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="tumpeng">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Tumpeng" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-300 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                <h3 class="text-white font-bold text-2xl">Tumpeng</h3>
+              </div>
+            </div>
+
+            <!-- Nasi Box Items -->
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="nasi-box">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Nasi Box" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-300 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                <h3 class="text-white font-bold text-2xl">Nasi Box</h3>
+              </div>
+            </div>
+
+            <!-- Es & Minuman Items -->
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="minuman">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Es & Minuman" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                <h3 class="text-white font-playfair font-bold text-2xl transform -translate-y-4 group-hover:translate-y-0 transition-all duration-500">Es & Minuman</h3>
+              </div>
+            </div>
+
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="minuman">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Es Buah" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Paket Es Buah</h3>
+                <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Es buah spesial dengan aneka buah segar</p>
+              </div>
+            </div>
+
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="minuman">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Es Campur" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Aneka Es Campur</h3>
+                <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Es campur dengan berbagai topping pilihan</p>
+              </div>
+            </div>
+
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="nasi-box">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Nasi Box 2" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-300 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <h3 class="text-white font-bold text-lg">Nasi Box Standar</h3>
+                <p class="text-white text-sm">Paket nasi box standar untuk acara dan meeting</p>
+              </div>
+            </div>
+
+            <!-- Snack Items -->
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="snack">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Snack" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-300 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                <h3 class="text-white font-bold text-2xl">Snack Box</h3>
+              </div>
+            </div>
+
+            <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300" data-category="snack">
+              <img src="{{ asset('foto/bg.jpg') }}" alt="Snack 2" class="w-full h-64 md:h-72 lg:h-80 object-cover transition duration-300 transform group-hover:scale-110">
+              <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <h3 class="text-white font-bold text-lg">Snack Box Standar</h3>
+                <p class="text-white text-sm">Aneka snack tradisional dan modern</p>
+              </div>
             </div>
           </div>
         </div>
-        
-        <!-- Gallery Grid with enhanced hover effects -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <!-- Buffet Items -->
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="buffet">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Buffet" class="w-full h-64 object-cover transition duration-500 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-              <h3 class="text-white font-playfair font-bold text-2xl transform -translate-y-4 group-hover:translate-y-0 transition-all duration-500">Buffet</h3>
-            </div>
-          </div>
-
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="buffet">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Buffet 2" class="w-full h-64 object-cover transition duration-500 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-              <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Buffet Standar</h3>
-              <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Menu standar 7 item masakan Indonesia</p>
-            </div>
-          </div>
-
-          <!-- Tumpeng Items -->
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="tumpeng">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Tumpeng" class="w-full h-64 object-cover transition duration-300 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <h3 class="text-white font-bold text-2xl">Tumpeng</h3>
-            </div>
-          </div>
-
-          <!-- Nasi Box Items -->
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="nasi-box">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Nasi Box" class="w-full h-64 object-cover transition duration-300 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <h3 class="text-white font-bold text-2xl">Nasi Box</h3>
-            </div>
-          </div>
-
-          <!-- Es & Minuman Items -->
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="minuman">
-            <img src="{{ asset('foto/es.jpg') }}" alt="Es & Minuman" class="w-full h-64 object-cover transition duration-500 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-              <h3 class="text-white font-playfair font-bold text-2xl transform -translate-y-4 group-hover:translate-y-0 transition-all duration-500">Es & Minuman</h3>
-            </div>
-          </div>
-
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="minuman">
-            <img src="{{ asset('foto/es.jpg') }}" alt="Es Buah" class="w-full h-64 object-cover transition duration-500 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-              <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Paket Es Buah</h3>
-              <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Es buah spesial dengan aneka buah segar</p>
-            </div>
-          </div>
-
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="minuman">
-            <img src="{{ asset('foto/es.jpg') }}" alt="Es Campur" class="w-full h-64 object-cover transition duration-500 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
-              <h3 class="font-playfair font-bold text-xl text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">Aneka Es Campur</h3>
-              <p class="font-montserrat text-sm text-orange-100 mt-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">Es campur dengan berbagai topping pilihan</p>
-            </div>
-          </div>
-
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-lg" data-category="nasi-box">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Nasi Box 2" class="w-full h-64 object-cover transition duration-300 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-              <h3 class="text-white font-bold text-lg">Nasi Box Standar</h3>
-              <p class="text-white text-sm">Paket nasi box standar untuk acara dan meeting</p>
-            </div>
-          </div>
-
-          <!-- Snack Items -->
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-xl shadow-lg" data-category="snack">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Snack" class="w-full h-64 object-cover transition duration-300 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <h3 class="text-white font-bold text-2xl">Snack Box</h3>
-            </div>
-          </div>
-
-          <div class="gallery-item group relative cursor-pointer overflow-hidden rounded-lg" data-category="snack">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Snack 2" class="w-full h-64 object-cover transition duration-300 transform group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-              <h3 class="text-white font-bold text-lg">Snack Box Standar</h3>
-              <p class="text-white text-sm">Aneka snack tradisional dan modern</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- Track Order (full) -->
-    <section id="contact" class="snap-start min-h-screen flex items-start pt-20 relative">
+    <section id="kontak" class="snap-start min-h-screen flex items-start pt-20 relative">
       <!-- Background image with overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/contact.jpg') }}" alt="Background" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
-      
+
       <!-- Content -->
       <div class="container mx-auto px-4 relative z-10">
         <div class="w-full max-w-3xl mx-auto">
           <h2 class="text-4xl font-extrabold mb-4 text-center text-white">Hubungi Kami</h2>
-        <p class="text-center text-gray-200 mb-8 max-w-2xl mx-auto">Kami siap melayani kebutuhan catering Anda. Hubungi kami melalui channel yang tersedia atau kunjungi lokasi kami.</p>
+          <p class="text-center text-gray-200 mb-8 max-w-2xl mx-auto">Kami siap melayani kebutuhan catering Anda. Hubungi kami melalui channel yang tersedia atau kunjungi lokasi kami.</p>
 
           <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl space-y-8 border border-white/20">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -616,7 +601,7 @@
               <div class="space-y-4">
                 <a href="https://wa.me/6282227110771" target="_blank" class="w-full flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-lg hover:border-green-500 transition-all duration-300">
                   <div class="bg-green-500 rounded-full p-2">
-                    <img src="https://img.icons8.com/color/48/000000/whatsapp.png" class="w-8 h-8" alt="whatsapp"/>
+                    <img src="https://img.icons8.com/color/48/000000/whatsapp.png" class="w-8 h-8" alt="whatsapp" />
                   </div>
                   <div class="text-left flex-1">
                     <div class="font-semibold text-lg text-green-600">WhatsApp</div>
@@ -630,16 +615,16 @@
                   </div>
                 </a>
 
-                <a href="https://instagram.com/rejosari.catering" target="_blank" class="w-full flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-lg transition">
-                  <img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" class="w-10 h-10" alt="instagram"/>
+                <a href="https://instagram.com/rejosaricatering" target="_blank" class="w-full flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-lg transition">
+                  <img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" class="w-10 h-10" alt="instagram" />
                   <div class="text-left">
                     <div class="font-semibold text-lg">Instagram</div>
-                    <div class="text-sm text-gray-500">@rejosari.catering</div>
+                    <div class="text-sm text-gray-500">@rejosaricatering</div>
                   </div>
                 </a>
 
                 <a href="mailto:info@rejosari.com" class="w-full flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-lg transition">
-                  <img src="https://img.icons8.com/fluency/48/000000/new-post.png" class="w-10 h-10" alt="email"/>
+                  <img src="https://img.icons8.com/fluency/48/000000/new-post.png" class="w-10 h-10" alt="email" />
                   <div class="text-left">
                     <div class="font-semibold text-lg">Email</div>
                     <div class="text-sm text-gray-500">rejosaricatering.rs@gmail.com</div>
@@ -647,7 +632,7 @@
                 </a>
 
                 <div class="w-full flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                  <img src="https://img.icons8.com/fluency/48/000000/marker.png" class="w-10 h-10 mt-1" alt="alamat"/>
+                  <img src="https://img.icons8.com/fluency/48/000000/marker.png" class="w-10 h-10 mt-1" alt="alamat" />
                   <div class="text-left">
                     <div class="font-semibold text-lg">Alamat</div>
                     <div class="text-sm text-gray-500">Jl. Niaga, Kedonsari, Penyangkringan, Kec. Weleri, Kabupaten Kendal, Jawa Tengah 51355</div>
@@ -668,11 +653,11 @@
                   <div class="rounded-xl overflow-hidden border border-gray-200 shadow-lg w-full h-[280px] hover:shadow-xl transition-shadow duration-300">
                     <iframe
                       src="https://www.google.com/maps?q=Rejosari%20Catering&output=embed"
-                      width="100%" 
-                      height="100%" 
-                      style="border:0;" 
-                      allowfullscreen="" 
-                      loading="lazy" 
+                      width="100%"
+                      height="100%"
+                      style="border:0;"
+                      allowfullscreen=""
+                      loading="lazy"
                       referrerpolicy="no-referrer-when-downgrade"
                       class="w-full h-full">
                     </iframe>
@@ -683,16 +668,16 @@
 
             <!-- Divider -->
             <div class="border-t border-gray-200 col-span-full my-4"></div>
-            
+
             <!-- Call to Action -->
             <div class="col-span-full text-center space-y-4">
               <h3 class="text-xl font-bold text-gray-800">Siap Memesan?</h3>
               <p class="text-gray-600">Tim kami siap membantu mewujudkan acara sempurna Anda</p>
               <div class="flex justify-center pt-2">
-                <a href="https://wa.me/6282227110771?text=Halo%20Rejosari,%20saya%20ingin%20memesan" 
-                   target="_blank" 
-                   class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-3">
-                  <img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WA" class="w-6 h-6"/>
+                <a href="https://wa.me/6282227110771?text=Halo%20Rejosari,%20saya%20ingin%20memesan"
+                  target="_blank"
+                  class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-3">
+                  <img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WA" class="w-6 h-6" />
                   <span>Hubungi Kami Sekarang</span>
                 </a>
               </div>
@@ -705,80 +690,81 @@
     <div class="bg-gray-900 text-gray-400 text-center text-xs py-4">
       © Rejosari Catering Copyright 2025. All Rights Reserved. &nbsp;|&nbsp; Privacy Policy &nbsp;|&nbsp; Terms &nbsp;|&nbsp; Pricing &nbsp;|&nbsp; Do not sell or share my personal Information
     </div>
-  </footer>
+    </footer>
 
-  <!-- Add JavaScript for filtering -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const gallerySection = document.querySelector('#gallery');
+    <!-- Add JavaScript for filtering -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const gallerySection = document.querySelector('#galeri');
 
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default action
-        
-        // Get the section's position
-        const sectionTop = gallerySection.offsetTop;
-        
-        // Remove active class from all buttons
-        categoryButtons.forEach(btn => {
-          btn.classList.remove('bg-orange-500', 'text-white');
-          btn.classList.add('bg-white/80', 'backdrop-blur-sm', 'text-gray-700');
+        categoryButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default action
+
+            // Remove active class from all buttons
+            categoryButtons.forEach(btn => {
+              btn.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-amber-500', 'font-semibold');
+              btn.classList.add('backdrop-blur-sm', 'bg-white/30', 'font-medium', 'border', 'border-white/20');
+            });
+
+            // Add active class to clicked button
+            button.classList.remove('backdrop-blur-sm', 'bg-white/30', 'font-medium', 'border', 'border-white/20');
+            button.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-amber-500', 'text-white', 'font-semibold');
+
+            const category = button.dataset.category;
+
+            // Show/hide items based on category with fade effect
+            galleryItems.forEach(item => {
+              if (category === 'all' || item.dataset.category === category) {
+                item.style.opacity = '0';
+                item.style.display = 'block';
+                setTimeout(() => {
+                  item.style.opacity = '1';
+                }, 50);
+              } else {
+                item.style.opacity = '0';
+                setTimeout(() => {
+                  item.style.display = 'none';
+                }, 200);
+              }
+            });
+
+            // Maintain scroll position at the top of the gallery section
+            if (gallerySection) {
+              const sectionTop = gallerySection.offsetTop;
+              window.scrollTo({
+                top: sectionTop - 100, // Subtract some pixels to account for fixed header
+                behavior: 'smooth'
+              });
+            }
+          });
         });
 
-        // Add active class to clicked button
-        button.classList.remove('bg-white/80', 'backdrop-blur-sm', 'text-gray-700');
-        button.classList.add('bg-orange-500', 'text-white');
-
-        const category = button.dataset.category;
-
-        // Show/hide items based on category with fade effect
+        // Add transition style to gallery items
         galleryItems.forEach(item => {
-          if (category === 'all' || item.dataset.category === category) {
-            item.style.opacity = '0';
-            item.style.display = 'block';
-            setTimeout(() => {
-              item.style.opacity = '1';
-            }, 50);
-          } else {
-            item.style.opacity = '0';
-            setTimeout(() => {
-              item.style.display = 'none';
-            }, 200);
-          }
-        });
-
-        // Maintain scroll position at the top of the gallery section
-        window.scrollTo({
-          top: sectionTop - 100, // Subtract some pixels to account for fixed header
-          behavior: 'smooth'
+          item.style.transition = 'opacity 0.2s ease-in-out';
         });
       });
-    });
+    </script>
 
-    // Add transition style to gallery items
-    galleryItems.forEach(item => {
-      item.style.transition = 'opacity 0.2s ease-in-out';
-    });
-  });
-  </script>
+    <!-- Add Alpine.js to your head section -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-  <!-- Add Alpine.js to your head section -->
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-<!-- Add this script before closing body tag -->
-<script>
-function imageSlider() {
-    return {
-        activeSlide: 1,
-        init() {
+    <!-- Add this script before closing body tag -->
+    <script>
+      function imageSlider() {
+        return {
+          activeSlide: 1,
+          init() {
             setInterval(() => {
-                this.activeSlide = this.activeSlide === 3 ? 1 : this.activeSlide + 1;
+              this.activeSlide = this.activeSlide === 3 ? 1 : this.activeSlide + 1;
             }, 3000); // Changed from 5000 to 8000 ms (8 seconds)
+          }
         }
-    }
-}
-</script>
+      }
+    </script>
 </body>
+
 </html>

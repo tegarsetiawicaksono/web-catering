@@ -12,12 +12,18 @@ class SocialController extends Controller
 {
     public function redirect()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->scopes(['openid', 'profile', 'email'])
+            ->redirect();
     }
 
     public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Gagal login dengan Google: ' . $e->getMessage());
+        }
 
         // cari berdasarkan email
         $user = User::where('email', $googleUser->getEmail())->first();

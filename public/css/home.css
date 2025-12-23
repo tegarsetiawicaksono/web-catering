@@ -1,0 +1,149 @@
+/* Home Page Styles */
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+.max-h-24 {
+    max-height: 6rem;
+    transition: max-height 0.3s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #fb923c;
+    border-radius: 3px;
+}
+
+/* Gallery Section Styles */
+.gallery-item {
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Hide scrollbar for mobile gallery tabs */
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Section snap scrolling */
+main {
+    scroll-snap-type: y mandatory;
+}
+
+section {
+    scroll-snap-align: start;
+}
+
+/* Hero section image slider animation */
+@keyframes zoomIn {
+    from {
+        transform: scale(1.1);
+    }
+
+    to {
+        transform: scale(1.25);
+    }
+}
+
+/* Hover effects for cards */
+.group:hover {
+    transform: translateY(-0.25rem);
+}
+
+/* Gradient text effects */
+.gradient-text {
+    background: linear-gradient(to right, #f59e0b, #ea580c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Button hover animations */
+.btn-hover {
+    transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Category button active state */
+.category-btn {
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Image overlay effects */
+.image-overlay {
+    transition: opacity 0.5s ease;
+}
+
+/* Backdrop blur effects */
+.backdrop-blur-custom {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Card shadow effects */
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+
+.card-shadow:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Loading animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+    .text-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}

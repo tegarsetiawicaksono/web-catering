@@ -1,26 +1,27 @@
-<!-- Cart -->
+<!-- Cart - Only show for authenticated users -->
+@auth
 <div class="relative" x-data="cart">
   <button @click="toggleCart" class="relative p-2 hover:bg-gray-100 rounded-full group">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
-    <span x-show="itemCount > 0" 
-          x-text="itemCount"
-          class="absolute -top-2 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+    <span x-show="itemCount > 0"
+      x-text="itemCount"
+      class="absolute -top-2 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
     </span>
   </button>
 
   <!-- Cart Dropdown -->
-  <div x-show="isOpen" 
-       @click.away="isOpen = false"
-       x-transition:enter="transition ease-out duration-200"
-       x-transition:enter-start="opacity-0 scale-95"
-       x-transition:enter-end="opacity-100 scale-100"
-       x-transition:leave="transition ease-in duration-100"
-       x-transition:leave-start="opacity-100 scale-100"
-       x-transition:leave-end="opacity-0 scale-95"
-       class="absolute right-0 mt-2 w-72 sm:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
-    
+  <div x-show="isOpen"
+    @click.away="isOpen = false"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-100"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    class="absolute right-0 mt-2 w-72 sm:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+
     <!-- Cart Header -->
     <div class="p-2 sm:p-4 border-b border-gray-200">
       <div class="flex justify-between items-center">
@@ -77,12 +78,13 @@
           <span class="text-gray-600">Total</span>
           <span x-text="formatPrice(total)" class="text-lg font-bold text-gray-800"></span>
         </div>
-        <a href="https://wa.me/6282227110771?text=Halo, saya ingin memesan:" 
-           target="_blank"
-           class="block w-full bg-[#86765a] text-white text-center py-3 rounded-lg font-medium hover:bg-[#6d5e48] transition-colors">
+        <a href="https://wa.me/6282227110771?text=Halo, saya ingin memesan:"
+          target="_blank"
+          class="block w-full bg-[#86765a] text-white text-center py-3 rounded-lg font-medium hover:bg-[#6d5e48] transition-colors">
           Checkout via WhatsApp
         </a>
       </div>
     </template>
   </div>
 </div>
+@endauth

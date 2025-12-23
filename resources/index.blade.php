@@ -6,7 +6,7 @@
         <div class="mb-6">
             <nav class="text-sm text-gray-500">
                 <ol class="list-reset flex items-center space-x-2">
-                    <li><a href="{{ route('admin.index') }}" class="hover:underline text-blue-600">Admin</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}" class="hover:underline text-blue-600">Admin</a></li>
                     <li><span class="text-gray-400">></span></li>
                     <li class="text-gray-700 font-semibold">Dashboard</li>
                 </ol>
@@ -87,7 +87,8 @@
                             <div
                                 class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none gap-y-1">
                                 <p class="text-2xl font-bold text-gray-800 leading-none">
-                                    {{ number_format($totalStokBarang) }}</p>
+                                    {{ number_format($totalStokBarang) }}
+                                </p>
                                 <p class="text-xs text-gray-500 leading-none">Total Barang</p>
                             </div>
                         </div>
@@ -119,26 +120,26 @@
                         <table class="w-full text-sm text-left text-gray-500">
                             <tbody>
                                 @forelse ($permintaanBarang as $permintaan)
-                                    <tr
-                                        class="border-b hover:bg-gray-100 hover:shadow-sm transition duration-200 ease-in-out">
-                                        <td class="px-4 py-2 text-gray-900">
-                                            {{ $permintaan->user->name ?? 'Tidak Diketahui' }}
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            {{ $permintaan->stokBarang->nama_barang ?? 'Tidak Diketahui' }}
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            {{ $permintaan->jumlah }}
-                                        </td>
-                                        <td class="px-4 py-2 text-gray-500">
-                                            {{ $permintaan->status }}
-                                        </td>
-                                    </tr>
+                                <tr
+                                    class="border-b hover:bg-gray-100 hover:shadow-sm transition duration-200 ease-in-out">
+                                    <td class="px-4 py-2 text-gray-900">
+                                        {{ $permintaan->user->name ?? 'Tidak Diketahui' }}
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        {{ $permintaan->stokBarang->nama_barang ?? 'Tidak Diketahui' }}
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        {{ $permintaan->jumlah }}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-500">
+                                        {{ $permintaan->status }}
+                                    </td>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="4" class="px-4 py-2 text-center text-gray-500">Belum ada
-                                            permintaan barang.</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-2 text-center text-gray-500">Belum ada
+                                        permintaan barang.</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -164,27 +165,27 @@
                         </thead>
                         <tbody>
                             @forelse ($distribusiBarang as $distribusi)
-                                <tr
-                                    class="border-b hover:bg-gray-100 hover:shadow-sm transition duration-200 ease-in-out">
-                                    <td class="px-4 py-2 text-gray-900">
-                                        {{ $distribusi->distributor->name ?? 'Tidak Diketahui' }}
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        {{ $distribusi->permintaanBarang->nama_barang ?? 'Tidak Diketahui' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-gray-500">
-                                        {{ ucfirst($distribusi->status) }}
-                                    </td>
-                                    <td class="px-4 py-2 text-gray-500">
-                                        {{ $distribusi->created_at->format('d M Y') }}
-                                    </td>
-                                </tr>
+                            <tr
+                                class="border-b hover:bg-gray-100 hover:shadow-sm transition duration-200 ease-in-out">
+                                <td class="px-4 py-2 text-gray-900">
+                                    {{ $distribusi->distributor->name ?? 'Tidak Diketahui' }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    {{ $distribusi->permintaanBarang->nama_barang ?? 'Tidak Diketahui' }}
+                                </td>
+                                <td class="px-4 py-2 text-gray-500">
+                                    {{ ucfirst($distribusi->status) }}
+                                </td>
+                                <td class="px-4 py-2 text-gray-500">
+                                    {{ $distribusi->created_at->format('d M Y') }}
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="4" class="px-4 py-2 text-center text-gray-500">Belum ada
-                                        distribusi
-                                        barang.</td>
-                                </tr>
+                            <tr>
+                                <td colspan="4" class="px-4 py-2 text-center text-gray-500">Belum ada
+                                    distribusi
+                                    barang.</td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -203,7 +204,19 @@
             data: {
                 labels: [], // Kosongkan agar tidak muncul legend dari Chart.js
                 datasets: [{
-                    data: [{{ $pupukCount }}, {{ $bibitCount }}, {{ $obatCount }}],
+                    data: [{
+                        {
+                            $pupukCount
+                        }
+                    }, {
+                        {
+                            $bibitCount
+                        }
+                    }, {
+                        {
+                            $obatCount
+                        }
+                    }],
                     backgroundColor: ['#66BB6A', '#FFCA28', '#EF5350'],
                     borderWidth: 0,
                     hoverOffset: 8
