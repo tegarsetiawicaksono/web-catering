@@ -36,6 +36,21 @@ class PasswordResetLinkController extends Controller
             $request->only('email')
         );
 
+        // Development mode: Generate direct link untuk ditampilkan
+        if (config('app.env') === 'local' && config('mail.default') === 'log') {
+            $user = \App\Models\User::where('email', $request->email)->first();
+            if ($user) {
+                $token = Password::broker()->createToken($user);
+                $resetUrl = url('reset-password/' . $token . '?email=' . urlencode($request->email));
+                
+                return back()->with([
+                    'status' => 'Reset link berhasil dibuat!',
+                    'reset_link' => $resetUrl,
+                    'dev_mode' => true
+                ]);
+            }
+        }
+
         return $status == Password::RESET_LINK_SENT
                     ? back()->with('status', __($status))
                     : back()->withInput($request->only('email'))

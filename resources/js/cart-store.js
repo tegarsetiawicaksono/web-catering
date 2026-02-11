@@ -4,14 +4,11 @@ document.addEventListener('alpine:init', () => {
         isAuthenticated: false,
 
         init() {
-            // Check if user is authenticated
             this.isAuthenticated = document.querySelector('meta[name="user-authenticated"]')?.content === 'true';
 
             if (this.isAuthenticated) {
-                // If user is logged in, load cart from server
                 this.loadFromServer();
             } else {
-                // If not logged in, load from localStorage
                 const savedCart = localStorage.getItem('cart');
                 if (savedCart) {
                     this.items = JSON.parse(savedCart);
@@ -34,7 +31,6 @@ document.addEventListener('alpine:init', () => {
                 }
             } catch (error) {
                 console.error('Failed to load cart from server:', error);
-                // Fallback to localStorage
                 const savedCart = localStorage.getItem('cart');
                 if (savedCart) {
                     this.items = JSON.parse(savedCart);
@@ -47,6 +43,7 @@ document.addEventListener('alpine:init', () => {
 
             if (existingItem) {
                 existingItem.quantity += quantity;
+                this.showNotification(`${name} (${quantity} porsi) ditambahkan ke keranjang`);
             } else {
                 this.items.push({
                     id,
@@ -54,6 +51,7 @@ document.addEventListener('alpine:init', () => {
                     price,
                     quantity
                 });
+                this.showNotification(`${name} (${quantity} porsi) ditambahkan ke keranjang`);
             }
 
             await this.saveCart();
@@ -88,7 +86,6 @@ document.addEventListener('alpine:init', () => {
 
         async saveCart() {
             if (this.isAuthenticated) {
-                // Save to server if user is logged in
                 try {
                     await fetch('/api/cart', {
                         method: 'POST',
@@ -104,13 +101,11 @@ document.addEventListener('alpine:init', () => {
                     console.error('Failed to save cart to server:', error);
                 }
             } else {
-                // Save to localStorage if not logged in
                 localStorage.setItem('cart', JSON.stringify(this.items));
             }
         },
 
         saveToStorage() {
-            // Deprecated: Use saveCart() instead
             this.saveCart();
         },
 

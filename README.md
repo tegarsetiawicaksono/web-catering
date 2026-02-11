@@ -1,50 +1,217 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ Web Catering - Laravel Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web catering untuk pemesanan paket buffet, tumpeng, nasi box, dan snack.
 
-## About Laravel
+## ✨ Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- 🔐 Autentikasi (Login/Register dengan Email & Google OAuth)
+- 🛒 Shopping Cart
+- 📦 Manajemen Pesanan
+- 👤 Profile Management
+- 🔑 Reset Password via Email
+- 📱 Responsive Design
+- 💳 Payment Verification
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Quick Start
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Install Dependencies
 
-## Learning Laravel
+```bash
+composer install
+npm install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Setup Environment
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Setup Database
 
-## Laravel Sponsors
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 4. Setup Email (PENTING!)
 
-### Premium Partners
+Untuk fitur reset password, Anda perlu setup email Gmail:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan email:setup
+```
 
-## Contributing
+Command ini akan memandu Anda step-by-step untuk:
+
+- Input email Gmail
+- Input App Password Gmail
+- Konfigurasi otomatis
+- Test pengiriman email
+
+**Atau setup manual di file `.env`:**
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="your-email@gmail.com"
+MAIL_FROM_NAME="RS Catering"
+```
+
+📖 **Panduan lengkap:** [EMAIL_SETUP_GUIDE.md](EMAIL_SETUP_GUIDE.md)
+
+### 5. Run Application
+
+```bash
+# Terminal 1 - Laravel Server
+php artisan serve
+
+# Terminal 2 - Vite Dev Server
+npm run dev
+```
+
+Buka: http://localhost:8000
+
+## 🛠️ Artisan Commands
+
+### Email Commands
+
+```bash
+# Setup email Gmail (interactive)
+php artisan email:setup
+
+# Test pengiriman email
+php artisan email:test
+
+# Test ke email tertentu
+php artisan email:test user@example.com
+```
+
+### Cache Commands
+
+```bash
+# Clear all cache
+php artisan optimize:clear
+
+# Clear config cache
+php artisan config:clear
+
+# Clear view cache
+php artisan view:clear
+```
+
+## 📋 Requirements
+
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- MySQL/MariaDB
+- Gmail Account (untuk email notifications)
+
+## 🔧 Configuration
+
+### Google OAuth Setup
+
+1. Buka [Google Cloud Console](https://console.cloud.google.com/)
+2. Buat project baru atau pilih existing
+3. Enable Google+ API
+4. Buat OAuth 2.0 credentials
+5. Update `.env`:
+
+```env
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT=http://localhost:8000/auth/google/callback
+```
+
+📖 **Panduan lengkap:** [GOOGLE_OAUTH_SETUP.md](GOOGLE_OAUTH_SETUP.md)
+
+## 📁 Project Structure
+
+```
+app/
+├── Console/Commands/
+│   ├── SetupEmail.php      # Email setup command
+│   └── TestEmail.php        # Email test command
+├── Http/Controllers/
+├── Models/
+└── ...
+resources/
+├── js/
+│   └── cart-store.js       # Alpine.js cart store
+└── views/
+    ├── auth/               # Login, register, forgot password
+    ├── profile/            # User profile & settings
+    └── ...
+routes/
+└── web.php                # All routes
+```
+
+## 🎨 Tech Stack
+
+- **Backend:** Laravel 11
+- **Frontend:** Blade, Alpine.js, Tailwind CSS
+- **Database:** MySQL
+- **Authentication:** Laravel Breeze + Google OAuth
+- **Email:** SMTP (Gmail)
+
+## 📧 Email Features
+
+- ✅ Password Reset
+- ✅ Email Verification (optional)
+- ✅ Order Notifications
+- ✅ Custom templates
+
+## 🐛 Troubleshooting
+
+### Email tidak terkirim?
+
+```bash
+# 1. Cek konfigurasi
+php artisan config:clear
+php artisan email:test
+
+# 2. Cek log
+tail -f storage/logs/laravel.log
+
+# 3. Setup ulang
+php artisan email:setup
+```
+
+### Error "Class not found"?
+
+```bash
+composer dump-autoload
+php artisan optimize:clear
+```
+
+### CSS tidak muncul?
+
+```bash
+npm run build
+# atau
+npm run dev
+```
+
+## 📝 Development
+
+```bash
+# Run with hot reload
+npm run dev
+
+# Build for production
+npm run build
+
+# Run tests
+php artisan test
+```
+
+## 🤝 Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 

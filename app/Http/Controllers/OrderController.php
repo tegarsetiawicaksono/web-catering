@@ -51,32 +51,27 @@ class OrderController extends Controller
     public function history()
     {
         try {
-            // Debug: Log authentication status
-            \Log::info('Accessing order history', [
-                'user_id' => auth()->id(),
-                'user_email' => auth()->user()->email,
-                'is_authenticated' => auth()->check()
-            ]);
-
-            // Get orders for logged in user by user_id or email
-            $orders = Order::where(function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->orWhere('email', auth()->user()->email);
-            })
+            // Get orders for logged in user by user_id or email with payment verification relation
+            $orders = Order::with('latestPaymentVerification')
+                ->where(function ($query) {
+                    $query->where('user_id', auth()->id())
+                        ->orWhere('email', auth()->user()->email);
+                })
                 ->orderBy('created_at', 'desc')
                 ->get();
-
-            \Log::info('Orders found', ['count' => $orders->count()]);
 
             return view('orders.history', compact('orders'));
         } catch (\Exception $e) {
             \Log::error('Error in order history: ' . $e->getMessage());
-            return response()->view('errors.500', ['error' => $e->getMessage()], 500);
+            return back()->with('error', 'Gagal memuat riwayat pesanan: ' . $e->getMessage());
         }
     }
 
     public function show(Order $order)
     {
+        // Load payment verification relationship
+        $order->load('latestPaymentVerification');
+
         // Debugging
         Log::info('Order Data:', ['order' => $order->toArray()]);
 

@@ -104,27 +104,88 @@
 
     <!-- Orders Stats Summary -->
     <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
-        <div class="p-4 bg-white border border-gray-200 rounded-lg">
-            <p class="text-sm text-gray-600">Total Pesanan</p>
-            <p class="text-2xl font-bold text-gray-900">{{ $orders->total() }}</p>
-        </div>
-        <div class="p-4 bg-white border border-yellow-200 rounded-lg bg-yellow-50">
-            <p class="text-sm text-yellow-800">Pending</p>
-            <p class="text-2xl font-bold text-yellow-900">{{ \App\Models\Order::where('status', 'pending')->count() }}</p>
-        </div>
-        <div class="p-4 bg-white border border-blue-200 rounded-lg bg-blue-50">
-            <p class="text-sm text-blue-800">Dikonfirmasi</p>
-            <p class="text-2xl font-bold text-blue-900">{{ \App\Models\Order::where('status', 'confirmed')->count() }}</p>
-        </div>
-        <div class="p-4 bg-white border border-green-200 rounded-lg bg-green-50">
-            <p class="text-sm text-green-800">Selesai</p>
-            <p class="text-2xl font-bold text-green-900">{{ \App\Models\Order::where('status', 'completed')->count() }}</p>
-        </div>
+        <a href="{{ route('admin.orders.index') }}" class="block p-4 transition-all duration-200 bg-white border rounded-lg hover:shadow-lg hover:-translate-y-1 group {{ request('status') === null ? 'border-gray-400 ring-2 ring-gray-300' : 'border-gray-200 hover:border-gray-400' }}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 group-hover:text-gray-700">Total Pesanan</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ \App\Models\Order::count() }}</p>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            @if(request('status') === null && !request('search') && !request('date_from'))
+            <div class="flex items-center mt-2 text-xs text-gray-500">
+                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Aktif
+            </div>
+            @endif
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="block p-4 transition-all duration-200 bg-white border rounded-lg bg-yellow-50 hover:shadow-lg hover:-translate-y-1 group {{ request('status') === 'pending' ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-yellow-200 hover:border-yellow-400' }}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-yellow-800 group-hover:text-yellow-900">Pending</p>
+                    <p class="text-2xl font-bold text-yellow-900">{{ \App\Models\Order::where('status', 'pending')->count() }}</p>
+                </div>
+                <svg class="w-5 h-5 text-yellow-600 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            @if(request('status') === 'pending')
+            <div class="flex items-center mt-2 text-xs text-yellow-700">
+                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Aktif
+            </div>
+            @endif
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="block p-4 transition-all duration-200 bg-white border rounded-lg bg-blue-50 hover:shadow-lg hover:-translate-y-1 group {{ request('status') === 'confirmed' ? 'border-blue-400 ring-2 ring-blue-300' : 'border-blue-200 hover:border-blue-400' }}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-blue-800 group-hover:text-blue-900">Dikonfirmasi</p>
+                    <p class="text-2xl font-bold text-blue-900">{{ \App\Models\Order::where('status', 'confirmed')->count() }}</p>
+                </div>
+                <svg class="w-5 h-5 text-blue-600 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            @if(request('status') === 'confirmed')
+            <div class="flex items-center mt-2 text-xs text-blue-700">
+                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Aktif
+            </div>
+            @endif
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}" class="block p-4 transition-all duration-200 bg-white border rounded-lg bg-green-50 hover:shadow-lg hover:-translate-y-1 group {{ request('status') === 'completed' ? 'border-green-400 ring-2 ring-green-300' : 'border-green-200 hover:border-green-400' }}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-green-800 group-hover:text-green-900">Selesai</p>
+                    <p class="text-2xl font-bold text-green-900">{{ \App\Models\Order::where('status', 'completed')->count() }}</p>
+                </div>
+                <svg class="w-5 h-5 text-green-600 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            @if(request('status') === 'completed')
+            <div class="flex items-center mt-2 text-xs text-green-700">
+                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Aktif
+            </div>
+            @endif
+        </a>
     </div>
 
     <!-- Orders Table -->
     <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
-        <div class="overflow-x-auto">
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -227,6 +288,78 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden divide-y divide-gray-200">
+            @forelse ($orders as $order)
+            <div class="p-4 hover:bg-gray-50">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-8 h-8 mr-2 bg-indigo-100 rounded-lg">
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-gray-900">#{{ $order->id }}</span>
+                        </div>
+                    </div>
+                    @if($order->status === 'pending')
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">
+                        Pending
+                    </span>
+                    @elseif($order->status === 'confirmed')
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
+                        Dikonfirmasi
+                    </span>
+                    @elseif($order->status === 'completed')
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
+                        Selesai
+                    </span>
+                    @else
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
+                        {{ ucfirst($order->status) }}
+                    </span>
+                    @endif
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-xs text-gray-500">{{ $order->package_name }}</p>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
+                        <p class="text-xs text-gray-500">{{ $order->email }}</p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <div>
+                            <p class="text-xs text-gray-500">Event</p>
+                            <p class="text-sm text-gray-900">{{ $order->event_date ? \Carbon\Carbon::parse($order->event_date)->format('d M Y') : '-' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Total</p>
+                            <p class="text-sm font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('admin.orders.show', $order) }}"
+                        class="mt-2 inline-flex items-center justify-center w-full px-3 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Lihat Detail
+                    </a>
+                </div>
+            </div>
+            @empty
+            <div class="p-8 text-center text-gray-500">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+                <p class="text-base font-medium text-gray-900">Tidak ada pesanan ditemukan</p>
+                <p class="text-sm text-gray-500 mt-1">Coba ubah filter atau kata kunci pencarian</p>
+            </div>
+            @endforelse
         </div>
 
         <!-- Pagination -->

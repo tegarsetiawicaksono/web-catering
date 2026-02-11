@@ -60,52 +60,95 @@
                     Download Laporan
                 </a>
             </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paket</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($orders as $order)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ $order->id }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $order->created_at->format('d M Y') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $order->customer_name }}</div>
-                                <div class="text-sm text-gray-500">{{ $order->email }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $order->package_name }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $order->quantity }} porsi
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 text-xs font-semibold rounded-full
+
+            <!-- Desktop Table -->
+            <div class="hidden md:block">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paket</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach($orders as $order)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ $order->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $order->created_at->format('d M Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $order->customer_name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $order->email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $order->package_name }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $order->quantity }} porsi
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex px-2 text-xs font-semibold rounded-full
                                     @if($order->status === 'pending') text-yellow-800 bg-yellow-100
                                     @elseif($order->status === 'confirmed') text-green-800 bg-green-100
                                     @elseif($order->status === 'completed') text-blue-800 bg-blue-100
                                     @else text-red-800 bg-red-100 @endif">
-                                    {{ ucfirst($order->status) }}
-                                </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                        {{ ucfirst($order->status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="block md:hidden divide-y divide-gray-200">
+                @foreach($orders as $order)
+                <div class="p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-base font-bold text-gray-900">#{{ $order->id }}</span>
+                            <p class="text-xs text-gray-500 mt-1">{{ $order->created_at->format('d M Y, H:i') }}</p>
+                        </div>
+                        <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full
+                            @if($order->status === 'pending') text-yellow-800 bg-yellow-100
+                            @elseif($order->status === 'confirmed') text-green-800 bg-green-100
+                            @elseif($order->status === 'completed') text-blue-800 bg-blue-100
+                            @else text-red-800 bg-red-100 @endif">
+                            {{ ucfirst($order->status) }}
+                        </span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900">{{ $order->customer_name }}</p>
+                            <p class="text-xs text-gray-500">{{ $order->email }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <p class="text-xs text-gray-500 mb-1">Paket Pesanan</p>
+                            <p class="text-sm font-medium text-gray-900">{{ $order->package_name }}</p>
+                            <p class="text-xs text-gray-600 mt-1">Jumlah: {{ $order->quantity }} porsi</p>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-200">
+                            <p class="text-xs font-medium text-gray-500">Total Pembayaran</p>
+                            <p class="text-lg font-bold text-indigo-600">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>

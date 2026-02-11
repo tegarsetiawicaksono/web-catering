@@ -53,7 +53,9 @@
         <!-- Recent Orders -->
         <div class="bg-white rounded-xl shadow-lg p-6">
             <h3 class="text-xl font-semibold mb-4 text-gray-800">Pesanan Terbaru (Completed)</h3>
-            <div class="overflow-x-auto">
+
+            <!-- Desktop Table -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr class="bg-gray-50">
@@ -73,13 +75,13 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</div>
-                                <div class="text-sm text-gray-500">{{ $order->customer_email }}</div>
+                                <div class="text-sm text-gray-500">{{ $order->email }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $order->created_at->format('d M Y H:i') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <span class="text-sm font-semibold text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                                <span class="text-sm font-semibold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                             </td>
                         </tr>
                         @empty
@@ -91,6 +93,29 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden divide-y divide-gray-200">
+                @forelse($recentOrders as $order)
+                <div class="py-3 hover:bg-gray-50">
+                    <div class="flex justify-between items-start mb-2">
+                        <a href="{{ route('admin.orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-sm">
+                            #{{ $order->id }}
+                        </a>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
+                        <p class="text-xs text-gray-500">{{ $order->email }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $order->created_at->format('d M Y H:i') }}</p>
+                    </div>
+                </div>
+                @empty
+                <div class="py-8 text-center text-gray-500">
+                    <p class="text-sm">Tidak ada data pesanan</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -172,18 +197,3 @@
     </script>
     @endpush
 </x-admin-layout>
-tension: 0.1
-}]
-},
-options: {
-responsive: true,
-plugins: {
-legend: {
-position: 'top',
-}
-}
-}
-});
-</script>
-@endpush
-@endsection

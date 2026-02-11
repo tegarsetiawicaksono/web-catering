@@ -75,4 +75,14 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function paymentVerifications()
+    {
+        return $this->hasMany(PaymentVerification::class);
+    }
+
+    public function latestPaymentVerification()
+    {
+        return $this->hasOne(PaymentVerification::class)->latestOfMany();
+    }
 }

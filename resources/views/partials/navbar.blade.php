@@ -9,38 +9,55 @@
       </button>
       <!-- KIRI: logo -->
       <div class="flex-1">
-        <a href="{{ route('home') }}" class="flex items-center space-x-2">
-          <img src="{{ asset('foto/rejosari.jpg') }}" alt="Rejosari Catering" class="h-8 md:h-10 w-auto object-contain rounded-full">
+        <div class="flex items-center space-x-2">
+          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-10 md:h-14 w-auto object-contain">
           <h1 class="font-bold text-lg md:text-xl leading-none">
-            <span class="text-[#86765a]">REJOSARI</span>
-            <span class="bg-gray-900 text-white text-xs font-extrabold rounded-sm px-1 align-top ml-1">CATERING</span>
+            <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
-        </a>
+        </div>
       </div>
 
       <!-- TENGAH: menu navigasi -->
       <div class="flex-1 flex justify-center">
         <div class="hidden sm:flex items-center space-x-6 md:space-x-8 lg:space-x-10">
-          <a href="#beranda" class="nav-link {{ Route::currentRouteName() == 'home' ? 'px-6 py-2 text-[#86765a] font-semibold' : 'px-6 py-2 hover:text-[#86765a] transition' }}">Beranda</a>
+          <a href="{{ url('/#beranda') }}" class="nav-link {{ Route::currentRouteName() == 'home' ? 'px-6 py-2 text-[#86765a] font-semibold' : 'px-6 py-2 hover:text-[#86765a] transition' }}">Beranda</a>
 
-          <a href="#tentang" class="nav-link {{ Route::currentRouteName() == 'about' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Tentang</a>
+          <a href="{{ url('/#tentang') }}" class="nav-link {{ Route::currentRouteName() == 'about' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Tentang</a>
 
-          <a href="#menu" class="nav-link {{ Route::currentRouteName() == 'menu' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Menu</a>
+          <a href="{{ url('/#menu') }}" class="nav-link {{ Route::currentRouteName() == 'menu' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Menu</a>
 
-          <a href="#galeri" class="nav-link {{ Route::currentRouteName() == 'gallery' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Galeri</a>
+          <a href="{{ url('/#galeri') }}" class="nav-link {{ Route::currentRouteName() == 'gallery' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Galeri</a>
 
-          <a href="#kontak" class="nav-link {{ Route::currentRouteName() == 'contact' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Kontak</a>
+          <a href="{{ url('/#kontak') }}" class="nav-link {{ Route::currentRouteName() == 'contact' ? 'px-6 py-2 bg-[#86765a] text-white rounded-full font-semibold' : 'px-4 py-2 hover:text-[#86765a] transition' }}">Kontak</a>
         </div>
       </div>
 
       <!-- KANAN: cart dan login/profile -->
-      <div class="flex-1 flex justify-end items-center space-x-4">
-        <x-cart-button />
+      <div class="flex-1 flex justify-end items-center space-x-2 sm:space-x-4">
+        @auth
+        <!-- Riwayat Pesanan Button - Hidden on mobile -->
+        <a href="{{ route('orders.history') }}" class="hidden sm:block relative p-2 hover:bg-gray-100 rounded-full group" title="Riwayat Pesanan">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </a>
+        <!-- Cart Button - Hidden on mobile -->
+        <a href="{{ url('/cart') }}" class="hidden sm:block relative p-2 hover:bg-gray-100 rounded-full group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span x-show="itemCount > 0"
+                x-text="itemCount"
+                class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+          </span>
+        </a>
+        @endauth
+
         @auth
         <!-- Profile Menu (Desktop) -->
         <div class="hidden sm:block relative" x-data="{ isOpen: false }">
           <button @click="isOpen = !isOpen" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-full">
-            <span class="text-gray-600">Hi, {{ Auth::user()->name }}</span>
+            <span class="text-sm md:text-base text-gray-600">Hi, {{ Auth::user()->name }}</span>
             <svg xmlns="http://www.w3.org/2000/svg"
               class="h-4 w-4 text-gray-500 transform transition-transform duration-200"
               :class="{ 'rotate-180': isOpen }"
@@ -119,7 +136,7 @@
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute right-0 mt-2 w-48 sm:w-72 bg-white rounded-lg shadow-xl border border-gray-200 py-2 px-3">
+            class="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-xl border border-gray-200 py-2 px-3">
             <div class="relative">
               <input type="text"
                 x-model="searchQuery"
@@ -144,7 +161,8 @@
 
 
 
-        <!-- Icon Akun dengan Dropdown -->
+        <!-- Icon Akun dengan Dropdown - Only for Guests -->
+        @guest
         <div class="relative" x-data="{ isOpen: false }">
           <div @click="isOpen = !isOpen" class="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded-full">
             <!-- Icon visible on all screens -->
@@ -171,6 +189,7 @@
             </a>
           </div>
         </div>
+        @endguest
       </div>
     </div>
   </div>
@@ -184,11 +203,11 @@
     x-transition:leave-start="opacity-100 translate-y-0"
     x-transition:leave-end="opacity-0 -translate-y-2"
     @click.away="mobileMenuOpen = false"
-    class="sm:hidden mt-4 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
+    class="sm:hidden mt-4 mb-4 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-[calc(100vh-120px)] overflow-y-auto"
     style="display: none;">
     <div class="py-2">
       <!-- Menu Navigation -->
-      <a href="#beranda" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+      <a href="{{ url('/#beranda') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
         <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -196,7 +215,7 @@
           <span class="font-medium">Beranda</span>
         </div>
       </a>
-      <a href="#tentang" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+      <a href="{{ url('/#tentang') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
         <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -204,7 +223,7 @@
           <span class="font-medium">Tentang</span>
         </div>
       </a>
-      <a href="#menu" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+      <a href="{{ url('/#menu') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
         <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -212,7 +231,7 @@
           <span class="font-medium">Menu</span>
         </div>
       </a>
-      <a href="#galeri" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+      <a href="{{ url('/#galeri') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
         <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -220,7 +239,7 @@
           <span class="font-medium">Galeri</span>
         </div>
       </a>
-      <a href="#kontak" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+      <a href="{{ url('/#kontak') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
         <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -234,6 +253,21 @@
 
       <!-- Account Section -->
       @auth
+      <!-- Cart and History for Mobile -->
+      <a href="{{ url('/cart') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span class="font-medium">Keranjang</span>
+          </div>
+          <span x-show="itemCount > 0" x-text="itemCount" class="bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"></span>
+        </div>
+      </a>
+      
+      <div class="border-t border-gray-100"></div>
+      
       <div class="px-4 py-2 text-sm font-medium text-gray-500">
         Hi, {{ Auth::user()->name }}
       </div>

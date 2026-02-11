@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -33,9 +35,36 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        return redirect()->intended(route('home', absolute: false));
+        return redirect()->intended(route('home'));
     }
 
+    // Callback from Google
+    public function handleGoogleCallback()
+    {
+        $user = Socialite::driver('google')->stateless()->user();
+
+        // Find or create user logic here
+        $existingUser = User::where('email', $user->getEmail())->first();
+
+        if ($existingUser) {
+            Auth::login($existingUser);
+        } else {
+            $newUser = User::create([
+                'name' => $user->getName(),
+                'email' => $user->getEmail(),
+                'password' => bcrypt(str()->random(16)), // Random password
+            ]);
+            Auth::login($newUser);
+        }
+
+        return redirect()->intended(route('home'));
+    }
+
+    // Redirect Google
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
     /**
      * Destroy an authenticated session.
      */

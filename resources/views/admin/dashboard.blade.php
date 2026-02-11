@@ -9,7 +9,7 @@
 
     <!-- Stats Overview Grid -->
     <div class="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2 lg:grid-cols-4">
-        <!-- Today's Orders -->
+        <!-- Total Orders -->
         <div class="relative overflow-hidden transition-transform duration-200 bg-white border border-gray-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
@@ -18,12 +18,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                     </div>
-                    <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Hari Ini</span>
+                    <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Semua</span>
                 </div>
                 <h3 class="mb-1 text-sm font-medium text-gray-600">Total Pesanan</h3>
                 <p class="text-3xl font-bold text-gray-900">{{ $todayOrders }}</p>
                 <p class="mt-2 text-xs text-gray-500">
-                    <span class="text-green-600">↑ 12%</span> dari kemarin
+                    Keseluruhan pesanan masuk
                 </p>
             </div>
             <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
@@ -287,82 +287,142 @@
                         Lihat Semua →
                     </a>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pesanan</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pelanggan</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($recentOrders as $order)
-                            <tr class="transition-colors hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex items-center justify-center w-10 h-10 mr-3 bg-indigo-100 rounded-lg">
-                                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
+
+                <!-- Desktop Table -->
+                <div class="hidden md:block">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pesanan</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pelanggan</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @forelse($recentOrders as $order)
+                                <tr class="transition-colors hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex items-center justify-center w-10 h-10 mr-3 bg-indigo-100 rounded-lg">
+                                                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">#{{ $order->id }}</div>
+                                                <div class="text-xs text-gray-500">{{ $order->package_name }}</div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">#{{ $order->id }}</div>
-                                            <div class="text-xs text-gray-500">{{ $order->package_name }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</div>
-                                    <div class="text-xs text-gray-500">{{ $order->event_date ? \Carbon\Carbon::parse($order->event_date)->format('d M Y') : '-' }}</div>
-                                </td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                    Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($order->status === 'pending')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-yellow-400 rounded-full"></span>
-                                        Pending
-                                    </span>
-                                    @elseif($order->status === 'confirmed')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-green-400 rounded-full"></span>
-                                        Dikonfirmasi
-                                    </span>
-                                    @elseif($order->status === 'completed')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-blue-400 rounded-full"></span>
-                                        Selesai
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <span class="w-1.5 h-1.5 mr-1.5 bg-red-400 rounded-full"></span>
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                                    <a href="{{ route('admin.orders.show', $order) }}"
-                                        class="text-indigo-600 transition-colors hover:text-indigo-900">
-                                        Detail
-                                    </a>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                                    <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</div>
+                                        <div class="text-xs text-gray-500">{{ $order->event_date ? \Carbon\Carbon::parse($order->event_date)->format('d M Y') : '-' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($order->status === 'pending')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-yellow-400 rounded-full"></span>
+                                            Pending
+                                        </span>
+                                        @elseif($order->status === 'confirmed')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-green-400 rounded-full"></span>
+                                            Dikonfirmasi
+                                        </span>
+                                        @elseif($order->status === 'completed')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-blue-400 rounded-full"></span>
+                                            Selesai
+                                        </span>
+                                        @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <span class="w-1.5 h-1.5 mr-1.5 bg-red-400 rounded-full"></span>
+                                            {{ ucfirst($order->status) }}
+                                        </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                                        <a href="{{ route('admin.orders.show', $order) }}"
+                                            class="text-indigo-600 transition-colors hover:text-indigo-900">
+                                            Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                        </svg>
+                                        Belum ada pesanan
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="block md:hidden divide-y divide-gray-200">
+                    @forelse($recentOrders as $order)
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center">
+                                <div class="flex items-center justify-center w-10 h-10 mr-3 bg-indigo-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
-                                    Belum ada pesanan
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-gray-900">#{{ $order->id }}</div>
+                                    <div class="text-xs text-gray-500">{{ $order->package_name }}</div>
+                                </div>
+                            </div>
+                            @if($order->status === 'pending')
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                Pending
+                            </span>
+                            @elseif($order->status === 'confirmed')
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Dikonfirmasi
+                            </span>
+                            @elseif($order->status === 'completed')
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                Selesai
+                            </span>
+                            @else
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                            @endif
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-500">{{ $order->event_date ? \Carbon\Carbon::parse($order->event_date)->format('d M Y') : '-' }}</span>
+                                <span class="font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.orders.show', $order) }}"
+                            class="block w-full text-center px-3 py-2 mt-3 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                            Lihat Detail
+                        </a>
+                    </div>
+                    @empty
+                    <div class="p-8 text-center text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                        <p class="text-sm">Belum ada pesanan</p>
+                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>

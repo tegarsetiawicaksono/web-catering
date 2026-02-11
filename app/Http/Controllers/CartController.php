@@ -13,8 +13,9 @@ class CartController extends Controller
 
     public function index()
     {
-        $cartItems = Cart::where('user_id', Auth::id())->with('menu')->get();
-        
+        $cart = Cart::where('user_id', Auth::id())->first();
+        $cartItems = $cart ? $cart->items : [];
+
         return view('cart.index', [
             'cartItems' => $cartItems
         ]);
@@ -29,32 +30,45 @@ class CartController extends Controller
             'price' => 'required|numeric'
         ]);
 
-        // Check if item already exists in cart
-        $existingItem = Cart::where('user_id', Auth::id())
-            ->where('menu_id', $request->menu_id)
-            ->first();
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()], ['items' => []]);
+        $items = $cart->items ?? [];
 
-        if ($existingItem) {
-            $existingItem->update([
-                'quantity' => $existingItem->quantity + $request->quantity
-            ]);
-        } else {
-            Cart::create([
-                'user_id' => Auth::id(),
-                'menu_id' => $request->menu_id,
-                'quantity' => $request->quantity,
-                'package_name' => $request->package_name,
-                'price' => $request->price
-            ]);
+        // Check if item already exists
+        $found = false;
+        foreach ($items as &$item) {
+            if ($item['id'] === $request->menu_id) {
+                $item['quantity'] += $request->quantity;
+                $found = true;
+                break;
+            }
         }
+
+        if (!$found) {
+            $items[] = [
+                'id' => $request->menu_id,
+                'name' => $request->package_name,
+                'price' => $request->price,
+                'quantity' => $request->quantity
+            ];
+        }
+
+        $cart->update(['items' => $items]);
 
         return redirect()->route('cart.index')->with('success', 'Menu berhasil ditambahkan ke keranjang');
     }
 
     public function destroy($id)
     {
-        $cartItem = Cart::where('user_id', Auth::id())->findOrFail($id);
-        $cartItem->delete();
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        if ($cart) {
+            $items = $cart->items ?? [];
+            $items = array_filter($items, function ($item) use ($id) {
+                return $item['id'] !== $id;
+            });
+
+            $cart->update(['items' => array_values($items)]);
+        }
 
         return redirect()->route('cart.index')->with('success', 'Item berhasil dihapus dari keranjang');
     }
@@ -65,10 +79,19 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
 
-        $cartItem = Cart::where('user_id', Auth::id())->findOrFail($id);
-        $cartItem->update([
-            'quantity' => $request->quantity
-        ]);
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        if ($cart) {
+            $items = $cart->items ?? [];
+            foreach ($items as &$item) {
+                if ($item['id'] === $id) {
+                    $item['quantity'] = $request->quantity;
+                    break;
+                }
+            }
+
+            $cart->update(['items' => $items]);
+        }
 
         return redirect()->route('cart.index')->with('success', 'Jumlah item berhasil diperbarui');
     }

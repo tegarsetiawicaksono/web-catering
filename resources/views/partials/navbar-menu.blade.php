@@ -9,13 +9,12 @@
       </button>
       <!-- KIRI: logo -->
       <div class="flex-1">
-        <a href="{{ route('home') }}" class="flex items-center space-x-2">
-          <img src="{{ asset('foto/rejosari.jpg') }}" alt="Rejosari Catering" class="h-8 md:h-10 w-auto object-contain rounded-full">
+        <div class="flex items-center space-x-2">
+          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-12 md:h-16 w-auto object-contain">
           <h1 class="font-bold text-lg md:text-xl leading-none">
-            <span class="text-[#86765a]">REJOSARI</span>
-            <span class="bg-gray-900 text-white text-xs font-extrabold rounded-sm px-1 align-top ml-1">CATERING</span>
+            <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
-        </a>
+        </div>
       </div>
 
       <!-- TENGAH: menu navigasi -->
@@ -31,6 +30,15 @@
 
       <!-- KANAN: cart, search dan login/profile -->
       <div class="flex-1 flex justify-end items-center space-x-4">
+        @auth
+        <!-- Riwayat Pesanan Button -->
+        <a href="{{ route('orders.history') }}" class="relative p-2 hover:bg-gray-100 rounded-full group" title="Riwayat Pesanan">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </a>
+        @endauth
+
         <!-- Cart Button -->
         <x-cart-button />
 
@@ -53,7 +61,8 @@
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute right-0 mt-2 w-48 sm:w-72 bg-white rounded-lg shadow-xl border border-gray-200 py-2 px-3 hidden">
+            style="display: none;"
+            class="absolute right-0 mt-2 w-48 sm:w-72 bg-white rounded-lg shadow-xl border border-gray-200 py-2 px-3">
             <div class="relative">
               <input type="text"
                 x-model="searchQuery"
@@ -92,7 +101,8 @@
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 hidden">
+            style="display: none;"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200">
             @auth
             <div class="py-2">
               <div class="px-4 py-2 text-sm font-medium text-gray-800 border-b border-gray-100">
@@ -205,6 +215,14 @@
         <div class="px-4 py-2 text-sm font-medium text-gray-500">
           Hi, {{ Auth::user()->name }}
         </div>
+        <a href="{{ route('orders.history') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
+          <div class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="font-medium">Riwayat Pesanan</span>
+          </div>
+        </a>
         <a href="{{ route('profile.edit') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
           <div class="flex items-center space-x-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">

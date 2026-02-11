@@ -37,7 +37,7 @@ class DashboardController extends Controller
         }
 
         return view('admin.dashboard', [
-            'todayOrders' => Order::whereDate('created_at', Carbon::today())->count(),
+            'todayOrders' => Order::count(), // Changed from whereDate to total count
             'currentMonthRevenue' => Order::whereMonth('created_at', Carbon::now()->month)->sum('total_price'),
             'pendingOrders' => Order::where('status', 'pending')->count(),
             'recentOrders' => Order::latest()->take(10)->get(),

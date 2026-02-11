@@ -101,14 +101,15 @@ class CheckoutController extends Controller
             'price' => session('checkout_price'),
             'minOrder' => session('checkout_min'),
             'customer' => $step1,
-            'event' => $step2
+            'event' => $step2,
+            'bankAccounts' => \App\Models\BankAccount::where('is_active', true)->get()
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'payment_method' => 'required|in:transfer,ewallet,cash',
+            'payment_method' => 'required|in:BCA,BNI,BRI,Mandiri,cash',
         ]);
 
         // Get all session data
@@ -122,6 +123,7 @@ class CheckoutController extends Controller
         $totalPrice = $step2['quantity'] * session('checkout_price');
 
         $order = Order::create([
+            'user_id' => auth()->check() ? auth()->id() : null,
             'customer_name' => $step1['customer_name'],
             'phone' => $step1['phone'],
             'email' => $step1['email'],
@@ -143,7 +145,7 @@ class CheckoutController extends Controller
         // Clear session data
         session()->forget(['checkout_package', 'checkout_name', 'checkout_price', 'checkout_min', 'checkout_step1', 'checkout_step2']);
 
-        return redirect()->route('orders.show', $order);
+        return redirect()->route('orders.show', $order)->with('success', 'Pesanan berhasil dibuat! Silakan upload bukti pembayaran untuk melanjutkan.');
     }
     public function invoice(Order $order)
     {

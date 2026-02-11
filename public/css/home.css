@@ -42,15 +42,16 @@ body {
 /* Smooth scroll behavior */
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
-/* Section snap scrolling */
-main {
-    scroll-snap-type: y mandatory;
+html, body {
+    height: 100%;
+    overflow-x: hidden;
 }
 
-section {
-    scroll-snap-align: start;
+body {
+    overflow-y: auto;
 }
 
 /* Hero section image slider animation */

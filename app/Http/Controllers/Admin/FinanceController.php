@@ -18,7 +18,7 @@ class FinanceController extends Controller
             ->whereYear('created_at', $currentYear)
             ->select(
                 DB::raw('MONTH(created_at) as month'),
-                DB::raw('SUM(total_amount) as total'),
+                DB::raw('SUM(total_price) as total'),
                 DB::raw('COUNT(*) as count')
             )
             ->groupBy('month')
@@ -28,7 +28,7 @@ class FinanceController extends Controller
         // Calculate totals
         $totalIncome = Order::where('status', 'completed')
             ->whereYear('created_at', $currentYear)
-            ->sum('total_amount');
+            ->sum('total_price');
 
         // For now, we'll estimate expenses as a percentage (you can track actual expenses later)
         $estimatedExpenses = $totalIncome * 0.3; // 30% for operational costs
@@ -79,7 +79,7 @@ class FinanceController extends Controller
         $income = $query->paginate(15);
 
         // Calculate totals for current page
-        $totalAmount = $income->sum('total_amount');
+        $totalAmount = $income->sum('total_price');
 
         return view('admin.analysis.transactions', compact('income', 'totalAmount'));
     }

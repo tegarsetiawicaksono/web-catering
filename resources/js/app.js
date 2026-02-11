@@ -1,6 +1,7 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import './cart-store';
+import './csrf-refresh';
 
 window.Alpine = Alpine;
 Alpine.start();

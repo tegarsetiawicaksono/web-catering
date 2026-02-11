@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class PaymentVerification extends Model
 {
@@ -65,7 +64,7 @@ class PaymentVerification extends Model
     public function extractImageMetadata($file)
     {
         $metadata = [];
-        
+
         // Get EXIF data if available
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($file);
@@ -80,12 +79,12 @@ class PaymentVerification extends Model
             }
         }
 
-        // Get image information
-        $image = Image::make($file);
+        // Get image information tanpa Intervention Image
+        $imageInfo = getimagesize($file);
         $metadata['image'] = [
-            'mime' => $image->mime(),
-            'width' => $image->width(),
-            'height' => $image->height(),
+            'mime' => $imageInfo['mime'] ?? null,
+            'width' => $imageInfo[0] ?? null,
+            'height' => $imageInfo[1] ?? null,
             'size' => $file->getSize(),
             'hash' => md5_file($file)
         ];
@@ -96,7 +95,7 @@ class PaymentVerification extends Model
     public function isLikelyFraudulent()
     {
         if (!$this->metadata) {
-            return true; // Tidak ada metadata adalah mencurigakan
+            return ['is_suspicious' => true, 'flags' => ['no_metadata']];
         }
 
         $suspiciousFlags = [];

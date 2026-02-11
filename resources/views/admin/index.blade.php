@@ -9,7 +9,7 @@
 
     <!-- Stats Overview Grid -->
     <div class="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2 lg:grid-cols-4">
-        <!-- Today's Orders -->
+        <!-- Total Orders -->
         <div class="relative overflow-hidden transition-transform duration-200 bg-white border border-gray-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
@@ -18,12 +18,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                     </div>
-                    <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Hari Ini</span>
+                    <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Semua</span>
                 </div>
                 <h3 class="mb-1 text-sm font-medium text-gray-600">Total Pesanan</h3>
-                <p class="text-3xl font-bold text-gray-900">{{ $todayOrders }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ \App\Models\Order::count() }}</p>
                 <p class="mt-2 text-xs text-gray-500">
-                    <span class="text-green-600">↑ 12%</span> dari kemarin
+                    Keseluruhan pesanan masuk
                 </p>
             </div>
             <div class="h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>

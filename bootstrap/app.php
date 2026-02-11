@@ -13,8 +13,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'user' => \App\Http\Middleware\UserMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Handle CSRF token mismatch (419 Page Expired)
+        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'CSRF token mismatch. Please refresh and try again.'], 419);
+            }
+
+            // Redirect back with error message for web requests
+            return redirect()->back()
+                ->withInput($request->except('password', '_token'))
+                ->with('error', 'Sesi Anda telah berakhir. Silakan coba lagi.');
+        });
     })->create();

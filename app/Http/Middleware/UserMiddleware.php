@@ -21,9 +21,13 @@ class UserMiddleware
             return redirect()->route('login');
         }
 
-        // If user is admin and trying to access non-profile/non-order routes, redirect to admin dashboard
-        // Allow admin to access their own profile and order history
-        if (Auth::user()->is_admin && !$request->routeIs('profile.*') && !$request->routeIs('orders.*')) {
+        // Redirect admin to admin dashboard (but allow them to access profile and orders)
+        if (Auth::user()->is_admin) {
+            // Allow admin to access profile and order routes
+            if ($request->routeIs('profile.*') || $request->routeIs('orders.*')) {
+                return $next($request);
+            }
+            // Redirect to admin dashboard for other user routes
             return redirect()->route('admin.dashboard');
         }
 

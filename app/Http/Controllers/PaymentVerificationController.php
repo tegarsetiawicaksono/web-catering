@@ -56,8 +56,8 @@ class PaymentVerificationController extends Controller
             ]);
         }
 
-        return redirect()->route('orders.show', $order)
-            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang diverifikasi.');
+        return redirect()->route('home')
+            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang diverifikasi. Terima kasih!');
     }
 
     public function verify(Request $request, PaymentVerification $verification)
@@ -80,11 +80,16 @@ class PaymentVerificationController extends Controller
 
     public function adminIndex()
     {
-        $verifications = PaymentVerification::where('status', 'pending')
-            ->with('order')
-            ->latest()
-            ->paginate(10);
+        $pendingOrders = Order::where('payment_status', 'pending')
+            ->whereNotNull('payment_proof')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('admin.payment-verifications.index', compact('verifications'));
+        $verifiedOrders = Order::whereIn('payment_status', ['verified', 'paid'])
+            ->orderBy('updated_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('admin.payment-verifications.index', compact('pendingOrders', 'verifiedOrders'));
     }
 }

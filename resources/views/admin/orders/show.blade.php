@@ -85,9 +85,13 @@
                             <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">No. Telepon</label>
                             <p class="mt-2 text-sm font-medium text-gray-900">{{ $order->phone }}</p>
                         </div>
-                        <div>
+                        <div class="md:col-span-2">
                             <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Alamat Pengiriman</label>
-                            <p class="mt-2 text-sm text-gray-700">{{ $order->address }}</p>
+                            <p class="mt-2 text-sm text-gray-700">
+                                {{ $order->street_address }}<br>
+                                Kecamatan {{ $order->district }}, {{ $order->city }}<br>
+                                {{ $order->province }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -159,6 +163,125 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Payment Verification Section -->
+            @if($order->latestPaymentVerification)
+            <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center w-10 h-10 mr-3 bg-blue-100 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Bukti Pembayaran</h3>
+                        </div>
+                        @if($order->latestPaymentVerification->status === 'pending')
+                        <span class="px-3 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Menunggu Verifikasi</span>
+                        @elseif($order->latestPaymentVerification->status === 'verified')
+                        <span class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Terverifikasi</span>
+                        @else
+                        <span class="px-3 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">Ditolak</span>
+                        @endif
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Payment Details -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Bank Pengirim</label>
+                                <p class="mt-1 text-sm font-medium text-gray-900">{{ $order->latestPaymentVerification->bank_name }}</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">No. Rekening</label>
+                                <p class="mt-1 text-sm font-medium text-gray-900">{{ $order->latestPaymentVerification->account_number }}</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Nama Pemilik</label>
+                                <p class="mt-1 text-sm font-medium text-gray-900">{{ $order->latestPaymentVerification->account_name }}</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Jumlah Transfer</label>
+                                <p class="mt-1 text-lg font-bold text-green-600">Rp {{ number_format($order->latestPaymentVerification->amount, 0, ',', '.') }}</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Tanggal Transfer</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ $order->latestPaymentVerification->transfer_date->format('d M Y, H:i') }}</p>
+                            </div>
+                            @if($order->latestPaymentVerification->transfer_receipt_number)
+                            <div>
+                                <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">No. Referensi</label>
+                                <p class="mt-1 text-sm font-mono text-gray-900">{{ $order->latestPaymentVerification->transfer_receipt_number }}</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Payment Proof Image -->
+                        <div>
+                            <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase mb-2 block">Bukti Transfer</label>
+                            <a href="{{ Storage::url($order->latestPaymentVerification->payment_proof) }}" target="_blank" class="block group">
+                                <div class="relative overflow-hidden rounded-lg border-2 border-gray-300 group-hover:border-blue-500 transition-colors">
+                                    <img src="{{ Storage::url($order->latestPaymentVerification->payment_proof) }}"
+                                        alt="Bukti Transfer"
+                                        class="w-full h-auto group-hover:opacity-90 transition-opacity">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all flex items-center justify-center">
+                                        <svg class="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                            <p class="mt-2 text-xs text-gray-500 text-center">Klik untuk memperbesar</p>
+                        </div>
+                    </div>
+
+                    @if($order->latestPaymentVerification->status === 'rejected' && $order->latestPaymentVerification->verification_notes)
+                    <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-sm font-semibold text-red-800">Catatan Penolakan:</p>
+                        <p class="text-sm text-red-700 mt-1">{{ $order->latestPaymentVerification->verification_notes }}</p>
+                    </div>
+                    @endif
+
+                    <!-- Admin Actions for Verification -->
+                    @if($order->latestPaymentVerification->status === 'pending')
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <form action="{{ route('admin.payment-verifications.verify', $order) }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Aksi Verifikasi</label>
+                                <div class="flex gap-3">
+                                    <button type="submit" name="action" value="verify"
+                                        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Verifikasi Pembayaran
+                                    </button>
+                                    <button type="button" onclick="document.getElementById('reject-form').classList.toggle('hidden')"
+                                        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Tolak Pembayaran
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="reject-form" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Penolakan</label>
+                                <textarea name="notes" rows="3" class="w-full rounded-lg border-gray-300" placeholder="Masukkan alasan penolakan..."></textarea>
+                                <button type="submit" name="action" value="reject"
+                                    class="mt-2 w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                                    Konfirmasi Penolakan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
 
             <!-- Notes -->
             @if($order->notes)

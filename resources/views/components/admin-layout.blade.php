@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<body class="h-full bg-gray-50" x-data="{ sidebarOpen: false }">
+<body class="h-full bg-gray-50" x-data="{ sidebarOpen: false, openNotif: false }">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar Mobile Overlay -->
         <div x-show="sidebarOpen"
@@ -49,8 +49,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold text-white">Catering Admin</h1>
-                        <p class="text-xs text-indigo-200">Management Panel</p>
+                        <h1 class="text-lg font-bold text-white">Rejosari Catering</h1>
+                        <p class="text-xs text-indigo-200">Admin Panel</p>
                     </div>
                 </a>
                 <button @click="sidebarOpen = false" class="text-white md:hidden">
@@ -80,45 +80,64 @@
                     Pesanan
                 </a>
 
-                <a href="{{ route('admin.payments.index') }}"
+                <a href="{{ route('admin.menus.index') }}"
                     class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
-                          @if(request()->routeIs('admin.payments.*')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                          @if(request()->routeIs('admin.menus.*')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Pembayaran
+                    Kelola Menu
                 </a>
 
+                <a href="{{ route('admin.gallery.index') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
+                          @if(request()->routeIs('admin.gallery.*')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Kelola Galeri
+                </a>
+
+                <a href="{{ route('admin.payment-verifications.index') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
+                          @if(request()->routeIs('admin.payment-verifications.*')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Verifikasi Pembayaran
+                </a>
+
+                <a href="{{ route('admin.reports') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
+                          @if(request()->routeIs('admin.reports')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Laporan
+                </a>
+
+                <!-- Divider for Analysis Section -->
                 <div class="pt-4 mt-4 border-t border-indigo-700">
-                    <p class="px-4 mb-2 text-xs font-semibold text-indigo-300 uppercase">Analisis</p>
-
-                    <a href="{{ route('admin.reports') }}"
-                        class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
-                              @if(request()->routeIs('admin.reports')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Laporan
-                    </a>
-
-                    <a href="{{ route('admin.analysis.finance') }}"
-                        class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
-                              @if(request()->routeIs('admin.analysis.finance')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                        Keuangan
-                    </a>
-
-                    <a href="{{ route('admin.analysis.transactions') }}"
-                        class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
-                              @if(request()->routeIs('admin.analysis.transactions')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Transaksi
-                    </a>
+                    <p class="px-4 mb-2 text-xs font-semibold tracking-wider text-indigo-300 uppercase">Analisis</p>
                 </div>
+
+                <a href="{{ route('admin.analysis.finance') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
+                          @if(request()->routeIs('admin.analysis.finance')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Keuangan
+                </a>
+
+                <a href="{{ route('admin.analysis.transactions') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
+                          @if(request()->routeIs('admin.analysis.transactions')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Transaksi
+                </a>
             </nav>
 
             <!-- User Profile -->
@@ -203,13 +222,143 @@
                     <!-- Right side items -->
                     <div class="flex items-center space-x-4">
                         <!-- Notifications -->
-                        <button class="relative text-gray-500 hover:text-gray-700">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                        <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                            @php
+                                $lastReadAt = auth()->user()->last_notification_read_at;
+                                
+                                // Hitung hanya notifikasi baru (setelah terakhir dibaca)
+                                $notificationQuery = \App\Models\Order::where(function($q) {
+                                    $q->where('status', 'pending')
+                                      ->orWhere('status', 'confirmed');
+                                });
+                                
+                                if ($lastReadAt) {
+                                    $notificationQuery->where('created_at', '>', $lastReadAt);
+                                }
+                                
+                                $notificationCount = $notificationQuery->count();
+                            @endphp
+                            
+                            <button @click="open = !open; if(open) { fetch('{{ route('admin.notifications.mark-read') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } }) }" 
+                                class="relative text-gray-500 transition-colors hover:text-gray-700 focus:outline-none">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                @if($notificationCount > 0)
+                                    <span class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-indigo-600 rounded-full">
+                                        {{ $notificationCount > 99 ? '99+' : $notificationCount }}
+                                    </span>
+                                @endif
+                            </button>
+                            
+                            <!-- Dropdown Notifikasi -->
+                            <div x-show="open"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform scale-95"
+                                x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform scale-100"
+                                x-transition:leave-end="opacity-0 transform scale-95"
+                                class="absolute right-0 z-50 w-80 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5">
+                                
+                                <!-- Header -->
+                                <div class="px-4 py-3 border-b border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-semibold text-gray-900">Notifikasi</h3>
+                                        @if($notificationCount > 0)
+                                            <span class="px-2 py-1 text-xs font-medium text-indigo-900 bg-indigo-100 rounded-full">
+                                                {{ $notificationCount }} Baru
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
 
+                                <!-- Notification Items -->
+                                <div class="max-h-96 overflow-y-auto">
+                                    @php
+                                        $recentOrders = \App\Models\Order::where(function($q) {
+                                            $q->where('status', 'pending')
+                                              ->orWhere('status', 'confirmed');
+                                        })
+                                            ->orderBy('created_at', 'desc')
+                                            ->take(10)
+                                            ->get();
+                                    @endphp
+
+                                    @forelse($recentOrders as $order)
+                                        @php
+                                            $isNew = !$lastReadAt || $order->created_at > $lastReadAt;
+                                        @endphp
+                                        <a href="{{ route('admin.orders.show', $order->id) }}" 
+                                            class="block px-4 py-3 transition-colors hover:bg-gray-50 border-b border-gray-100 {{ $isNew ? 'bg-indigo-50' : '' }}">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0">
+                                                    <div class="flex items-center justify-center w-10 h-10 rounded-full
+                                                        @if($order->status === 'pending') bg-yellow-100
+                                                        @elseif($order->status === 'confirmed') bg-blue-100
+                                                        @endif">
+                                                        <svg class="w-5 h-5 
+                                                            @if($order->status === 'pending') text-yellow-600
+                                                            @elseif($order->status === 'confirmed') text-blue-600
+                                                            @endif" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 ml-3">
+                                                    <div class="flex items-center gap-2">
+                                                        <p class="text-sm font-medium text-gray-900">
+                                                            Pesanan #{{ $order->order_number }}
+                                                        </p>
+                                                        @if($isNew)
+                                                            <span class="px-1.5 py-0.5 text-xs font-bold text-indigo-700 bg-indigo-200 rounded">BARU</span>
+                                                        @endif
+                                                    </div>
+                                                    <p class="mt-1 text-xs text-gray-500">
+                                                        {{ $order->customer_name }} - Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                                    </p>
+                                                    <p class="mt-1 text-xs text-gray-400">
+                                                        {{ $order->created_at->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                                <span class="px-2 py-1 text-xs font-medium rounded-full
+                                                    @if($order->status === 'pending') bg-yellow-100 text-yellow-800
+                                                    @elseif($order->status === 'confirmed') bg-blue-100 text-blue-800
+                                                    @endif">
+                                                    {{ ucfirst($order->status) }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="px-4 py-8 text-center">
+                                            <svg class="mx-auto w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                            </svg>
+                                            <p class="mt-2 text-sm text-gray-500">Tidak ada pesanan baru</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+
+                                <!-- Flash Messages -->
+                                @if(session('success') || session('error'))
+                                    <div class="border-t border-gray-200">
+                                        @if(session('success'))
+                                        <div class="flex items-center justify-between px-4 py-3 text-green-800 bg-green-100">
+                                            <span class="text-sm">{{ session('success') }}</span>
+                                            <button class="ml-2 text-green-600 hover:text-green-900" @click="open = false">&times;</button>
+                                        </div>
+                                        @endif
+                                        @if(session('error'))
+                                        <div class="flex items-center justify-between px-4 py-3 text-red-800 bg-red-100">
+                                            <span class="text-sm">{{ session('error') }}</span>
+                                            <button class="ml-2 text-red-600 hover:text-red-900" @click="open = false">&times;</button>
+                                        </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                         <!-- Current Date -->
                         <div class="hidden text-sm text-gray-600 sm:block">
                             {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
@@ -240,6 +389,8 @@
     </div>
 
     @stack('scripts')
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <x-notification />
 </body>
 
 </html>

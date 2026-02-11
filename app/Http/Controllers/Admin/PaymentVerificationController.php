@@ -25,31 +25,72 @@ class PaymentVerificationController extends Controller
 
     public function verify(Request $request, Order $order)
     {
-        $request->validate([
-            'action' => 'required|in:approve,reject',
-            'rejection_reason' => 'required_if:action,reject|string|max:500'
+        \Log::info('Payment verification request', [
+            'order_id' => $order->id,
+            'action' => $request->action,
+            'all_data' => $request->all()
         ]);
 
-        if ($request->action === 'approve') {
-            $order->update([
-                'payment_status' => 'verified',
-                'paid_at' => now()
+        $request->validate([
+            'action' => 'required|in:verify,reject',
+            'notes' => 'required_if:action,reject|string|max:500'
+        ]);
+
+        // Get the latest payment verification
+        $verification = $order->latestPaymentVerification;
+
+        if (!$verification) {
+            \Log::error('No payment verification found for order: ' . $order->id);
+            return back()->with('error', 'Bukti pembayaran tidak ditemukan');
+        }
+
+        \Log::info('Found verification', ['verification_id' => $verification->id, 'current_status' => $verification->status]);
+
+        if ($request->action === 'verify') {
+            // Update verification status
+            $verification->status = 'verified';
+            $verification->verified_at = now();
+            $verification->verified_by = auth()->id();
+            $verification->save();
+
+            // Update order payment status
+            $order->payment_status = 'verified';
+            $order->paid_at = now();
+            
+            // Auto-update order status to confirmed if still pending
+            if ($order->status === 'pending') {
+                $order->status = 'confirmed';
+            }
+            
+            $order->save();
+
+            \Log::info('Payment verified', [
+                'order_id' => $order->id, 
+                'verification_id' => $verification->id,
+                'new_payment_status' => $order->payment_status,
+                'new_order_status' => $order->status
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Pembayaran berhasil diverifikasi'
-            ]);
+            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Dikonfirmasi.');
         } else {
-            $order->update([
-                'payment_status' => 'rejected',
-                'rejection_reason' => $request->rejection_reason
+            // Update verification status to rejected
+            $verification->status = 'rejected';
+            $verification->verification_notes = $request->notes;
+            $verification->verified_at = now();
+            $verification->verified_by = auth()->id();
+            $verification->save();
+
+            // Update order payment status
+            $order->payment_status = 'rejected';
+            $order->save();
+
+            \Log::info('Payment rejected', [
+                'order_id' => $order->id, 
+                'verification_id' => $verification->id,
+                'reason' => $request->notes
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Pembayaran ditolak'
-            ]);
+            return redirect()->back()->with('success', 'Pembayaran ditolak. Customer akan menerima notifikasi.');
         }
     }
 }

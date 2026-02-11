@@ -22,10 +22,17 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    // Google OAuth Routes
+    Route::get('auth/google/redirect', [AuthenticatedSessionController::class, 'redirectToGoogle'])
+        ->name('google.redirect');
+    Route::get('auth/google/callback', [AuthenticatedSessionController::class, 'handleGoogleCallback'])
+        ->name('google.callback');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->middleware('throttle:10,1')
         ->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])

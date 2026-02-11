@@ -48,7 +48,9 @@
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-800">Menunggu Verifikasi</h2>
             </div>
-            <div class="overflow-x-auto">
+
+            <!-- Desktop Table -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -95,7 +97,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="inline" x-data>
                                     @csrf
-                                    <input type="hidden" name="action" value="approve">
+                                    <input type="hidden" name="action" value="verify">
                                     <button type="submit"
                                         @click.prevent="if(confirm('Verifikasi pembayaran ini?')) $el.closest('form').submit()"
                                         class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs mr-2">
@@ -120,6 +122,67 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden divide-y divide-gray-200">
+                @forelse($pendingOrders as $order)
+                <div class="p-4 hover:bg-gray-50">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-sm font-bold text-gray-900">#{{ $order->id }}</span>
+                            <p class="text-xs text-gray-500">{{ $order->created_at->format('d M Y H:i') }}</p>
+                        </div>
+                        @if($order->payment_proof)
+                        <a href="{{ Storage::url($order->payment_proof) }}" target="_blank" class="inline-flex items-center text-indigo-600 hover:text-indigo-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </a>
+                        @endif
+                    </div>
+
+                    <div class="space-y-2 mb-3">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
+                            <p class="text-xs text-gray-500">{{ $order->email }}</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-2 rounded">
+                            <p class="text-xs text-gray-500">Bank Info</p>
+                            <p class="text-sm text-gray-900">{{ $order->bank_name ?? '-' }}</p>
+                            <p class="text-xs text-gray-500">{{ $order->account_number ?? '-' }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-gray-500">Total</p>
+                            <p class="text-base font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="flex-1" x-data>
+                            @csrf
+                            <input type="hidden" name="action" value="verify">
+                            <button type="submit"
+                                @click.prevent="if(confirm('Verifikasi pembayaran ini?')) $el.closest('form').submit()"
+                                class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm">
+                                ✓ Verifikasi
+                            </button>
+                        </form>
+                        <button onclick="showRejectModal({{ $order->id }})" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">
+                            ✗ Tolak
+                        </button>
+                    </div>
+                </div>
+                @empty
+                <div class="p-8 text-center text-gray-500">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="mt-2">Tidak ada pembayaran yang menunggu verifikasi</p>
+                </div>
+                @endforelse
+            </div>
         </div>
 
         <!-- Verified Orders -->
@@ -127,7 +190,7 @@
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-800">Pembayaran Terverifikasi (10 Terakhir)</h2>
             </div>
-            <div class="overflow-x-auto">
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -184,7 +247,7 @@
                     <input type="hidden" name="action" value="reject">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Alasan Penolakan</label>
-                        <textarea name="rejection_reason" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        <textarea name="notes" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
                     </div>
                     <div class="flex justify-end space-x-2">
                         <button type="button" onclick="closeRejectModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
@@ -211,5 +274,12 @@
             const modal = document.getElementById('rejectModal');
             modal.classList.add('hidden');
         }
+
+        // Close modal when clicking outside
+        document.getElementById('rejectModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRejectModal();
+            }
+        });
     </script>
 </x-admin-layout>
