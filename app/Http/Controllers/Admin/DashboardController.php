@@ -37,14 +37,20 @@ class DashboardController extends Controller
         }
 
         return view('admin.dashboard', [
-            'todayOrders' => Order::count(), // Changed from whereDate to total count
-            'currentMonthRevenue' => Order::whereMonth('created_at', Carbon::now()->month)->sum('total_price'),
+            'todayOrders' => Order::whereDate('created_at', Carbon::today())->count(),
+            'currentYearRevenue' => Order::whereYear('created_at', Carbon::now()->year)
+                ->sum('total_price'),
             'pendingOrders' => Order::where('status', 'pending')->count(),
             'recentOrders' => Order::latest()->take(10)->get(),
             'monthlySales' => $monthlySales,
             'monthlyRevenueData' => $monthlyRevenue,
             'yearlyData' => $yearlyData,
-            'currentYear' => $currentYear
+            'currentYear' => $currentYear,
+            // DP Statistics
+            'dpPaidOrders' => Order::where('payment_status', 'dp_paid')->count(),
+            'fullyPaidOrders' => Order::where('payment_status', 'fully_paid')->count(),
+            'dpReceivedAmount' => Order::where('payment_status', 'dp_paid')->sum('paid_amount'),
+            'awaitingPayment' => Order::where('payment_status', 'dp_paid')->sum('remaining_amount'),
         ]);
     }
 }

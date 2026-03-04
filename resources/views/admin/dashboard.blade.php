@@ -38,10 +38,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Bulan Ini</span>
+                    <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Tahun Ini</span>
                 </div>
                 <h3 class="mb-1 text-sm font-medium text-gray-600">Pendapatan</h3>
-                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($currentMonthRevenue / 1000000, 1) }}jt</p>
+                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($currentYearRevenue / 1000000, 1) }}jt</p>
                 <p class="mt-2 text-xs text-gray-500">
                     <span class="text-green-600">↑ 8%</span> dari bulan lalu
                 </p>
@@ -87,6 +87,89 @@
                 </p>
             </div>
             <div class="h-1 bg-gradient-to-r from-purple-500 to-purple-600"></div>
+        </div>
+    </div>
+
+    <!-- Payment Status Overview (DP System) -->
+    <div class="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- DP Paid Orders -->
+        <div class="relative overflow-hidden transition-transform duration-200 bg-white border-2 border-orange-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium text-orange-700 bg-orange-100 rounded-full">DP 50%</span>
+                </div>
+                <h3 class="mb-1 text-sm font-medium text-gray-600">Bayar DP</h3>
+                <p class="text-3xl font-bold text-gray-900">{{ $dpPaidOrders }}</p>
+                <p class="mt-2 text-xs text-orange-600">
+                    ⏳ Menunggu pelunasan
+                </p>
+            </div>
+            <div class="h-1 bg-gradient-to-r from-orange-500 to-orange-600"></div>
+        </div>
+
+        <!-- DP Received Amount -->
+        <div class="relative overflow-hidden transition-transform duration-200 bg-white border-2 border-cyan-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-cyan-600">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium text-cyan-700 bg-cyan-100 rounded-full">Sudah Masuk</span>
+                </div>
+                <h3 class="mb-1 text-sm font-medium text-gray-600">DP Diterima</h3>
+                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($dpReceivedAmount / 1000000, 1) }}jt</p>
+                <p class="mt-2 text-xs text-cyan-600">
+                    💰 Cash flow dari DP
+                </p>
+            </div>
+            <div class="h-1 bg-gradient-to-r from-cyan-500 to-cyan-600"></div>
+        </div>
+
+        <!-- Awaiting Payment -->
+        <div class="relative overflow-hidden transition-transform duration-200 bg-white border-2 border-red-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-red-500 to-red-600">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-full">Belum Lunas</span>
+                </div>
+                <h3 class="mb-1 text-sm font-medium text-gray-600">Sisa Bayar</h3>
+                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($awaitingPayment / 1000000, 1) }}jt</p>
+                <p class="mt-2 text-xs text-red-600">
+                    📋 Piutang customer
+                </p>
+            </div>
+            <div class="h-1 bg-gradient-to-r from-red-500 to-red-600"></div>
+        </div>
+
+        <!-- Fully Paid Orders -->
+        <div class="relative overflow-hidden transition-transform duration-200 bg-white border-2 border-emerald-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium text-emerald-700 bg-emerald-100 rounded-full">Lunas</span>
+                </div>
+                <h3 class="mb-1 text-sm font-medium text-gray-600">Bayar Penuh</h3>
+                <p class="text-3xl font-bold text-gray-900">{{ $fullyPaidOrders }}</p>
+                <p class="mt-2 text-xs text-emerald-600">
+                    ✅ Pembayaran selesai
+                </p>
+            </div>
+            <div class="h-1 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
         </div>
     </div>
 
@@ -235,6 +318,60 @@
                 </div>
             </div>
 
+            <!-- Orders Awaiting Full Payment (DP Paid) -->
+            @if($dpPaidOrders > 0)
+            <div class="mt-6 overflow-hidden bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-300 rounded-xl">
+                <div class="px-6 py-4 border-b border-orange-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h3 class="text-lg font-semibold text-orange-900">Perlu Pelunasan</h3>
+                        </div>
+                        <span class="px-3 py-1 text-sm font-bold text-orange-700 bg-orange-200 rounded-full">{{ $dpPaidOrders }} order</span>
+                    </div>
+                </div>
+                <div class="p-6 space-y-3">
+                    @php
+                        $dpOrders = \App\Models\Order::where('payment_status', 'dp_paid')->latest()->take(5)->get();
+                    @endphp
+                    @forelse($dpOrders as $order)
+                    <a href="{{ route('admin.orders.show', $order) }}" class="block p-4 transition-all bg-white border border-orange-200 rounded-lg hover:shadow-md hover:border-orange-400">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <p class="font-semibold text-gray-900">{{ $order->customer_name }}</p>
+                                <p class="text-xs text-gray-500">#{{ $order->id }} - {{ $order->package_name }}</p>
+                            </div>
+                            <span class="px-2 py-1 text-xs font-medium text-orange-700 bg-orange-100 rounded-full">DP Lunas</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="p-2 bg-green-50 rounded">
+                                <p class="text-gray-600">DP Dibayar</p>
+                                <p class="font-bold text-green-700">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</p>
+                            </div>
+                            <div class="p-2 bg-red-50 rounded">
+                                <p class="text-gray-600">Sisa Bayar</p>
+                                <p class="font-bold text-red-700">Rp {{ number_format($order->remaining_amount, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-orange-600">
+                            📅 Event: {{ $order->event_date->format('d M Y') }}
+                        </p>
+                    </a>
+                    @empty
+                    <p class="text-sm text-center text-gray-500">Tidak ada order yang menunggu pelunasan</p>
+                    @endforelse
+                    
+                    @if($dpPaidOrders > 5)
+                    <a href="{{ route('admin.orders.index') }}?payment_status=dp_paid" class="block mt-3 text-sm font-medium text-center text-orange-600 hover:text-orange-700">
+                        Lihat semua {{ $dpPaidOrders }} order →
+                    </a>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             <!-- Popular Packages -->
             <div class="mt-6 overflow-hidden bg-white border border-gray-200 rounded-xl">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -297,6 +434,7 @@
                                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pesanan</th>
                                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pelanggan</th>
                                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Total</th>
+                                    <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Pembayaran</th>
                                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
                                     <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Aksi</th>
                                 </tr>
@@ -323,6 +461,31 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                         Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($order->payment_status === 'dp_paid')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                                            </svg>
+                                            DP ({{ $order->dp_percentage }}%)
+                                        </span>
+                                        @elseif($order->payment_status === 'fully_paid')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            Lunas
+                                        </span>
+                                        @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                            </svg>
+                                            Belum Bayar
+                                        </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($order->status === 'pending')
@@ -356,7 +519,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                    <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                         <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                         </svg>

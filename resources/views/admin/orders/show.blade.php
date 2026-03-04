@@ -21,7 +21,7 @@
                     @elseif($order->status === 'confirmed')
                     <span class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
                         <span class="w-1.5 h-1.5 mr-1.5 bg-blue-500 rounded-full"></span>
-                        Dikonfirmasi
+                        Terverifikasi
                     </span>
                     @elseif($order->status === 'completed')
                     <span class="inline-flex items-center px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
@@ -165,7 +165,54 @@
             </div>
 
             <!-- Payment Verification Section -->
-            @if($order->latestPaymentVerification)
+            @if($order->payment_method === 'cash')
+            <!-- Cash Payment Notice -->
+            <div class="overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl">
+                <div class="px-6 py-4 border-b border-green-200 bg-gradient-to-r from-green-100 to-emerald-100">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-10 h-10 mr-3 bg-green-500 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">💵 Pembayaran Tunai (Cash)</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="bg-white p-4 rounded-lg border border-green-200 space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                                <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">Pembayaran saat pengiriman</p>
+                                <p class="text-xs text-gray-600">Customer akan membayar tunai kepada driver</p>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-green-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Total yang harus dibayar:</span>
+                                <span class="text-xl font-bold text-green-700">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-3">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs font-semibold text-yellow-800">Catatan untuk Admin:</p>
+                                    <p class="text-xs text-yellow-700 mt-1">Pastikan driver membawa uang kembalian yang cukup. Total pembayaran akan dikonfirmasi setelah pengiriman.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif($order->latestPaymentVerification)
+            <!-- Transfer Payment Verification -->
             <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <div class="flex items-center justify-between">
@@ -187,6 +234,39 @@
                     </div>
                 </div>
                 <div class="p-6">
+                    <!-- Payment Type Badge -->
+                    @if($order->latestPaymentVerification->payment_type === 'dp')
+                    <div class="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm font-bold text-blue-900">Pembayaran DP ({{ $order->dp_percentage }}%)</p>
+                                <p class="text-xs text-blue-700">Sisa pembayaran: Rp {{ number_format($order->remaining_amount, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @elseif($order->latestPaymentVerification->payment_type === 'remaining')
+                    <div class="mb-4 p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p class="text-sm font-bold text-purple-900">Pembayaran Pelunasan</p>
+                        </div>
+                    </div>
+                    @else
+                    <div class="mb-4 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <p class="text-sm font-bold text-green-900">Pembayaran Lunas (Full Payment)</p>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Payment Details -->
                         <div class="space-y-3">
@@ -322,7 +402,7 @@
                                     ⏳ Pending
                                 </option>
                                 <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>
-                                    ✅ Dikonfirmasi
+                                    ✅ Terverifikasi
                                 </option>
                                 <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>
                                     🎉 Selesai

@@ -13,15 +13,14 @@ class AdminOrderController extends Controller
     public function dashboard()
     {
         $todayOrders = Order::whereDate('created_at', Carbon::today())->count();
-        $monthlyRevenue = Order::whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
+        $yearlyRevenue = Order::whereYear('created_at', Carbon::now()->year)
             ->sum('total_price');
         $pendingOrders = Order::where('status', 'pending')->count();
         $recentOrders = Order::latest()->take(10)->get();
 
         return view('admin.index', compact(
             'todayOrders',
-            'monthlyRevenue',
+            'yearlyRevenue',
             'pendingOrders',
             'recentOrders'
         ));

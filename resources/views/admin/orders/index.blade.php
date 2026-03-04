@@ -34,7 +34,7 @@
                         <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Semua Status</option>
                             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="confirmed" {{ request('status') === 'confirmed' ? 'selected' : '' }}>Dikonfirmasi</option>
+                            <option value="confirmed" {{ request('status') === 'confirmed' ? 'selected' : '' }}>Terverifikasi</option>
                             <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Selesai</option>
                             <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                         </select>
@@ -145,7 +145,7 @@
         <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="block p-4 transition-all duration-200 bg-white border rounded-lg bg-blue-50 hover:shadow-lg hover:-translate-y-1 group {{ request('status') === 'confirmed' ? 'border-blue-400 ring-2 ring-blue-300' : 'border-blue-200 hover:border-blue-400' }}">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-blue-800 group-hover:text-blue-900">Dikonfirmasi</p>
+                    <p class="text-sm text-blue-800 group-hover:text-blue-900">Terverifikasi</p>
                     <p class="text-2xl font-bold text-blue-900">{{ \App\Models\Order::where('status', 'confirmed')->count() }}</p>
                 </div>
                 <svg class="w-5 h-5 text-blue-600 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +250,7 @@
                             @elseif($order->status === 'confirmed')
                             <span class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
                                 <span class="w-1.5 h-1.5 mr-1.5 bg-blue-500 rounded-full"></span>
-                                Dikonfirmasi
+                                Terverifikasi
                             </span>
                             @elseif($order->status === 'completed')
                             <span class="inline-flex items-center px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">
@@ -311,7 +311,7 @@
                     </span>
                     @elseif($order->status === 'confirmed')
                     <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                        Dikonfirmasi
+                        Terverifikasi
                     </span>
                     @elseif($order->status === 'completed')
                     <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">

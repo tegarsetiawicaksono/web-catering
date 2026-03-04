@@ -36,6 +36,11 @@ class Order extends Model
         'bank_name',
         'account_number',
         'account_name',
+        // DP fields
+        'dp_percentage',
+        'dp_amount',
+        'paid_amount',
+        'remaining_amount',
         // Delivery fields
         'delivery_method',
         'delivery_fee',
@@ -58,6 +63,10 @@ class Order extends Model
         'event_date' => 'date:Y-m-d',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
+        'dp_percentage' => 'decimal:2',
+        'dp_amount' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
+        'remaining_amount' => 'decimal:2',
         'package_price' => 'decimal:2',
         'total_price' => 'decimal:2',
         'delivery_fee' => 'decimal:2',

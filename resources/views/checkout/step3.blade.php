@@ -7,23 +7,121 @@
         <!-- Progress Indicator -->
         <x-checkout.progress-bar :current-step="3" />
 
-        <!-- Package Info Card -->
+        <!-- Package Info Card atau Cart Summary -->
+        @if($fromCart ?? false)
+        <!-- Cart Summary -->
         <div class="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-200">
             <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
-                <h2 class="text-xl md:text-2xl font-bold text-white">{{ $name }}</h2>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-white text-xl font-bold">Ringkasan Pesanan</h2>
+                            <p class="text-orange-100 text-sm">{{ count($cartItems) }} menu dipilih</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Gallery Images -->
-            <div class="px-4 md:px-6 py-4">
-                <div class="grid grid-cols-3 gap-2 md:gap-4">
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Menu 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
+            <!-- Order Summary -->
+            <div class="px-4 md:px-6 py-6">
+                <div class="space-y-3 mb-6">
+                    @foreach($cartItems as $item)
+                    <div class="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-xl border border-orange-100">
+                        <div class="flex gap-3">
+                            @if(isset($item['image']) && $item['image'])
+                            <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="{{ asset('foto/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                            </div>
+                            @endif
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <p class="font-bold text-gray-900">{{ $item['name'] }}</p>
+                                        </div>
+                                        <div class="flex items-center gap-4 text-sm">
+                                            <span class="text-gray-600">{{ $item['quantity'] }} porsi</span>
+                                            <span class="text-gray-400">×</span>
+                                            <span class="text-orange-600 font-semibold">Rp {{ number_format($item['price'], 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xl font-bold text-orange-600">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/buffet.jpg') }}" alt="Menu 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    @endforeach
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl p-6 border-2 border-orange-200">
+                    <h4 class="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Detail Pesanan
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center py-2 border-b border-orange-200">
+                            <span class="text-gray-600 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3z"/>
+                                </svg>
+                                Total Porsi
+                            </span>
+                            <span class="font-bold text-gray-900">{{ collect($cartItems)->sum('quantity') }} porsi</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-orange-200">
+                            <span class="text-gray-600 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Tanggal & Waktu
+                            </span>
+                            <span class="font-semibold text-gray-900">{{ date('d M Y', strtotime($event['event_date'])) }} - {{ $event['event_time'] }}</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-3 mt-2 border-t-2 border-orange-300">
+                            <span class="text-lg font-bold text-gray-900">Grand Total</span>
+                            <span class="text-3xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+                                Rp {{ number_format(collect($cartItems)->sum(function($item) {
+                                    return $item['price'] * $item['quantity'];
+                                }), 0, ',', '.') }}
+                            </span>
+                        </div>
                     </div>
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Menu 3" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
+                </div>
+            </div>
+        </div>
+        @else
+        <!-- Single Package Card -->
+        <div class="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-200">
+            <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+                <div class="flex items-center gap-3">
+                    @if($image ?? null)
+                    <div class="w-16 h-16 rounded-xl overflow-hidden border-2 border-white/30 flex-shrink-0">
+                        <img src="{{ asset('foto/' . $image) }}" alt="{{ $name }}" class="w-full h-full object-cover">
+                    </div>
+                    @else
+                    <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                        </svg>
+                    </div>
+                    @endif
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold text-white">{{ $name }}</h2>
+                        <p class="text-orange-100 text-sm">Paket Catering Premium</p>
                     </div>
                 </div>
             </div>
@@ -57,6 +155,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <!-- Form Step 3 -->
         <form action="{{ route('checkout.store') }}" method="POST" x-data="{ submitting: false }" @submit.prevent="if(!submitting) { submitting = true; $el.submit(); }">
@@ -131,7 +230,15 @@
                                     </div>
                                     <div class="flex-1">
                                         <h4 class="text-lg font-bold text-gray-900">Tunai (Cash)</h4>
-                                        <p class="text-sm text-gray-600 mt-1">Bayar tunai saat pengiriman</p>
+                                        <p class="text-sm text-gray-600 mt-1">Wajib upload bukti DP/Lunas</p>
+                                        <div class="mt-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+                                            <p class="text-xs text-amber-800 font-semibold flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                                Min. 7 hari sebelum acara
+                                            </p>
+                                        </div>
                                     </div>
                                     <div class="p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
                                         <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

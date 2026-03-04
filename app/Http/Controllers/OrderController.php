@@ -72,6 +72,9 @@ class OrderController extends Controller
         // Load payment verification relationship
         $order->load('latestPaymentVerification');
 
+        // Get active bank accounts
+        $bankAccounts = \App\Models\BankAccount::where('is_active', true)->get();
+
         // Debugging
         Log::info('Order Data:', ['order' => $order->toArray()]);
 
@@ -80,20 +83,35 @@ class OrderController extends Controller
             return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan');
         }
 
-        return view('orders.show', compact('order'));
+        return view('orders.show', compact('order', 'bankAccounts'));
     }
 
     public function cancel(Order $order)
     {
         try {
+            // Check if order status is pending
             if ($order->status !== 'pending') {
                 return back()->with('error', 'Hanya pesanan dengan status pending yang dapat dibatalkan');
+            }
+
+            // Check if payment verification exists (DP already paid)
+            if ($order->latestPaymentVerification) {
+                return back()->with('error', 'Pesanan yang sudah bayar DP tidak dapat dibatalkan. Silakan hubungi admin untuk pembatalan.');
+            }
+
+            // Check event date - cannot cancel within 3 days before event
+            $eventDate = \Carbon\Carbon::parse($order->event_date)->startOfDay();
+            $now = \Carbon\Carbon::now()->startOfDay();
+            $daysUntilEvent = $now->diffInDays($eventDate, false);
+
+            if ($daysUntilEvent < 3) {
+                return back()->with('error', 'Pembatalan tidak dapat dilakukan kurang dari 3 hari sebelum tanggal event. Silakan hubungi admin melalui WhatsApp untuk pembatalan darurat.');
             }
 
             $order->status = 'cancelled';
             $order->save();
 
-            Log::info('Order cancelled:', ['order_id' => $order->id]);
+            Log::info('Order cancelled:', ['order_id' => $order->id, 'days_until_event' => $daysUntilEvent]);
 
             return back()->with('success', 'Pesanan berhasil dibatalkan');
         } catch (\Exception $e) {

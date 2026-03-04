@@ -25,21 +25,16 @@
 
         <!-- Package Info Card -->
         <div class="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border border-orange-200">
-            <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
-                <h2 class="text-xl md:text-2xl font-bold text-white">{{ $name }}</h2>
-            </div>
-
-            <!-- Gallery Images - Compact Grid -->
-            <div class="px-4 md:px-6 py-4">
-                <div class="grid grid-cols-3 gap-2 md:gap-4">
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Menu 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
+            <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-6 relative">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                        </svg>
                     </div>
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/buffet.jpg') }}" alt="Menu 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="relative group rounded-lg overflow-hidden aspect-square">
-                        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Menu 3" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold text-white">{{ $name }}</h2>
+                        <p class="text-white/80 text-sm">Paket Catering Premium</p>
                     </div>
                 </div>
             </div>

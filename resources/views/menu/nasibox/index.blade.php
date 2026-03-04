@@ -127,7 +127,7 @@
                                     <div class="mt-5 space-y-2">
                                         @auth
                                         <!-- Pesan Sekarang -->
-                                        <a href="{{ route('checkout.show') }}?package=nasibox&name={{ urlencode($menu->nama) }}&price={{ $menu->harga }}&min={{ $menu->min_order }}"
+                                        <a href="{{ route('checkout.show') }}?package=nasibox&name={{ urlencode($menu->nama) }}&price={{ $menu->harga }}&min={{ $menu->min_order }}&menu_id={{ $menu->id }}"
                                             class="block w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-bold text-center">
                                             <span class="flex items-center justify-center gap-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

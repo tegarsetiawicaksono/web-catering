@@ -12,6 +12,7 @@ class PaymentVerification extends Model
 
     protected $fillable = [
         'order_id',
+        'payment_type',
         'payment_proof',
         'bank_name',
         'account_number',
@@ -21,6 +22,8 @@ class PaymentVerification extends Model
         'transfer_date',
         'status',
         'verification_notes',
+        'verified_by',
+        'verified_at',
         'ip_address',
         'user_agent',
         'metadata'
@@ -45,8 +48,36 @@ class PaymentVerification extends Model
         $this->verified_at = now();
         $this->save();
 
-        // Update order status
-        $this->order->updatePaymentStatus('paid');
+        $order = $this->order;
+        
+        // Update order based on payment type
+        if ($this->payment_type === 'dp') {
+            // DP payment verified
+            $order->update([
+                'paid_amount' => $this->amount,
+                'remaining_amount' => $order->total_price - $this->amount,
+                'payment_status' => 'dp_paid'
+            ]);
+            // Don't change order status yet, waiting for full payment
+        } elseif ($this->payment_type === 'remaining') {
+            // Remaining payment verified
+            $order->update([
+                'paid_amount' => $order->paid_amount + $this->amount,
+                'remaining_amount' => 0,
+                'payment_status' => 'fully_paid'
+            ]);
+            // Update order status to paid
+            $order->updatePaymentStatus('paid');
+        } else {
+            // Full payment verified
+            $order->update([
+                'paid_amount' => $this->amount,
+                'remaining_amount' => 0,
+                'payment_status' => 'fully_paid'
+            ]);
+            // Update order status to paid
+            $order->updatePaymentStatus('paid');
+        }
     }
 
     public function rejectPayment($notes)

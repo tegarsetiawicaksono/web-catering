@@ -10,15 +10,22 @@ class PaymentVerificationController extends Controller
 {
     public function index()
     {
-        $pendingOrders = Order::where('payment_status', 'pending')
-            ->whereNotNull('payment_proof')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Get orders with pending payment verification
+        $pendingOrders = Order::whereHas('latestPaymentVerification', function ($query) {
+            $query->where('status', 'pending');
+        })
+        ->with('latestPaymentVerification')
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        $verifiedOrders = Order::whereIn('payment_status', ['verified', 'paid'])
-            ->orderBy('updated_at', 'desc')
-            ->limit(10)
-            ->get();
+        // Get orders with verified payment
+        $verifiedOrders = Order::whereHas('latestPaymentVerification', function ($query) {
+            $query->where('status', 'verified');
+        })
+        ->with('latestPaymentVerification')
+        ->orderBy('updated_at', 'desc')
+        ->limit(10)
+        ->get();
 
         return view('admin.payment-verifications.index', compact('pendingOrders', 'verifiedOrders'));
     }
@@ -51,7 +58,9 @@ class PaymentVerificationController extends Controller
             $verification->status = 'verified';
             $verification->verified_at = now();
             $verification->verified_by = auth()->id();
-            $verification->save();
+            $saved = $verification->save();
+
+            \Log::info('Verification save result', ['saved' => $saved, 'new_status' => $verification->status]);
 
             // Update order payment status
             $order->payment_status = 'verified';
@@ -62,16 +71,24 @@ class PaymentVerificationController extends Controller
                 $order->status = 'confirmed';
             }
             
-            $order->save();
+            $orderSaved = $order->save();
 
-            \Log::info('Payment verified', [
+            // Refresh the order to get latest data
+            $order->refresh();
+            $order->load('latestPaymentVerification');
+
+            \Log::info('Payment verified - Complete', [
                 'order_id' => $order->id, 
                 'verification_id' => $verification->id,
+                'verification_saved' => $saved,
+                'order_saved' => $orderSaved,
+                'verification_status_after_save' => $verification->status,
+                'latest_verification_status' => $order->latestPaymentVerification?->status,
                 'new_payment_status' => $order->payment_status,
                 'new_order_status' => $order->status
             ]);
 
-            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Dikonfirmasi.');
+            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Terverifikasi.');
         } else {
             // Update verification status to rejected
             $verification->status = 'rejected';

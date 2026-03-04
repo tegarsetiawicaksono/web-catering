@@ -288,33 +288,31 @@
                     <!-- Right side items -->
                     <div class="flex items-center space-x-4">
                         <!-- Notifications -->
-                        <div x-data="{ open: false }" @click.away="open = false" class="relative">
-                            @php
-                                $lastReadAt = auth()->user()->last_notification_read_at;
-                                
-                                // Hitung hanya notifikasi baru (setelah terakhir dibaca)
-                                $notificationQuery = \App\Models\Order::where(function($q) {
-                                    $q->where('status', 'pending')
-                                      ->orWhere('status', 'confirmed');
-                                });
-                                
-                                if ($lastReadAt) {
-                                    $notificationQuery->where('created_at', '>', $lastReadAt);
-                                }
-                                
-                                $notificationCount = $notificationQuery->count();
-                            @endphp
+                        @php
+                            $lastReadAt = auth()->user()->last_notification_read_at;
                             
-                            <button @click="open = !open; if(open) { fetch('{{ route('admin.notifications.mark-read') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } }) }" 
+                            // Hitung hanya notifikasi baru (setelah terakhir dibaca)
+                            $notificationQuery = \App\Models\Order::where(function($q) {
+                                $q->where('status', 'pending')
+                                  ->orWhere('status', 'confirmed');
+                            });
+                            
+                            if ($lastReadAt) {
+                                $notificationQuery->where('created_at', '>', $lastReadAt);
+                            }
+                            
+                            $notificationCount = $notificationQuery->count();
+                        @endphp
+                        <div x-data="{ open: false, hasNotification: {{ $notificationCount > 0 ? 'true' : 'false' }}, notifCount: {{ $notificationCount }} }" @click.away="open = false" class="relative">
+                            
+                            <button @click="open = !open; if(open && hasNotification) { fetch('{{ route('admin.notifications.mark-read') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } }).then(response => { if(response.ok) { hasNotification = false; notifCount = 0; } }).catch(err => console.error('Error marking notifications as read:', err)); }" 
                                 class="relative text-gray-500 transition-colors hover:text-gray-700 focus:outline-none">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
-                                @if($notificationCount > 0)
-                                    <span class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-indigo-600 rounded-full">
-                                        {{ $notificationCount > 99 ? '99+' : $notificationCount }}
-                                    </span>
-                                @endif
+                                <span x-show="hasNotification" x-cloak class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-indigo-600 rounded-full">
+                                    <span x-text="notifCount > 99 ? '99+' : notifCount"></span>
+                                </span>
                             </button>
 
                             <!-- Dropdown Notifikasi -->
@@ -332,11 +330,9 @@
                                 <div class="px-4 py-3 border-b border-gray-200">
                                     <div class="flex items-center justify-between">
                                         <h3 class="text-sm font-semibold text-gray-900">Notifikasi</h3>
-                                        @if($notificationCount > 0)
-                                            <span class="px-2 py-1 text-xs font-medium text-indigo-900 bg-indigo-100 rounded-full">
-                                                {{ $notificationCount }} Baru
-                                            </span>
-                                        @endif
+                                        <span x-show="hasNotification" x-cloak class="px-2 py-1 text-xs font-medium text-indigo-900 bg-indigo-100 rounded-full">
+                                            <span x-text="notifCount"></span> Baru
+                                        </span>
                                     </div>
                                 </div>
 
@@ -429,15 +425,59 @@
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto bg-gray-50">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <!-- Success Notification (Auto-hide after 5 seconds) -->
                     @if (session('success'))
-                    <div class="p-4 mb-6 text-green-800 bg-green-100 border-l-4 border-green-500 rounded">
-                        {{ session('success') }}
+                    <div x-data="{ show: true }" 
+                        x-show="show" 
+                        x-init="setTimeout(() => show = false, 5000)"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform translate-y-2"
+                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                        x-transition:leave-end="opacity-0 transform translate-y-2"
+                        class="p-4 mb-6 text-green-800 bg-green-100 border-l-4 border-green-500 rounded shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>{{ session('success') }}</span>
+                            </div>
+                            <button @click="show = false" class="text-green-700 hover:text-green-900 focus:outline-none">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     @endif
 
+                    <!-- Error Notification (Auto-hide after 5 seconds) -->
                     @if (session('error'))
-                    <div class="p-4 mb-6 text-red-800 bg-red-100 border-l-4 border-red-500 rounded">
-                        {{ session('error') }}
+                    <div x-data="{ show: true }" 
+                        x-show="show" 
+                        x-init="setTimeout(() => show = false, 5000)"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform translate-y-2"
+                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                        x-transition:leave-end="opacity-0 transform translate-y-2"
+                        class="p-4 mb-6 text-red-800 bg-red-100 border-l-4 border-red-500 rounded shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>{{ session('error') }}</span>
+                            </div>
+                            <button @click="show = false" class="text-red-700 hover:text-red-900 focus:outline-none">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     @endif
 

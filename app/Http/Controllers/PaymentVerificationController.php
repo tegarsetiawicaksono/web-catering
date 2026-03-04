@@ -13,14 +13,42 @@ class PaymentVerificationController extends Controller
     public function store(Request $request, Order $order)
     {
         $request->validate([
+            'payment_type' => 'required|in:dp,full',
             'payment_proof' => 'required|image|max:2048', // max 2MB
             'bank_name' => 'required|string',
             'account_number' => 'required|string',
             'account_name' => 'required|string',
             'amount' => 'required|numeric|min:1',
-            'transfer_receipt_number' => 'required|string',
+            'transfer_receipt_number' => 'nullable|string',
             'transfer_date' => 'required|date'
         ]);
+
+        $paymentType = $request->payment_type;
+        
+        // Calculate DP amount if payment type is DP
+        $dpPercentage = 50; // Default 50%
+        $dpAmount = round($order->total_price * ($dpPercentage / 100));
+        $expectedAmount = $paymentType === 'dp' ? $dpAmount : $order->total_price;
+        
+        // Update order DP fields
+        if ($paymentType === 'dp') {
+            $order->update([
+                'dp_percentage' => $dpPercentage,
+                'dp_amount' => $dpAmount,
+                'paid_amount' => 0,
+                'remaining_amount' => $order->total_price,
+                'payment_status' => 'unpaid'
+            ]);
+        } else {
+            // Full payment
+            $order->update([
+                'dp_percentage' => 0,
+                'dp_amount' => 0,
+                'paid_amount' => 0,
+                'remaining_amount' => $order->total_price,
+                'payment_status' => 'unpaid'
+            ]);
+        }
 
         // Process and store payment proof
         $paymentProof = $request->file('payment_proof');
@@ -29,6 +57,7 @@ class PaymentVerificationController extends Controller
         // Create payment verification record
         $verification = new PaymentVerification([
             'order_id' => $order->id,
+            'payment_type' => $paymentType,
             'payment_proof' => $path,
             'bank_name' => $request->bank_name,
             'account_number' => $request->account_number,
@@ -50,14 +79,19 @@ class PaymentVerificationController extends Controller
             // Log suspicious activity for admin review
             \Log::warning('Suspicious payment verification', [
                 'order_id' => $order->id,
+                'payment_type' => $paymentType,
                 'flags' => $fraudCheck['flags'],
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent()
             ]);
         }
 
-        return redirect()->route('home')
-            ->with('success', 'Bukti pembayaran berhasil diunggah dan sedang diverifikasi. Terima kasih!');
+        $message = $paymentType === 'dp' 
+            ? 'Bukti pembayaran DP berhasil diunggah. Silakan bayar sisa pembayaran sebelum tanggal event.' 
+            : 'Bukti pembayaran lunas berhasil diunggah dan sedang diverifikasi. Terima kasih!';
+
+        return redirect()->route('orders.show', $order)
+            ->with('success', $message);
     }
 
     public function verify(Request $request, PaymentVerification $verification)

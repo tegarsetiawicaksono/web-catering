@@ -79,6 +79,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // User management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     
     // Notifications
     Route::post('/notifications/mark-read', function() {
@@ -97,6 +98,7 @@ Route::get('/menu/snack', [MenuController::class, 'snack'])->name('menu.snack');
 
 // Checkout routes - Multi-step
 Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout/from-cart', [App\Http\Controllers\CheckoutController::class, 'fromCart'])->name('checkout.from-cart');
     Route::get('/checkout/direct', [App\Http\Controllers\CheckoutController::class, 'show'])->name('checkout.show');
     Route::get('/checkout/step-1', [App\Http\Controllers\CheckoutController::class, 'step1'])->name('checkout.step1');
     Route::post('/checkout/step-1', [App\Http\Controllers\CheckoutController::class, 'storeStep1'])->name('checkout.step1.store');

@@ -978,9 +978,6 @@
       // Category filtering is now handled by Alpine.js
     </script>
 
-    <!-- Add Alpine.js to your head section -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     <!-- Add this script before closing body tag -->
     <script>
       function imageSlider() {

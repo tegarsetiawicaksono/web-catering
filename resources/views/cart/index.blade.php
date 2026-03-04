@@ -40,11 +40,19 @@
                 <div class="overflow-hidden transition-all duration-300 bg-white shadow-md hover:shadow-lg rounded-xl">
                     <div class="p-6">
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <!-- Item Icon -->
-                            <div class="flex items-center justify-center flex-shrink-0 w-16 h-16 rounded-lg bg-gradient-to-br from-orange-100 to-orange-200">
-                                <svg class="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                                </svg>
+                            <!-- Item Image/Icon -->
+                            <div class="flex-shrink-0">
+                                @if(isset($item['image']) && $item['image'])
+                                <div class="w-20 h-20 overflow-hidden rounded-lg shadow-md">
+                                    <img src="{{ asset('foto/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-cover w-full h-full">
+                                </div>
+                                @else
+                                <div class="flex items-center justify-center w-20 h-20 rounded-lg bg-gradient-to-br from-orange-100 to-orange-200">
+                                    <svg class="w-10 h-10 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                    </svg>
+                                </div>
+                                @endif
                             </div>
 
                             <!-- Item Details -->
@@ -54,7 +62,10 @@
                                     <span class="font-medium text-orange-600">Rp {{ number_format($item['price'], 0, ',', '.') }}</span>
                                     <span class="text-gray-400">/porsi</span>
                                 </p>
-                                <p class="mt-1 text-xs text-gray-400">Min. pemesanan 50 porsi</p>
+                                @php
+                                    $minOrder = $item['min_order'] ?? 50;
+                                @endphp
+                                <p class="mt-1 text-xs text-gray-400">Min. pemesanan {{ $minOrder }} porsi</p>
                             </div>
 
                             <!-- Quantity & Actions -->
@@ -66,8 +77,8 @@
                                         <input type="number" 
                                             name="quantity" 
                                             value="{{ $item['quantity'] }}" 
-                                            min="50" 
-                                            step="10"
+                                            min="{{ $minOrder }}" 
+                                            step="{{ max(1, floor($minOrder / 10)) }}"
                                             class="w-24 px-3 py-2 text-center border-0 focus:ring-0 focus:outline-none">
                                         <span class="pr-3 text-sm text-gray-500">porsi</span>
                                     </div>
@@ -136,7 +147,7 @@
 
                         <!-- Footer Actions -->
                         <div class="p-6 space-y-3 border-t border-gray-200 bg-gray-50">
-                            <a href="{{ route('checkout.show') }}"
+                            <a href="{{ route('checkout.from-cart') }}"
                                 class="flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white transition-all duration-200 rounded-lg shadow-md bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />

@@ -100,18 +100,18 @@
                                     </div>
                                     <div class="md:hidden">
                                         @php
-                                        $statusClass = match($order->payment_status) {
+                                        $statusClass = match($order->status) {
                                         'pending' => 'status-pending',
-                                        'verified' => 'status-verified',
-                                        'paid' => 'status-verified',
+                                        'confirmed' => 'status-verified',
+                                        'processing' => 'status-processing',
                                         'completed' => 'status-completed',
                                         'cancelled' => 'status-cancelled',
                                         default => 'status-pending'
                                         };
-                                        $statusText = match($order->payment_status) {
+                                        $statusText = match($order->status) {
                                         'pending' => 'Menunggu Pembayaran',
-                                        'verified' => 'Terverifikasi',
-                                        'paid' => 'Dibayar',
+                                        'confirmed' => 'Terverifikasi',
+                                        'processing' => 'Diproses',
                                         'completed' => 'Selesai',
                                         'cancelled' => 'Dibatalkan',
                                         default => 'Pending'
@@ -149,18 +149,18 @@
                                     </p>
                                 </div>
                                 @php
-                                $statusClass = match($order->payment_status) {
+                                $statusClass = match($order->status) {
                                 'pending' => 'status-pending',
-                                'verified' => 'status-verified',
-                                'paid' => 'status-verified',
+                                'confirmed' => 'status-verified',
+                                'processing' => 'status-processing',
                                 'completed' => 'status-completed',
                                 'cancelled' => 'status-cancelled',
                                 default => 'status-pending'
                                 };
-                                $statusText = match($order->payment_status) {
+                                $statusText = match($order->status) {
                                 'pending' => 'Menunggu Pembayaran',
-                                'verified' => 'Terverifikasi',
-                                'paid' => 'Dibayar',
+                                'confirmed' => 'Terverifikasi',
+                                'processing' => 'Diproses',
                                 'completed' => 'Selesai',
                                 'cancelled' => 'Dibatalkan',
                                 default => 'Pending'
@@ -325,6 +325,20 @@
                                         </div>
                                         @endif
                                     @else
+                                        @if($order->payment_method === 'cash')
+                                        <div class="flex items-center space-x-3 bg-green-50 p-4 rounded-lg border-2 border-green-200">
+                                            <div class="flex-shrink-0">
+                                                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="font-medium text-gray-900">💵 Pembayaran Tunai (Cash)</p>
+                                                <p class="text-sm text-gray-600">Pesanan akan dibayar tunai saat pengiriman. Total: <strong class="text-green-700">Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong></p>
+                                                <a href="{{ route('orders.show', $order) }}" class="text-sm text-orange-600 hover:text-orange-700 font-medium mt-1 inline-block">Lihat Detail Pesanan →</a>
+                                            </div>
+                                        </div>
+                                        @else
                                         <div class="flex items-center space-x-3 bg-orange-50 p-4 rounded-lg">
                                             <div class="flex-shrink-0">
                                                 <svg class="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
@@ -337,6 +351,7 @@
                                                 <a href="{{ route('orders.show', $order) }}" class="inline-block mt-2 px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition">Upload Bukti Sekarang →</a>
                                             </div>
                                         </div>
+                                        @endif
                                     @endif
                                 </div>
 

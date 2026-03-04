@@ -12,6 +12,22 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <ul class="list-disc list-inside">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="bg-white rounded-lg shadow p-6">
@@ -95,13 +111,16 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="inline" x-data>
+                                <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="inline" x-data="{ submitting: false }" @submit="submitting = true">
                                     @csrf
                                     <input type="hidden" name="action" value="verify">
                                     <button type="submit"
-                                        @click.prevent="if(confirm('Verifikasi pembayaran ini?')) $el.closest('form').submit()"
-                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs mr-2">
-                                        ✓ Verifikasi
+                                        @click="if(!confirm('Verifikasi pembayaran ini?')) { $event.preventDefault(); }"
+                                        :disabled="submitting"
+                                        :class="submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+                                        class="text-white px-3 py-1 rounded text-xs mr-2 transition-colors">
+                                        <span x-show="!submitting">✓ Verifikasi</span>
+                                        <span x-show="submitting" x-cloak>⏳ Memproses...</span>
                                     </button>
                                 </form>
                                 <button onclick="showRejectModal({{ $order->id }})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">
@@ -160,13 +179,16 @@
                     </div>
 
                     <div class="flex gap-2">
-                        <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="flex-1" x-data>
+                        <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="flex-1" x-data="{ submitting: false }" @submit="submitting = true">
                             @csrf
                             <input type="hidden" name="action" value="verify">
                             <button type="submit"
-                                @click.prevent="if(confirm('Verifikasi pembayaran ini?')) $el.closest('form').submit()"
-                                class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm">
-                                ✓ Verifikasi
+                                @click="if(!confirm('Verifikasi pembayaran ini?')) { $event.preventDefault(); }"
+                                :disabled="submitting"
+                                :class="submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+                                class="w-full text-white px-3 py-2 rounded text-sm transition-colors">
+                                <span x-show="!submitting">✓ Verifikasi</span>
+                                <span x-show="submitting" x-cloak>⏳ Memproses...</span>
                             </button>
                         </form>
                         <button onclick="showRejectModal({{ $order->id }})" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">
