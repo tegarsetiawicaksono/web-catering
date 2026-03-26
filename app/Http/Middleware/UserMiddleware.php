@@ -21,10 +21,10 @@ class UserMiddleware
             return redirect()->route('login');
         }
 
-        // Redirect admin to admin dashboard (but allow them to access profile and orders)
+        // Redirect admin to admin dashboard (but allow selected user routes)
         if (Auth::user()->is_admin) {
-            // Allow admin to access profile and order routes
-            if ($request->routeIs('profile.*') || $request->routeIs('orders.*')) {
+            // Allow admin to access profile, order, and cart routes
+            if ($request->routeIs('profile.*') || $request->routeIs('orders.*') || $request->routeIs('cart.*')) {
                 return $next($request);
             }
             // Redirect to admin dashboard for other user routes

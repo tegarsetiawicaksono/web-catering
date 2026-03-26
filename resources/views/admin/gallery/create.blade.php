@@ -18,10 +18,9 @@
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('category') border-red-500 @enderror" 
                             required>
                         <option value="">-- Pilih Kategori --</option>
-                        <option value="buffet" @selected(old('category')=='buffet')>Buffet</option>
-                        <option value="tumpeng" @selected(old('category')=='tumpeng')>Tumpeng</option>
-                        <option value="nasibox" @selected(old('category')=='nasibox')>Nasi Box</option>
-                        <option value="snack" @selected(old('category')=='snack')>Snack</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->slug }}" @selected(old('category')==$category->slug)>{{ $category->nama }}</option>
+                        @endforeach
                     </select>
                     @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

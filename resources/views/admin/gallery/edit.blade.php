@@ -18,10 +18,9 @@
                     <select name="category" 
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('category') border-red-500 @enderror" 
                             required>
-                        <option value="buffet" @selected($gallery->category=='buffet')>Buffet</option>
-                        <option value="tumpeng" @selected($gallery->category=='tumpeng')>Tumpeng</option>
-                        <option value="nasibox" @selected($gallery->category=='nasibox')>Nasi Box</option>
-                        <option value="snack" @selected($gallery->category=='snack')>Snack</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->slug }}" @selected(old('category', $gallery->category)===$category->slug || (old('category', $gallery->category)==='nasibox' && $category->slug==='nasi-box'))>{{ $category->nama }}</option>
+                        @endforeach
                     </select>
                     @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -32,7 +31,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Foto Saat Ini</label>
                     <div class="relative aspect-video w-full max-w-md bg-gray-100 rounded-lg overflow-hidden">
-                        <img src="{{ asset('storage/'.$gallery->path) }}" 
+                        <img src="{{ asset('storage/'.$gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
                              alt="Current photo" 
                              class="w-full h-full object-cover">
                     </div>

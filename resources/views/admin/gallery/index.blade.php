@@ -22,10 +22,9 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kategori</label>
                 <select name="category" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <option value="">Semua Kategori</option>
-                    <option value="buffet" @selected(request('category')=='buffet')>Buffet</option>
-                    <option value="tumpeng" @selected(request('category')=='tumpeng')>Tumpeng</option>
-                    <option value="nasibox" @selected(request('category')=='nasibox')>Nasi Box</option>
-                    <option value="snack" @selected(request('category')=='snack')>Snack</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->slug }}" @selected(request('category')==$category->slug)>{{ $category->nama }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="flex gap-2">
@@ -41,22 +40,12 @@
         </form>
     </div>
 
-    <!-- Success Message -->
-    @if(session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 flex items-center">
-            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-            </svg>
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Gallery Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         @forelse($galleries as $gallery)
             <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
                 <div class="relative aspect-video overflow-hidden bg-gray-100">
-                    <img src="{{ asset('storage/'.$gallery->path) }}" 
+                    <img src="{{ asset('storage/'.$gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
                          alt="{{ $gallery->caption }}" 
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute top-2 right-2">
@@ -65,7 +54,9 @@
                                 'buffet' => 'bg-blue-500',
                                 'tumpeng' => 'bg-green-500',
                                 'nasibox' => 'bg-yellow-500',
+                                'nasi-box' => 'bg-yellow-500',
                                 'snack' => 'bg-pink-500',
+                                'hampers' => 'bg-rose-500',
                             ];
                         @endphp
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-white {{ $categoryColors[$gallery->category] ?? 'bg-gray-500' }} rounded-full">

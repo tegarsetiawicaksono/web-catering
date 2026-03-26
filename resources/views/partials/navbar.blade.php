@@ -35,6 +35,7 @@
       <!-- KANAN: cart dan login/profile -->
       <div class="flex-1 flex justify-end items-center space-x-2 sm:space-x-4">
         @auth
+        @if(!Auth::user()->is_admin)
         <!-- Riwayat Pesanan Button - Hidden on mobile -->
         <a href="{{ route('orders.history') }}" class="hidden sm:block relative p-2 hover:bg-gray-100 rounded-full group" title="Riwayat Pesanan">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,11 +52,20 @@
                 class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
           </span>
         </a>
+        @endif
+          @if(Auth::user()->is_admin)
+          <!-- Cart Button - Keep visible for admin as requested -->
+          <a href="{{ url('/cart') }}" class="hidden sm:inline-flex items-center justify-center relative w-10 h-10 hover:bg-gray-100 rounded-full group transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </a>
+          @endif
         @endauth
 
         @auth
         <!-- Profile Menu (Desktop) -->
-        <div class="hidden sm:block relative" x-data="{ isOpen: false }">
+        <div class="hidden sm:block relative order-3" x-data="{ isOpen: false }">
           <button @click="isOpen = !isOpen" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-full">
             <span class="text-sm md:text-base text-gray-600">Hi, {{ Auth::user()->name }}</span>
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +128,7 @@
         </div>
         @endauth
         <!-- Search Button and Form -->
-        <div class="relative" x-data="{ isOpen: false, searchQuery: '' }">
+        <div class="relative @auth order-2 @endauth" x-data="{ isOpen: false, searchQuery: '' }">
           <button type="button"
             class="p-2 hover:bg-gray-100 rounded-full"
             @click="isOpen = !isOpen">

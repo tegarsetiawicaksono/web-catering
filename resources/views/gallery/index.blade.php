@@ -12,29 +12,34 @@
     </div>
 
     <!-- Filter Section -->
+    @php
+        $normalizedSelectedCategory = in_array(request('category'), ['nasibox', 'nasi-box'], true)
+            ? 'nasi-box'
+            : request('category');
+        $filterCategories = collect($categories ?? [])
+            ->map(function ($category) {
+                $category->filter_slug = in_array($category->slug, ['nasibox', 'nasi-box'], true)
+                    ? 'nasi-box'
+                    : $category->slug;
+
+                return $category;
+            })
+            ->unique('filter_slug')
+            ->values();
+    @endphp
     <div class="bg-white border-b sticky top-16 z-40 shadow-sm">
         <div class="container mx-auto px-4 py-4">
             <div class="flex flex-wrap gap-3 justify-center">
                 <a href="{{ route('gallery.index') }}" 
-                   class="px-6 py-2 rounded-full font-medium transition-all {{ !request('category') ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                   class="px-6 py-2 rounded-full font-medium transition-all {{ !$normalizedSelectedCategory ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                     Semua
                 </a>
-                <a href="{{ route('gallery.index', ['category' => 'buffet']) }}" 
-                   class="px-6 py-2 rounded-full font-medium transition-all {{ request('category') == 'buffet' ? 'bg-blue-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    Buffet
+                @foreach($filterCategories as $categoryItem)
+                <a href="{{ route('gallery.index', ['category' => $categoryItem->filter_slug]) }}" 
+                   class="px-6 py-2 rounded-full font-medium transition-all {{ $normalizedSelectedCategory === $categoryItem->filter_slug ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                    {{ $categoryItem->nama }}
                 </a>
-                <a href="{{ route('gallery.index', ['category' => 'tumpeng']) }}" 
-                   class="px-6 py-2 rounded-full font-medium transition-all {{ request('category') == 'tumpeng' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    Tumpeng
-                </a>
-                <a href="{{ route('gallery.index', ['category' => 'nasibox']) }}" 
-                   class="px-6 py-2 rounded-full font-medium transition-all {{ request('category') == 'nasibox' ? 'bg-yellow-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    Nasi Box
-                </a>
-                <a href="{{ route('gallery.index', ['category' => 'snack']) }}" 
-                   class="px-6 py-2 rounded-full font-medium transition-all {{ request('category') == 'snack' ? 'bg-pink-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    Snack
-                </a>
+                @endforeach
             </div>
         </div>
     </div>
@@ -74,13 +79,15 @@
                             'buffet' => 'bg-blue-500',
                             'tumpeng' => 'bg-green-500',
                             'nasibox' => 'bg-yellow-500',
+                            'nasi-box' => 'bg-yellow-500',
                             'snack' => 'bg-pink-500',
+                            'hampers' => 'bg-rose-500',
                         ];
                     @endphp
                     <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white cursor-pointer"
-                         @click="openLightbox('{{ asset('storage/' . $gallery->path) }}', '{{ $gallery->caption }}')">
+                        @click="openLightbox('{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}', '{{ $gallery->caption }}')">
                         <div class="aspect-square overflow-hidden">
-                            <img src="{{ asset('storage/' . $gallery->path) }}" 
+                           <img src="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
                                  alt="{{ $gallery->caption }}" 
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>

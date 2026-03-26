@@ -33,10 +33,11 @@
                         <select name="kategori" id="kategori" required
                             class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('kategori') border-red-300 @enderror">
                             <option value="">Pilih Kategori</option>
-                            <option value="buffet" {{ old('kategori') === 'buffet' ? 'selected' : '' }}>Buffet</option>
-                            <option value="tumpeng" {{ old('kategori') === 'tumpeng' ? 'selected' : '' }}>Tumpeng</option>
-                            <option value="nasibox" {{ old('kategori') === 'nasibox' ? 'selected' : '' }}>Nasi Box</option>
-                            <option value="snack" {{ old('kategori') === 'snack' ? 'selected' : '' }}>Snack</option>
+                            @foreach($categories as $category)
+                            <option value="{{ $category->slug }}" {{ old('kategori') === $category->slug ? 'selected' : '' }}>
+                                {{ $category->nama }}
+                            </option>
+                            @endforeach
                         </select>
                         @error('kategori')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

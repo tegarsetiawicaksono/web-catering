@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -15,7 +14,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\GalleryPageController;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/auth.php';
 require __DIR__ . '/analysis.php';
 
 Route::get('/', function () {
@@ -94,6 +92,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/menu/buffet', [MenuController::class, 'buffet'])->name('menu.buffet');
 Route::get('/menu/tumpeng', [MenuController::class, 'tumpeng'])->name('menu.tumpeng');
 Route::get('/menu/nasibox', [MenuController::class, 'nasibox'])->name('menu.nasibox');
+Route::get('/menu/nasi-box', [MenuController::class, 'nasibox'])->name('menu.nasi-box');
+Route::get('/menu/hampers', [MenuController::class, 'hampers'])->name('menu.hampers');
 Route::get('/menu/snack', [MenuController::class, 'snack'])->name('menu.snack');
 
 // Checkout routes - Multi-step
@@ -117,6 +117,8 @@ Route::get('/checkout', function () {
 Route::get('/menu/es', function () {
     return view('menu.es.index');
 })->name('menu.es');
+
+Route::get('/menu/{slug}', [MenuController::class, 'category'])->name('menu.category');
 
 // Dashboard & Profile routes (User only)
 // Dashboard route removed - users don't need dashboard, they have order history
@@ -142,12 +144,6 @@ Route::get('/test-history', function () {
     }
     $orders = \App\Models\Order::where('user_id', auth()->id())->get();
     return view('orders.history', compact('orders'));
-});
-
-// Google OAuth Routes
-Route::prefix('auth/google')->group(function () {
-    Route::get('/', [SocialController::class, 'redirect'])->name('google.redirect');
-    Route::get('callback', [SocialController::class, 'callback'])->name('google.callback');
 });
 
 // CSRF Token Refresh Route for mobile compatibility

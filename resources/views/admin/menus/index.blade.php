@@ -17,18 +17,6 @@
             </div>
         </div>
 
-        <!-- Success Message -->
-        @if(session('success'))
-        <div class="p-4 mb-6 text-green-800 bg-green-100 border border-green-200 rounded-lg">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                {{ session('success') }}
-            </div>
-        </div>
-        @endif
-
         <!-- Filter Kategori -->
         <div class="mb-6">
             <div class="flex flex-wrap gap-2">
@@ -36,22 +24,12 @@
                     class="px-4 py-2 text-sm font-medium rounded-lg {{ !request('kategori') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
                     Semua
                 </a>
-                <a href="{{ route('admin.menus.index', ['kategori' => 'buffet']) }}"
-                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === 'buffet' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
-                    Buffet
+                @foreach($categories as $category)
+                <a href="{{ route('admin.menus.index', ['kategori' => $category->slug]) }}"
+                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === $category->slug ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    {{ $category->nama }}
                 </a>
-                <a href="{{ route('admin.menus.index', ['kategori' => 'tumpeng']) }}"
-                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === 'tumpeng' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
-                    Tumpeng
-                </a>
-                <a href="{{ route('admin.menus.index', ['kategori' => 'nasibox']) }}"
-                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === 'nasibox' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
-                    Nasi Box
-                </a>
-                <a href="{{ route('admin.menus.index', ['kategori' => 'snack']) }}"
-                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === 'snack' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
-                    Snack
-                </a>
+                @endforeach
             </div>
         </div>
 
@@ -93,8 +71,9 @@
                                 <span class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full
                                     {{ $menu->kategori === 'buffet' ? 'text-blue-800 bg-blue-100' : '' }}
                                     {{ $menu->kategori === 'tumpeng' ? 'text-green-800 bg-green-100' : '' }}
-                                    {{ $menu->kategori === 'nasibox' ? 'text-yellow-800 bg-yellow-100' : '' }}
-                                    {{ $menu->kategori === 'snack' ? 'text-purple-800 bg-purple-100' : '' }}">
+                                    {{ in_array($menu->kategori, ['nasibox', 'nasi-box']) ? 'text-yellow-800 bg-yellow-100' : '' }}
+                                    {{ $menu->kategori === 'snack' ? 'text-purple-800 bg-purple-100' : '' }}
+                                    {{ $menu->kategori === 'hampers' ? 'text-rose-800 bg-rose-100' : '' }}">
                                     {{ ucfirst($menu->kategori) }}
                                 </span>
                             </td>
@@ -159,8 +138,9 @@
                                     <span class="inline-flex px-2 py-1 mt-1 text-xs font-semibold rounded-full
                                         {{ $menu->kategori === 'buffet' ? 'text-blue-800 bg-blue-100' : '' }}
                                         {{ $menu->kategori === 'tumpeng' ? 'text-green-800 bg-green-100' : '' }}
-                                        {{ $menu->kategori === 'nasibox' ? 'text-yellow-800 bg-yellow-100' : '' }}
-                                        {{ $menu->kategori === 'snack' ? 'text-purple-800 bg-purple-100' : '' }}">
+                                        {{ in_array($menu->kategori, ['nasibox', 'nasi-box']) ? 'text-yellow-800 bg-yellow-100' : '' }}
+                                        {{ $menu->kategori === 'snack' ? 'text-purple-800 bg-purple-100' : '' }}
+                                        {{ $menu->kategori === 'hampers' ? 'text-rose-800 bg-rose-100' : '' }}">
                                         {{ ucfirst($menu->kategori) }}
                                     </span>
                                 </div>

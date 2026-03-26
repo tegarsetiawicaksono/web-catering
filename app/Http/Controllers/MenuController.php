@@ -8,47 +8,60 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    public function buffet()
+    private function renderCategoryMenu(string $slug)
     {
-        $menus = Menu::where('kategori', 'buffet')
+        $normalizedSlug = in_array($slug, ['nasibox', 'nasi-box'], true) ? 'nasi-box' : $slug;
+        $menuCategorySlugs = $normalizedSlug === 'nasi-box'
+            ? ['nasibox', 'nasi-box']
+            : [$normalizedSlug];
+
+        $menus = Menu::whereIn('kategori', $menuCategorySlugs)
             ->orderBy('harga')
             ->get();
-        
-        $category = Category::where('slug', 'buffet')->first();
 
-        return view('menu.buffet.index', compact('menus', 'category'));
+        $category = Category::whereIn('slug', $menuCategorySlugs)->first();
+
+        if (! $category) {
+            abort(404);
+        }
+
+        $view = match ($normalizedSlug) {
+            'buffet' => 'menu.buffet.index',
+            'tumpeng' => 'menu.tumpeng.index',
+            'snack' => 'menu.snack.index',
+            default => 'menu.nasibox.index',
+        };
+
+        return view($view, compact('menus', 'category'));
+    }
+
+    public function buffet()
+    {
+        return $this->renderCategoryMenu('buffet');
     }
 
     public function tumpeng()
     {
-        $menus = Menu::where('kategori', 'tumpeng')
-            ->orderBy('harga')
-            ->get();
-        
-        $category = Category::where('slug', 'tumpeng')->first();
-
-        return view('menu.tumpeng.index', compact('menus', 'category'));
+        return $this->renderCategoryMenu('tumpeng');
     }
 
     public function nasibox()
     {
-        $menus = Menu::where('kategori', 'nasibox')
-            ->orderBy('harga')
-            ->get();
-        
-        $category = Category::where('slug', 'nasibox')->first();
+        return $this->renderCategoryMenu('nasi-box');
+    }
 
-        return view('menu.nasibox.index', compact('menus', 'category'));
+    public function hampers()
+    {
+        return $this->renderCategoryMenu('hampers');
     }
 
     public function snack()
     {
-        $menus = Menu::where('kategori', 'snack')
-            ->orderBy('harga')
-            ->get();
-        
-        $category = Category::where('slug', 'snack')->first();
+        return $this->renderCategoryMenu('snack');
+    }
 
-        return view('menu.snack.index', compact('menus', 'category'));
+    public function category(string $slug)
+    {
+        return $this->renderCategoryMenu($slug);
     }
 }

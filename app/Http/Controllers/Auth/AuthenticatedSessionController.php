@@ -41,7 +41,15 @@ class AuthenticatedSessionController extends Controller
     // Callback from Google
     public function handleGoogleCallback()
     {
-        $user = Socialite::driver('google')->stateless()->user();
+        try {
+            $user = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Gagal login dengan Google. Silakan coba lagi.');
+        }
+
+        if (! $user->getEmail()) {
+            return redirect()->route('login')->with('error', 'Email Google tidak tersedia untuk akun ini.');
+        }
 
         // Find or create user logic here
         $existingUser = User::where('email', $user->getEmail())->first();
@@ -50,9 +58,10 @@ class AuthenticatedSessionController extends Controller
             Auth::login($existingUser);
         } else {
             $newUser = User::create([
-                'name' => $user->getName(),
+                'name' => $user->getName() ?: explode('@', $user->getEmail())[0],
                 'email' => $user->getEmail(),
                 'password' => bcrypt(str()->random(16)), // Random password
+                'email_verified_at' => now(),
             ]);
             Auth::login($newUser);
         }

@@ -36,8 +36,10 @@ class Gallery extends Model
         return match($this->category) {
             'buffet' => 'Buffet',
             'tumpeng' => 'Tumpeng',
+            'nasi-box' => 'Nasi Box',
             'nasibox' => 'Nasi Box',
             'snack' => 'Snack',
+            'hampers' => 'Hampers',
             default => ucfirst($this->category),
         };
     }

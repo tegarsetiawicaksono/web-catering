@@ -289,9 +289,9 @@
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 pb-12 sm:pb-16 md:pb-0">
           @foreach($categories as $category)
           <!-- {{ $category->nama }} -->
-          <div class="group">
-            <a href="{{ route('menu.' . $category->slug) }}" class="block transition transform hover:-translate-y-1">
-              <div class="bg-white/90 backdrop-blur-sm rounded-xl p-2 sm:p-3 md:p-5 shadow-lg group-hover:shadow-xl h-full">
+          <div class="group h-full">
+            <a href="{{ route('menu.category', ['slug' => $category->slug]) }}" class="block h-full transition transform hover:-translate-y-1">
+              <div class="bg-white/90 backdrop-blur-sm rounded-xl p-2 sm:p-3 md:p-5 shadow-lg group-hover:shadow-xl h-full border border-amber-100/80 flex flex-col">
                 <div class="relative overflow-hidden rounded-lg">
                   <img src="{{ asset($category->gambar_url ?? 'foto/buffet.jpg') }}" class="w-full h-24 sm:h-32 md:h-40 lg:h-48 object-cover transition duration-300 group-hover:scale-110" alt="Menu {{ $category->nama }}" />
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -301,7 +301,7 @@
                         Mulai dari 50 porsi
                       @elseif($category->slug === 'tumpeng')
                         Tersedia berbagai ukuran
-                      @elseif($category->slug === 'nasibox')
+                      @elseif(in_array($category->slug, ['nasibox', 'nasi-box']))
                         Min. 50 box
                       @elseif($category->slug === 'snack')
                         Min. 100 box
@@ -311,13 +311,13 @@
                     </span>
                   </div>
                 </div>
-                <h3 class="mt-2 sm:mt-3 md:mt-4 font-playfair font-bold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-amber-800">
+                <h3 class="mt-2 sm:mt-3 md:mt-4 font-playfair font-bold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-amber-800 line-clamp-2 min-h-[2.8rem] sm:min-h-[3.2rem]">
                   {{ $category->nama }}
                 </h3>
-                <p class="mt-1 md:mt-2 text-[10px] sm:text-xs md:text-sm font-montserrat text-gray-600 line-clamp-2">
+                <p class="mt-1 md:mt-2 text-[10px] sm:text-xs md:text-sm font-montserrat text-gray-600 line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">
                   {{ $category->deskripsi ?? 'Menu ' . strtolower($category->nama) . ' untuk berbagai acara' }}
                 </p>
-                <div class="mt-2 sm:mt-2 sm:mt-3 md:mt-4 space-y-1 md:space-y-2">
+                <div class="mt-2 sm:mt-3 md:mt-4 space-y-1 md:space-y-2 flex-grow">
                   {{-- Fitur Unggulan dengan icon checklist --}}
                   @if($category->fitur_unggulan)
                     @foreach(explode("\n", trim($category->fitur_unggulan)) as $item)
@@ -358,7 +358,7 @@
                       </svg>
                       <span>Free dekorasi tumpeng</span>
                     </div>
-                    @elseif($category->slug === 'nasibox')
+                    @elseif(in_array($category->slug, ['nasibox', 'nasi-box']))
                     <div class="flex items-center text-[10px] sm:text-xs md:text-sm text-gray-600">
                       <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-amber-500 mr-1 sm:mr-1.5 md:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -387,7 +387,7 @@
                     @endif
                   @endif
                 </div>
-                <div class="mt-3 sm:mt-4 md:mt-6 flex items-center justify-between gap-1">
+                <div class="mt-3 sm:mt-4 md:mt-6 flex items-center justify-between gap-2 pt-2 border-t border-amber-100/70">
                   <span class="text-amber-800 font-montserrat font-semibold text-[10px] sm:text-xs md:text-sm">
                     @if($category->harga_mulai)
                       @if($category->slug === 'tumpeng')
@@ -434,18 +434,28 @@
           </div>
 
           <!-- Gallery Category Tabs -->
-          <div class="mb-8" x-data="{ selectedCategory: 'all' }">
+            @php
+            $galleryFilterCategories = $categories
+              ->map(function ($category) {
+                $category->filter_slug = in_array($category->slug, ['nasibox', 'nasi-box'], true)
+                  ? 'nasi-box'
+                  : $category->slug;
+
+                return $category;
+              })
+              ->unique('filter_slug')
+              ->values();
+            @endphp
+            <div class="mb-8" x-data="{ selectedCategory: 'all' }">
             <!-- Mobile scroll indicator -->
             <div class="md:hidden text-center mb-2">
             </div>
             <div class="overflow-x-auto hide-scrollbar">
               <div class="flex md:flex-wrap md:justify-center gap-2 pb-2" style="min-width: max-content;">
                 <button @click="selectedCategory = 'all'; $dispatch('category-change', 'all')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'all' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Semua</button>
-                <button @click="selectedCategory = 'buffet'; $dispatch('category-change', 'buffet')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'buffet' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Buffet</button>
-                <button @click="selectedCategory = 'tumpeng'; $dispatch('category-change', 'tumpeng')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'tumpeng' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Tumpeng</button>
-                <button @click="selectedCategory = 'nasi-box'; $dispatch('category-change', 'nasi-box')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'nasi-box' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Nasi Box</button>
-                <button @click="selectedCategory = 'snack'; $dispatch('category-change', 'snack')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'snack' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Snack</button>
-                <button @click="selectedCategory = 'hampers'; $dispatch('category-change', 'hampers')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === 'hampers' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">Hampers</button>
+                @foreach($galleryFilterCategories as $galleryCategory)
+                  <button @click="selectedCategory = '{{ $galleryCategory->filter_slug }}'; $dispatch('category-change', '{{ $galleryCategory->filter_slug }}')" class="px-4 md:px-6 py-2 font-montserrat text-sm rounded-full hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap" :class="selectedCategory === '{{ $galleryCategory->filter_slug }}' ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold' : 'backdrop-blur-sm bg-white/30 text-white font-medium border border-white/20'">{{ $galleryCategory->nama }}</button>
+                @endforeach
               </div>
             </div>
           </div>
@@ -470,15 +480,11 @@
               @if(isset($galleries) && $galleries->count() > 0)
                 @foreach($galleries as $gallery)
                   @php
-                    $categoryMap = [
-                      'buffet' => 'buffet',
-                      'tumpeng' => 'tumpeng',
-                      'nasibox' => 'nasi-box',
-                      'snack' => 'snack'
-                    ];
-                    $dataCategory = $categoryMap[$gallery->category] ?? $gallery->category;
+                    $dataCategory = in_array($gallery->category, ['nasibox', 'nasi-box'], true)
+                      ? 'nasi-box'
+                      : $gallery->category;
                   @endphp
-                  <a href="{{ asset('storage/' . $gallery->path) }}" target="_blank" 
+                  <a href="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" target="_blank" 
                      class="gallery-item group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 block transform hover:-translate-y-1" 
                      data-category="{{ $dataCategory }}" 
                      x-show="isVisible($el)" 
@@ -486,7 +492,7 @@
                      x-transition:enter-start="opacity-0 scale-95" 
                      x-transition:enter-end="opacity-100 scale-100" 
                      @click="if(window.innerWidth < 768) $event.preventDefault()">
-                    <img src="{{ asset('storage/' . $gallery->path) }}" 
+                    <img src="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
                          alt="{{ $gallery->caption ?? ucfirst($gallery->category) }}" 
                          class="w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 object-cover transition duration-500 transform group-hover:scale-110">
                     @if($gallery->caption)

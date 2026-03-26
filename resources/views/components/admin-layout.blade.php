@@ -336,23 +336,6 @@
                                     @endforelse
                                 </div>
 
-                                <!-- Flash Messages -->
-                                @if(session('success') || session('error'))
-                                    <div class="border-t border-gray-200">
-                                        @if(session('success'))
-                                        <div class="flex items-center justify-between px-4 py-3 text-green-800 bg-green-100">
-                                            <span class="text-sm">{{ session('success') }}</span>
-                                            <button class="ml-2 text-green-600 hover:text-green-900" @click="open = false">&times;</button>
-                                        </div>
-                                        @endif
-                                        @if(session('error'))
-                                        <div class="flex items-center justify-between px-4 py-3 text-red-800 bg-red-100">
-                                            <span class="text-sm">{{ session('error') }}</span>
-                                            <button class="ml-2 text-red-600 hover:text-red-900" @click="open = false">&times;</button>
-                                        </div>
-                                        @endif
-                                    </div>
-                                @endif
                             </div>
                         </div>
                         <!-- Current Date -->
@@ -366,23 +349,37 @@
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto bg-gray-50">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    @if (session('success'))
-                    <div class="p-4 mb-6 text-green-800 bg-green-100 border-l-4 border-green-500 rounded">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                    @if (session('error'))
-                    <div class="p-4 mb-6 text-red-800 bg-red-100 border-l-4 border-red-500 rounded">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-
                     {{ $slot }}
                 </div>
             </main>
         </div>
     </div>
+
+    @if(session('success'))
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('show-notification', {
+                detail: {
+                    message: @json(session('success')),
+                    type: 'success'
+                }
+            }));
+        });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('show-notification', {
+                detail: {
+                    message: @json(session('error')),
+                    type: 'error'
+                }
+            }));
+        });
+    </script>
+    @endif
 
     @stack('scripts')
     <x-notification />

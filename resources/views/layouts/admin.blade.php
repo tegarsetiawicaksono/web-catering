@@ -120,14 +120,16 @@
                     Pesanan
                 </a>
 
-                <a href="{{ route('admin.menus.index') }}"
+                <a href="{{ route('admin.payments.index') }}"
                     class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
-                          @if(request()->routeIs('admin.menus.*')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                          @if(request()->routeIs('admin.payments.*')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
-                    Kelola Menu
+                    Pembayaran
                 </a>
+
+                <div class="pt-4 mt-4 border-t border-indigo-500 border-opacity-30"></div>
 
                 <a href="{{ route('admin.categories.index') }}"
                     class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
@@ -136,6 +138,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
                     Kelola Kategori
+                </a>
+
+                <a href="{{ route('admin.menus.index') }}"
+                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
+                          @if(request()->routeIs('admin.menus.*')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Kelola Menu
                 </a>
 
                 <a href="{{ route('admin.gallery.index') }}"
@@ -154,15 +165,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
                     Kelola Rekening
-                </a>
-
-                <a href="{{ route('admin.payments.index') }}"
-                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
-                          @if(request()->routeIs('admin.payments.*')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Pembayaran
                 </a>
 
                 <a href="{{ route('admin.users.index') }}"
@@ -425,62 +427,6 @@
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto bg-gray-50">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <!-- Success Notification (Auto-hide after 5 seconds) -->
-                    @if (session('success'))
-                    <div x-data="{ show: true }" 
-                        x-show="show" 
-                        x-init="setTimeout(() => show = false, 5000)"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 transform translate-y-2"
-                        x-transition:enter-end="opacity-100 transform translate-y-0"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="opacity-100 transform translate-y-0"
-                        x-transition:leave-end="opacity-0 transform translate-y-2"
-                        class="p-4 mb-6 text-green-800 bg-green-100 border-l-4 border-green-500 rounded shadow-md">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>{{ session('success') }}</span>
-                            </div>
-                            <button @click="show = false" class="text-green-700 hover:text-green-900 focus:outline-none">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Error Notification (Auto-hide after 5 seconds) -->
-                    @if (session('error'))
-                    <div x-data="{ show: true }" 
-                        x-show="show" 
-                        x-init="setTimeout(() => show = false, 5000)"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 transform translate-y-2"
-                        x-transition:enter-end="opacity-100 transform translate-y-0"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="opacity-100 transform translate-y-0"
-                        x-transition:leave-end="opacity-0 transform translate-y-2"
-                        class="p-4 mb-6 text-red-800 bg-red-100 border-l-4 border-red-500 rounded shadow-md">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>{{ session('error') }}</span>
-                            </div>
-                            <button @click="show = false" class="text-red-700 hover:text-red-900 focus:outline-none">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    @endif
-
                     {{ $slot ?? '' }}
                     @yield('content')
                 </div>
@@ -488,7 +434,34 @@
         </div>
     </div>
 
+    @if(session('success'))
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('show-notification', {
+                detail: {
+                    message: @json(session('success')),
+                    type: 'success'
+                }
+            }));
+        });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            window.dispatchEvent(new CustomEvent('show-notification', {
+                detail: {
+                    message: @json(session('error')),
+                    type: 'error'
+                }
+            }));
+        });
+    </script>
+    @endif
+
     @stack('scripts')
+    <x-notification />
 </body>
 
 </html>
