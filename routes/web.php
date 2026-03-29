@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\OrderingController;
 use App\Http\Controllers\GalleryPageController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +18,7 @@ require __DIR__ . '/analysis.php';
 
 Route::get('/', function () {
     $galleries = \App\Models\Gallery::orderByDesc('created_at')->get();
-    $categories = \App\Models\Category::where('is_active', true)->orderBy('nama')->get();
+    $categories = \App\Models\Category::where('is_active', true)->orderBy('order')->orderBy('id')->get();
     return view('home', compact('galleries', 'categories'));
 })->name('home');
 
@@ -53,6 +52,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Backward-compatible redirects for old ordering pages.
+    Route::redirect('/ordering/categories', '/admin/categories');
+    Route::redirect('/ordering/menus', '/admin/menus');
+    Route::redirect('/ordering/package-menus', '/admin/menus');
+
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
@@ -64,6 +68,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Category management
     Route::resource('categories', CategoryController::class);
+    Route::post('/categories/{category}/move', [CategoryController::class, 'move'])->name('categories.move');
+
+    // Menu ordering inside existing menu management
+    Route::post('/menus/{menu}/move', [AdminMenuController::class, 'move'])->name('menus.move');
 
     // Bank Account management
     Route::resource('bank-accounts', \App\Http\Controllers\Admin\BankAccountController::class);
@@ -78,14 +86,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-        // Ordering management
-        Route::get('/ordering/categories', [OrderingController::class, 'categoriesIndex'])->name('ordering.categories');
-        Route::post('/ordering/categories/{category}/update-order', [OrderingController::class, 'updateCategoryOrder'])->name('ordering.categories.update-order');
-        Route::get('/ordering/menus', [OrderingController::class, 'menusIndex'])->name('ordering.menus');
-        Route::post('/ordering/menus/{menu}/update-order', [OrderingController::class, 'updateMenuOrder'])->name('ordering.menus.update-order');
-        Route::get('/ordering/package-menus', [OrderingController::class, 'packageMenusIndex'])->name('ordering.package-menus');
-        Route::post('/ordering/package-menus/{packageMenu}/update-order', [OrderingController::class, 'updatePackageMenuOrder'])->name('ordering.package-menus.update-order');
-    
     // Notifications
     Route::post('/notifications/mark-read', function() {
         auth()->user()->update([
