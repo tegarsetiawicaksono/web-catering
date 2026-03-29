@@ -24,7 +24,8 @@ trait HasOrderStatus
         $this->payment_status = $status;
         if ($status === 'paid') {
             $this->paid_at = now();
-            $this->addStatusHistory('payment_confirmed', 'Pembayaran telah dikonfirmasi');
+            // Don't change order status here, only payment_status
+            // Order status stays as 'pending' or whatever it is
         }
         $this->save();
     }

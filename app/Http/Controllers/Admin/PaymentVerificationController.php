@@ -56,14 +56,8 @@ class PaymentVerificationController extends Controller
         if ($request->action === 'verify') {
             // Use the verifyPayment() method which handles auto-sending invoice
             $verification->verifyPayment();
-            
-            // Auto-update order status to confirmed if still pending
-            if ($verification->order->status === 'pending') {
-                $verification->order->status = 'confirmed';
-                $verification->order->save();
-            }
 
-            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Terverifikasi. Invoice sudah dikirim ke WhatsApp customer.');
+            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Invoice sudah dikirim ke WhatsApp customer.');
         } else {
             // Update verification status to rejected
             $verification->status = 'rejected';
