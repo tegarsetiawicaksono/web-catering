@@ -40,13 +40,16 @@ class WhatsAppService
     {
         $pdf = PDF::loadView('orders.invoice-pdf', compact('order'));
         $fileName = 'invoice-' . $order->id . '.pdf';
-        $pdfPath = storage_path('app/public/invoices/' . $fileName);
-
-        // Ensure directory exists
-        if (!Storage::exists('public/invoices')) {
-            Storage::makeDirectory('public/invoices');
+        
+        // Use absolute path and ensure directory exists
+        $invoicesDir = storage_path('app/public/invoices');
+        
+        // Create directory if it doesn't exist
+        if (!is_dir($invoicesDir)) {
+            @mkdir($invoicesDir, 0755, true);
         }
-
+        
+        $pdfPath = $invoicesDir . '/' . $fileName;
         $pdf->save($pdfPath);
         
         return $fileName;

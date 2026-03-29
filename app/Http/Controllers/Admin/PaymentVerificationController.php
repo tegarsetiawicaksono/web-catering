@@ -54,41 +54,16 @@ class PaymentVerificationController extends Controller
         \Log::info('Found verification', ['verification_id' => $verification->id, 'current_status' => $verification->status]);
 
         if ($request->action === 'verify') {
-            // Update verification status
-            $verification->status = 'verified';
-            $verification->verified_at = now();
-            $verification->verified_by = auth()->id();
-            $saved = $verification->save();
-
-            \Log::info('Verification save result', ['saved' => $saved, 'new_status' => $verification->status]);
-
-            // Update order payment status
-            $order->payment_status = 'verified';
-            $order->paid_at = now();
+            // Use the verifyPayment() method which handles auto-sending invoice
+            $verification->verifyPayment();
             
             // Auto-update order status to confirmed if still pending
-            if ($order->status === 'pending') {
-                $order->status = 'confirmed';
+            if ($verification->order->status === 'pending') {
+                $verification->order->status = 'confirmed';
+                $verification->order->save();
             }
-            
-            $orderSaved = $order->save();
 
-            // Refresh the order to get latest data
-            $order->refresh();
-            $order->load('latestPaymentVerification');
-
-            \Log::info('Payment verified - Complete', [
-                'order_id' => $order->id, 
-                'verification_id' => $verification->id,
-                'verification_saved' => $saved,
-                'order_saved' => $orderSaved,
-                'verification_status_after_save' => $verification->status,
-                'latest_verification_status' => $order->latestPaymentVerification?->status,
-                'new_payment_status' => $order->payment_status,
-                'new_order_status' => $order->status
-            ]);
-
-            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Terverifikasi.');
+            return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Status pesanan otomatis diubah menjadi Terverifikasi. Invoice sudah dikirim ke WhatsApp customer.');
         } else {
             // Update verification status to rejected
             $verification->status = 'rejected';
