@@ -26,6 +26,11 @@
     $categorySlug = $category->slug ?? 'nasibox';
     $isHampers = $categorySlug === 'hampers';
     $defaultImage = $isHampers ? 'foto/buffet.jpg' : 'foto/nasibox.jpg';
+    $categoryBackground = ($category && $category->gambar_background)
+        ? (\Illuminate\Support\Str::startsWith($category->gambar_background, ['foto/', 'http://', 'https://'])
+            ? $category->gambar_background
+            : 'foto/' . ltrim($category->gambar_background, '/'))
+        : $defaultImage;
     $pageTitle = $isHampers ? 'Paket Hampers' : 'Paket Nasi Box';
     $pageSubtitle = $isHampers
         ? 'Pilihan hampers eksklusif untuk hadiah dan momen spesial Anda'
@@ -37,7 +42,7 @@
     <!-- Header Section -->
     <div class="relative">
         <div class="absolute inset-0 z-0">
-            <img src="{{ $category && $category->gambar_background ? asset($category->gambar_background) : asset($defaultImage) }}" alt="{{ $pageTitle }} Background" class="w-full h-full object-cover">
+            <img src="{{ asset($categoryBackground) }}" alt="{{ $pageTitle }} Background" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='{{ asset($defaultImage) }}';">
             <div class="absolute inset-0 bg-black/50"></div>
         </div>
         <div class="relative z-10 py-20">
@@ -92,9 +97,14 @@
                             <div class="menu-figure-card rounded-2xl overflow-hidden h-full">
                                 <div class="relative menu-figure-image">
                                     @if($menu->gambar)
-                                    <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover">
+                                    @php
+                                        $menuImage = \Illuminate\Support\Str::startsWith($menu->gambar, ['foto/', 'http://', 'https://'])
+                                            ? $menu->gambar
+                                            : 'foto/' . ltrim($menu->gambar, '/');
+                                    @endphp
+                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset($defaultImage) }}';">
                                     @else
-                                    <img src="{{ asset($defaultImage) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover">
+                                    <img src="{{ asset($defaultImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                                     @endif
                                     <div class="absolute top-4 right-4 bg-gradient-to-r from-[#86765a] to-amber-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
                                         Rp {{ number_format($menu->harga, 0, ',', '.') }}/pax
@@ -204,9 +214,14 @@
                 <div class="menu-figure-card rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(92,67,38,0.22)]">
                     <div class="relative menu-figure-image">
                         @if($menu->gambar)
-                        <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover">
+                        @php
+                            $menuImage = \Illuminate\Support\Str::startsWith($menu->gambar, ['foto/', 'http://', 'https://'])
+                                ? $menu->gambar
+                                : 'foto/' . ltrim($menu->gambar, '/');
+                        @endphp
+                        <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset($defaultImage) }}';">
                         @else
-                        <img src="{{ asset($defaultImage) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover">
+                        <img src="{{ asset($defaultImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                         @endif
                         <div class="absolute top-4 right-4 bg-white text-[#86765a] px-4 py-1 rounded-full font-semibold">
                             Rp {{ number_format($menu->harga, 0, ',', '.') }}/pax

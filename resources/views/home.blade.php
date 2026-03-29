@@ -288,28 +288,19 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 pb-12 sm:pb-16 md:pb-0">
           @foreach($categories as $category)
+          @php
+            $categoryImage = (is_string($category->gambar_url) && trim($category->gambar_url) !== '')
+              ? (\Illuminate\Support\Str::startsWith($category->gambar_url, ['foto/', 'http://', 'https://'])
+                  ? $category->gambar_url
+                  : 'foto/' . ltrim($category->gambar_url, '/'))
+              : 'foto/buffet.jpg';
+          @endphp
           <!-- {{ $category->nama }} -->
           <div class="group h-full">
             <a href="{{ route('menu.category', ['slug' => $category->slug]) }}" class="block h-full transition transform hover:-translate-y-1">
               <div class="bg-white/90 backdrop-blur-sm rounded-xl p-2 sm:p-3 md:p-5 shadow-lg group-hover:shadow-xl h-full border border-amber-100/80 flex flex-col">
                 <div class="relative overflow-hidden rounded-lg">
-                  <img src="{{ asset($category->gambar_url ?? 'foto/buffet.jpg') }}" class="w-full h-24 sm:h-32 md:h-40 lg:h-48 object-cover transition duration-300 group-hover:scale-110" alt="Menu {{ $category->nama }}" />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div class="absolute bottom-1 sm:bottom-2 md:bottom-4 left-1 sm:left-2 md:left-4">
-                    <span class="px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1 bg-orange-500 text-white text-[10px] sm:text-xs md:text-sm font-montserrat rounded-full">
-                      @if($category->slug === 'buffet')
-                        Mulai dari 50 porsi
-                      @elseif($category->slug === 'tumpeng')
-                        Tersedia berbagai ukuran
-                      @elseif(in_array($category->slug, ['nasibox', 'nasi-box']))
-                        Min. 50 box
-                      @elseif($category->slug === 'snack')
-                        Min. 100 box
-                      @else
-                        Info lebih lanjut
-                      @endif
-                    </span>
-                  </div>
+                  <img src="{{ asset($categoryImage) }}" class="w-full h-36 sm:h-44 md:h-52 lg:h-60 object-contain bg-gradient-to-b from-amber-50 to-orange-50 p-2 transition duration-500 group-hover:scale-105" alt="Menu {{ $category->nama }}" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';" />
                 </div>
                 <h3 class="mt-2 sm:mt-3 md:mt-4 font-playfair font-bold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-amber-800 line-clamp-2 min-h-[2.8rem] sm:min-h-[3.2rem]">
                   {{ $category->nama }}
