@@ -147,6 +147,24 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Kelola Menu
+
+                                <a href="{{ route('admin.ordering.categories') }}"
+                                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
+                                          @if(request()->routeIs('admin.ordering.categories')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                    Atur Urutan Kategori
+                                </a>
+
+                                <a href="{{ route('admin.ordering.menus') }}"
+                                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
+                                          @if(request()->routeIs('admin.ordering.menus')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                    Atur Urutan Menu
+                                </a>
                 </a>
 
                 <a href="{{ route('admin.gallery.index') }}"

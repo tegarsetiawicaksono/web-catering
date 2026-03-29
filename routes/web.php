@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\OrderingController;
 use App\Http\Controllers\GalleryPageController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +77,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // User management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // Ordering management
+        Route::get('/ordering/categories', [OrderingController::class, 'categoriesIndex'])->name('ordering.categories');
+        Route::post('/ordering/categories/{category}/update-order', [OrderingController::class, 'updateCategoryOrder'])->name('ordering.categories.update-order');
+        Route::get('/ordering/menus', [OrderingController::class, 'menusIndex'])->name('ordering.menus');
+        Route::post('/ordering/menus/{menu}/update-order', [OrderingController::class, 'updateMenuOrder'])->name('ordering.menus.update-order');
+        Route::get('/ordering/package-menus', [OrderingController::class, 'packageMenusIndex'])->name('ordering.package-menus');
+        Route::post('/ordering/package-menus/{packageMenu}/update-order', [OrderingController::class, 'updatePackageMenuOrder'])->name('ordering.package-menus.update-order');
     
     // Notifications
     Route::post('/notifications/mark-read', function() {
