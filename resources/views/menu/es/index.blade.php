@@ -14,7 +14,7 @@
             <!-- Es Buah -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
                 <div class="relative">
-                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Buah" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Buah" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2 transition duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div class="absolute bottom-4 left-4">
                         <span class="px-3 py-1 bg-orange-500 text-white text-sm font-montserrat rounded-full">Favorit</span>
@@ -122,7 +122,7 @@
                                                 <div class="space-y-4">
                                                     <!-- Product Info -->
                                                     <div class="flex items-start space-x-4">
-                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Buah Spesial" class="w-20 h-20 object-cover rounded-lg">
+                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Buah Spesial" class="w-20 h-20 object-contain bg-orange-50 p-1 rounded-lg">
                                                         <div>
                                                             <h4 class="font-semibold text-gray-900">Es Buah Spesial</h4>
                                                             <div class="space-y-1">
@@ -210,7 +210,7 @@
             <!-- Es Campur -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
                 <div class="relative">
-                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Campur" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Campur" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2 transition duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
                 <div class="p-6">
@@ -315,7 +315,7 @@
                                                 <div class="space-y-4">
                                                     <!-- Product Info -->
                                                     <div class="flex items-start space-x-4">
-                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Campur" class="w-20 h-20 object-cover rounded-lg">
+                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Campur" class="w-20 h-20 object-contain bg-orange-50 p-1 rounded-lg">
                                                         <div>
                                                             <h4 class="font-semibold text-gray-900">Es Campur</h4>
                                                             <div class="space-y-1">
@@ -403,7 +403,7 @@
             <!-- Es Teler -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
                 <div class="relative">
-                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Teler" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ asset('foto/es.jpg') }}" alt="Es Teler" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2 transition duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
                 <div class="p-6">
@@ -508,7 +508,7 @@
                                                 <div class="space-y-4">
                                                     <!-- Product Info -->
                                                     <div class="flex items-start space-x-4">
-                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Teler" class="w-20 h-20 object-cover rounded-lg">
+                                                        <img src="{{ asset('foto/es.jpg') }}" alt="Es Teler" class="w-20 h-20 object-contain bg-orange-50 p-1 rounded-lg">
                                                         <div>
                                                             <h4 class="font-semibold text-gray-900">Es Teler</h4>
                                                             <div class="space-y-1">

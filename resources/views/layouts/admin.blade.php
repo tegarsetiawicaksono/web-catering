@@ -353,6 +353,15 @@
                                     @forelse($recentOrders as $order)
                                         @php
                                             $isNew = !$lastReadAt || $order->created_at > $lastReadAt;
+                                            $statusText = match($order->status) {
+                                                'pending' => 'Menunggu Pembayaran',
+                                                'confirmed' => 'Terverifikasi',
+                                                'processing' => 'Diproses',
+                                                'completed' => 'Selesai',
+                                                'cancelled' => 'Dibatalkan',
+                                                default => ucfirst($order->status),
+                                            };
+                                            $orderLabel = $order->order_number ?: $order->id;
                                         @endphp
                                         <a href="{{ route('admin.orders.show', $order->id) }}" 
                                             class="block px-4 py-3 transition-colors hover:bg-gray-50 border-b border-gray-100 {{ $isNew ? 'bg-indigo-50' : '' }}">
@@ -373,24 +382,24 @@
                                                 <div class="flex-1 ml-3">
                                                     <div class="flex items-center gap-2">
                                                         <p class="text-sm font-medium text-gray-900">
-                                                            Pesanan #{{ $order->order_number }}
+                                                            Pesanan #{{ $orderLabel }}
                                                         </p>
                                                         @if($isNew)
                                                             <span class="px-1.5 py-0.5 text-xs font-bold text-indigo-700 bg-indigo-200 rounded">BARU</span>
                                                         @endif
                                                     </div>
                                                     <p class="mt-1 text-xs text-gray-500">
-                                                        {{ $order->customer_name }} - Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                                        {{ $order->customer_name }} - Rp {{ number_format($order->total_price, 0, ',', '.') }}
                                                     </p>
                                                     <p class="mt-1 text-xs text-gray-400">
-                                                        {{ $order->created_at->diffForHumans() }}
+                                                        {{ $order->created_at->format('d/m/Y H:i') }}
                                                     </p>
                                                 </div>
                                                 <span class="px-2 py-1 text-xs font-medium rounded-full
                                                     @if($order->status === 'pending') bg-yellow-100 text-yellow-800
                                                     @elseif($order->status === 'confirmed') bg-blue-100 text-blue-800
                                                     @endif">
-                                                    {{ ucfirst($order->status) }}
+                                                    {{ $statusText }}
                                                 </span>
                                             </div>
                                         </a>

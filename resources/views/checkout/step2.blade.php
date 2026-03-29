@@ -33,7 +33,7 @@
                         <div class="flex gap-3">
                             @if(isset($item['image']) && $item['image'])
                             <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="{{ asset('foto/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                                <img src="{{ asset('foto/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-contain bg-white p-1">
                             </div>
                             @endif
                             <div class="flex-1">

@@ -324,41 +324,6 @@
                     </div>
                     @endif
 
-                    <!-- Admin Actions for Verification -->
-                    @if($order->latestPaymentVerification->status === 'pending')
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        <form action="{{ route('admin.payment-verifications.verify', $order) }}" method="POST" class="space-y-4">
-                            @csrf
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Aksi Verifikasi</label>
-                                <div class="flex gap-3">
-                                    <button type="submit" name="action" value="verify"
-                                        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        Verifikasi Pembayaran
-                                    </button>
-                                    <button type="button" onclick="document.getElementById('reject-form').classList.toggle('hidden')"
-                                        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Tolak Pembayaran
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="reject-form" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Penolakan</label>
-                                <textarea name="notes" rows="3" class="w-full rounded-lg border-gray-300" placeholder="Masukkan alasan penolakan..."></textarea>
-                                <button type="submit" name="action" value="reject"
-                                    class="mt-2 w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                    Konfirmasi Penolakan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    @endif
                 </div>
             </div>
             @endif

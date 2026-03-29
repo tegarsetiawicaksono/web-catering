@@ -2,8 +2,8 @@
     <div class="p-6">
         <!-- Header -->
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Verifikasi Pembayaran</h1>
-            <p class="text-gray-600 mt-1">Kelola dan verifikasi bukti pembayaran dari pelanggan</p>
+            <h1 class="text-2xl font-bold text-gray-800">Monitoring Pembayaran</h1>
+            <p class="text-gray-600 mt-1">Pantau bukti pembayaran pelanggan. Perubahan dilakukan melalui status pesanan.</p>
         </div>
 
         @if($errors->any())
@@ -63,7 +63,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank Info</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bukti</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Pesanan</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -99,21 +99,13 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="inline" x-data="{ submitting: false }" @submit="submitting = true">
-                                    @csrf
-                                    <input type="hidden" name="action" value="verify">
-                                    <button type="submit"
-                                        @click="if(!confirm('Verifikasi pembayaran ini?')) { $event.preventDefault(); }"
-                                        :disabled="submitting"
-                                        :class="submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
-                                        class="text-white px-3 py-1 rounded text-xs mr-2 transition-colors">
-                                        <span x-show="!submitting">✓ Verifikasi</span>
-                                        <span x-show="submitting" x-cloak>⏳ Memproses...</span>
-                                    </button>
-                                </form>
-                                <button onclick="showRejectModal({{ $order->id }})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs">
-                                    ✗ Tolak
-                                </button>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                                    @if($order->status === 'confirmed') bg-green-100 text-green-800
+                                    @elseif($order->status === 'completed') bg-blue-100 text-blue-800
+                                    @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                                    @else bg-yellow-100 text-yellow-800 @endif">
+                                    {{ ucfirst($order->status) }}
+                                </span>
                             </td>
                         </tr>
                         @empty
@@ -166,22 +158,14 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
-                        <form method="POST" action="{{ route('admin.payment-verifications.verify', $order) }}" class="flex-1" x-data="{ submitting: false }" @submit="submitting = true">
-                            @csrf
-                            <input type="hidden" name="action" value="verify">
-                            <button type="submit"
-                                @click="if(!confirm('Verifikasi pembayaran ini?')) { $event.preventDefault(); }"
-                                :disabled="submitting"
-                                :class="submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
-                                class="w-full text-white px-3 py-2 rounded text-sm transition-colors">
-                                <span x-show="!submitting">✓ Verifikasi</span>
-                                <span x-show="submitting" x-cloak>⏳ Memproses...</span>
-                            </button>
-                        </form>
-                        <button onclick="showRejectModal({{ $order->id }})" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">
-                            ✗ Tolak
-                        </button>
+                    <div>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                            @if($order->status === 'confirmed') bg-green-100 text-green-800
+                            @elseif($order->status === 'completed') bg-blue-100 text-blue-800
+                            @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                            @else bg-yellow-100 text-yellow-800 @endif">
+                            {{ ucfirst($order->status) }}
+                        </span>
                     </div>
                 </div>
                 @empty
@@ -247,49 +231,4 @@
         </div>
     </div>
 
-    <!-- Reject Modal -->
-    <div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Tolak Pembayaran</h3>
-                <form id="rejectForm" method="POST" action="">
-                    @csrf
-                    <input type="hidden" name="action" value="reject">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Alasan Penolakan</label>
-                        <textarea name="notes" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
-                    </div>
-                    <div class="flex justify-end space-x-2">
-                        <button type="button" onclick="closeRejectModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                            Tolak Pembayaran
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showRejectModal(orderId) {
-            const modal = document.getElementById('rejectModal');
-            const form = document.getElementById('rejectForm');
-            form.action = `/admin/payment-verifications/${orderId}/verify`;
-            modal.classList.remove('hidden');
-        }
-
-        function closeRejectModal() {
-            const modal = document.getElementById('rejectModal');
-            modal.classList.add('hidden');
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('rejectModal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeRejectModal();
-            }
-        });
-    </script>
 </x-admin-layout>

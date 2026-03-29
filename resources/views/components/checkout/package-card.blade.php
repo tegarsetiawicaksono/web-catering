@@ -6,7 +6,7 @@
         <div class="flex items-center gap-3">
             @if($image)
             <div class="w-16 h-16 rounded-xl overflow-hidden border-2 border-white/30 flex-shrink-0">
-                <img src="{{ asset('foto/' . $image) }}" alt="{{ $name }}" class="w-full h-full object-cover">
+                <img src="{{ asset('foto/' . $image) }}" alt="{{ $name }}" class="w-full h-full object-contain bg-white p-1">
             </div>
             @else
             <div class="bg-white/20 backdrop-blur-sm p-3 rounded-xl">

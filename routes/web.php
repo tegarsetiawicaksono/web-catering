@@ -48,7 +48,6 @@ Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name(
 Route::post('/payment/{order}/verify', [PaymentVerificationController::class, 'store'])->name('payment.verify');
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/payments', [PaymentVerificationController::class, 'adminIndex'])->name('admin.payments.index');
-    Route::post('/admin/payments/{verification}/verify', [PaymentVerificationController::class, 'verify'])->name('admin.payments.verify');
 });
 
 // Admin routes
@@ -70,7 +69,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Payment verification
     Route::get('/payment-verifications', [\App\Http\Controllers\Admin\PaymentVerificationController::class, 'index'])->name('payment-verifications.index');
-    Route::post('/payment-verifications/{order}/verify', [\App\Http\Controllers\Admin\PaymentVerificationController::class, 'verify'])->name('payment-verifications.verify');
 
     // Gallery management
     Route::resource('gallery', GalleryController::class);

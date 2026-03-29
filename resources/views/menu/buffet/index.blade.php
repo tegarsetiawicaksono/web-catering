@@ -84,9 +84,9 @@
                                             ? $menu->gambar
                                             : 'foto/' . ltrim($menu->gambar, '/');
                                     @endphp
-                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
+                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
                                     @else
-                                    <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover" onerror="this.style.display='none';">
+                                    <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                                     @endif
                                     <div class="absolute top-4 right-4 bg-gradient-to-r from-[#86765a] to-amber-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
                                         Rp {{ number_format($menu->harga, 0, ',', '.') }}/pax
@@ -201,9 +201,9 @@
                                 ? $menu->gambar
                                 : 'foto/' . ltrim($menu->gambar, '/');
                         @endphp
-                        <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
+                        <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
                         @else
-                        <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-48 object-cover" onerror="this.style.display='none';">
+                        <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                         @endif
                         <div class="absolute top-4 right-4 bg-white text-[#86765a] px-4 py-1 rounded-full font-semibold">
                             Rp {{ number_format($menu->harga, 0, ',', '.') }}/pax

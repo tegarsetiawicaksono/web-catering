@@ -12,17 +12,19 @@ class FinanceController extends Controller
     public function index()
     {
         $currentYear = now()->year;
+        $driver = DB::connection()->getDriverName();
+        $monthExpression = $driver === 'sqlite'
+            ? "CAST(strftime('%m', created_at) AS INTEGER)"
+            : 'MONTH(created_at)';
 
         // Get monthly income for current year
         $monthlyIncome = Order::where('status', 'completed')
             ->whereYear('created_at', $currentYear)
-            ->select(
-                DB::raw('MONTH(created_at) as month'),
-                DB::raw('SUM(total_price) as total'),
-                DB::raw('COUNT(*) as count')
-            )
-            ->groupBy('month')
-            ->orderBy('month')
+            ->selectRaw("{$monthExpression} as month")
+            ->selectRaw('SUM(total_price) as total')
+            ->selectRaw('COUNT(*) as count')
+            ->groupByRaw($monthExpression)
+            ->orderByRaw("{$monthExpression} asc")
             ->get();
 
         // Calculate totals

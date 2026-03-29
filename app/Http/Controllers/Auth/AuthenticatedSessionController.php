@@ -55,7 +55,7 @@ class AuthenticatedSessionController extends Controller
         $existingUser = User::where('email', $user->getEmail())->first();
 
         if ($existingUser) {
-            Auth::login($existingUser);
+            Auth::login($existingUser, true);
         } else {
             $newUser = User::create([
                 'name' => $user->getName() ?: explode('@', $user->getEmail())[0],
@@ -63,7 +63,7 @@ class AuthenticatedSessionController extends Controller
                 'password' => bcrypt(str()->random(16)), // Random password
                 'email_verified_at' => now(),
             ]);
-            Auth::login($newUser);
+            Auth::login($newUser, true);
         }
 
         return redirect()->intended(route('home'));

@@ -15,6 +15,10 @@ return new class extends Migration
             return;
         }
 
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Preferred: make gallery category dynamic to follow categories table.
         try {
             DB::statement("ALTER TABLE galleries MODIFY category VARCHAR(100) NOT NULL");
@@ -31,6 +35,10 @@ return new class extends Migration
     public function down(): void
     {
         if (! Schema::hasTable('galleries') || ! Schema::hasColumn('galleries', 'category')) {
+            return;
+        }
+
+        if (DB::getDriverName() === 'sqlite') {
             return;
         }
 
