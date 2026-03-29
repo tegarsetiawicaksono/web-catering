@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Events\NewOrder;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -126,84 +127,10 @@ class OrderController extends Controller
         return $pdf->download('invoice-' . $order->id . '.pdf');
     }
 
-    public function sendInvoiceToWhatsApp(Order $order)
+    public function sendInvoiceToWhatsApp(Order $order, WhatsAppService $whatsAppService)
     {
         try {
-            // Generate PDF
-            $pdf = PDF::loadView('orders.invoice-pdf', compact('order'));
-            $fileName = 'invoice-' . $order->id . '.pdf';
-            $pdfPath = storage_path('app/public/invoices/' . $fileName);
-
-            // Pastikan direktori ada
-            if (!Storage::exists('public/invoices')) {
-                Storage::makeDirectory('public/invoices');
-            }
-
-            // Simpan PDF
-            $pdf->save($pdfPath);
-
-            // Set nomor WhatsApp Rejosari Catering
-            $phone = '6282227110771'; // Nomor tetap Rejosari Catering
-
-            // Format harga
-            $formattedPrice = number_format($order->total_price, 0, ',', '.');
-
-            // Generate pesan WhatsApp dengan emoji
-            $message = "*REJOSARI CATERING*\n\n";
-            $message .= "Halo *{$order->customer_name}*!\n\n";
-
-            // Detail Pesanan dengan emoji
-            $message .= "*DETAIL PESANAN #{$order->id}*\n";
-            $message .= "───────────────────\n";
-            if ($order->items) {
-                foreach ($order->items as $item) {
-                    $itemTotal = number_format($item['price'] * $item['quantity'], 0, ',', '.');
-                    $message .= " {$item['name']}\n";
-                    $message .= "   {$item['quantity']} pax × Rp " . number_format($item['price'], 0, ',', '.') . "\n";
-                    $message .= "   = Rp {$itemTotal}\n";
-                }
-            } else {
-                $message .= "{$order->package_name}\n";
-                $message .= "   {$order->quantity} porsi × Rp " . number_format($order->package_price, 0, ',', '.') . "\n";
-                $message .= "   = Rp {$formattedPrice}\n";
-            }
-            $message .= "───────────────────\n";
-            $message .= "*Total: Rp {$formattedPrice}*\n\n";
-
-            // Informasi Acara
-            $message .= "*INFORMASI ACARA*\n";
-            $message .= "Tanggal: " . \Carbon\Carbon::parse($order->event_date)->locale('id')->isoFormat('dddd, D MMMM Y') . "\n";
-            $message .= "Waktu: {$order->event_time}\n";
-            $message .= "Lokasi: {$order->address}\n\n";
-
-            // Link Invoice
-            $message .= "📎 *INVOICE PDF*\n";
-            $pdfUrl = url('storage/invoices/' . $fileName);
-            $message .= $pdfUrl . "\n\n";
-
-            // Informasi Pembayaran
-            $message .= "*INFORMASI PEMBAYARAN*\n";
-            $message .= "Transfer Bank BCA\n";
-            $message .= "No. Rek: *1234567890*\n";
-            $message .= "a.n: *PT Rejosari Catering*\n\n";
-
-            // Instruksi
-            $message .= "*LANGKAH SELANJUTNYA*\n";
-            $message .= "1. Download invoice PDF di atas\n";
-            $message .= "2. Transfer sesuai total pembayaran\n";
-            $message .= "3. Kirim bukti transfer ke nomor ini (0822-2711-0771)\n\n";
-
-            if ($order->notes) {
-                $message .= "*Catatan:*\n";
-                $message .= "{$order->notes}\n\n";
-            }
-
-            $message .= "Terima kasih telah mempercayakan acara Anda kepada Rejosari Catering! 🙏\n";
-            $message .= "Jika ada pertanyaan, silakan hubungi kami.";
-
-            // Buat URL WhatsApp
-            $whatsappUrl = "https://wa.me/{$phone}?text=" . urlencode($message);
-
+            $whatsappUrl = $whatsAppService->sendInvoice($order);
             return redirect($whatsappUrl);
         } catch (\Exception $e) {
             Log::error('Error sending invoice to WhatsApp: ' . $e->getMessage());

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Services\WhatsAppService;
 
 class PaymentVerification extends Model
 {
@@ -77,6 +78,26 @@ class PaymentVerification extends Model
             ]);
             // Update order status to paid
             $order->updatePaymentStatus('paid');
+        }
+
+        // Auto-send invoice to customer's WhatsApp when full payment is verified
+        if (in_array($this->payment_type, ['remaining', 'full']) || $this->payment_type === 'dp') {
+            // Only send on full payment or when remaining is verified (meaning now fully paid)
+            if ($order->payment_status === 'fully_paid') {
+                try {
+                    $whatsAppService = new WhatsAppService();
+                    $whatsAppService->sendInvoice($order);
+                    \Log::info('Invoice auto-sent to WhatsApp after payment verification', [
+                        'order_id' => $order->id,
+                        'payment_type' => $this->payment_type
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Failed to auto-send invoice to WhatsApp', [
+                        'order_id' => $order->id,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
         }
     }
 
