@@ -10,8 +10,46 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::orderBy('nama')->paginate(20);
+        $categories = Category::orderBy('order')->orderBy('id')->paginate(20);
         return view('admin.categories.index', compact('categories'));
+    }
+
+    public function move(Request $request, Category $category)
+    {
+        $request->validate([
+            'direction' => 'required|in:up,down',
+        ]);
+
+        $categories = Category::orderBy('order')->orderBy('id')->get(['id', 'order']);
+
+        // Normalize existing order to avoid ties from old rows with same order value.
+        foreach ($categories as $index => $item) {
+            $expectedOrder = $index + 1;
+            if ((int) $item->order !== $expectedOrder) {
+                Category::whereKey($item->id)->update(['order' => $expectedOrder]);
+            }
+        }
+
+        $orderedIds = Category::orderBy('order')->orderBy('id')->pluck('id')->values();
+        $currentIndex = $orderedIds->search($category->id);
+
+        if ($currentIndex === false) {
+            return back();
+        }
+
+        $targetIndex = $request->direction === 'up' ? $currentIndex - 1 : $currentIndex + 1;
+
+        if (!isset($orderedIds[$targetIndex])) {
+            return back();
+        }
+
+        $currentId = $orderedIds[$currentIndex];
+        $targetId = $orderedIds[$targetIndex];
+
+        Category::whereKey($currentId)->update(['order' => $targetIndex + 1]);
+        Category::whereKey($targetId)->update(['order' => $currentIndex + 1]);
+
+        return back()->with('success', 'Urutan kategori berhasil diperbarui.');
     }
 
     public function create()
@@ -65,6 +103,8 @@ class CategoryController extends Controller
         if ($backgroundPath) {
             $validated['gambar_background'] = $backgroundPath;
         }
+
+        $validated['order'] = (int) Category::max('order') + 1;
 
         Category::create($validated);
 

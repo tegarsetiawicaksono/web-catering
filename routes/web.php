@@ -59,6 +59,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::get('/reports', [AdminOrderController::class, 'reports'])->name('reports');
@@ -88,11 +89,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Notifications
     Route::post('/notifications/mark-read', function() {
-        auth()->user()->update([
-            'last_notification_read_at' => now()
-        ]);
+        auth()->user()->forceFill([
+            'last_notification_read_at' => now(),
+        ])->save();
+
         return response()->json(['success' => true]);
     })->name('notifications.mark-read');
+
+    Route::post('/schedule-notifications/mark-read', function() {
+        auth()->user()->forceFill([
+            'last_schedule_notification_read_at' => now(),
+        ])->save();
+
+        return response()->json(['success' => true]);
+    })->name('schedule-notifications.mark-read');
 });
 
 // Menu pages
@@ -159,9 +169,5 @@ Route::get('/refresh-csrf', function () {
         'csrf_token' => csrf_token()
     ]);
 })->middleware('web');
-
-Route::get('/admin', [App\Http\Controllers\Admin\AdminOrderController::class, 'dashboard'])
-    ->middleware(['auth', 'admin'])
-    ->name('admin.dashboard');
 
 require __DIR__ . '/auth.php';

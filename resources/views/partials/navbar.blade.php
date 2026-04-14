@@ -1,4 +1,39 @@
 <nav class="bg-white/95 shadow-md py-4 fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false }">
+  @php
+    $userOrderNotificationCount = 0;
+    if (Auth::check() && !Auth::user()->is_admin) {
+      $lastUserOrderNotifReadAt = Auth::user()->last_user_order_notification_read_at;
+      $userOrderNotificationQuery = \App\Models\Order::query()
+        ->where(function ($query) {
+          $query->where('user_id', Auth::id())
+            ->orWhere('email', Auth::user()->email);
+        });
+
+      if ($lastUserOrderNotifReadAt) {
+        $userOrderNotificationQuery->where('updated_at', '>', $lastUserOrderNotifReadAt);
+      }
+
+      $userOrderNotificationCount = $userOrderNotificationQuery->count();
+    }
+
+    $searchCategories = isset($categories)
+      ? $categories
+      : \App\Models\Category::query()
+        ->where('is_active', true)
+        ->orderBy('order')
+        ->orderBy('id')
+        ->get(['nama', 'slug', 'deskripsi']);
+
+    $menuSearchItems = $searchCategories->map(function ($category) {
+      return [
+        'name' => $category->nama,
+        'slug' => $category->slug,
+        'category' => $category->nama,
+        'description' => $category->deskripsi ?: 'Buka menu ' . strtolower($category->nama),
+        'url' => route('menu.category', ['slug' => $category->slug]),
+      ];
+    })->values();
+  @endphp
   <div class="container mx-auto px-4">
     <div class="flex items-center">
       <!-- Hamburger Menu untuk Mobile -->
@@ -41,6 +76,11 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
+          @if($userOrderNotificationCount > 0)
+          <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none border border-white">
+            {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+          </span>
+          @endif
         </a>
         <!-- Cart Button - Hidden on mobile -->
         <a href="{{ url('/cart') }}" class="hidden sm:block relative p-2 hover:bg-gray-100 rounded-full group">
@@ -49,8 +89,13 @@
           </svg>
           <span x-show="itemCount > 0"
                 x-text="itemCount"
-                class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                class="absolute -bottom-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold border border-white">
           </span>
+              @if($userOrderNotificationCount > 0)
+          <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none border border-white">
+            {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+          </span>
+              @endif
         </a>
         @endif
           @if(Auth::user()->is_admin)
@@ -272,7 +317,14 @@
             </svg>
             <span class="font-medium">Keranjang</span>
           </div>
-          <span x-show="itemCount > 0" x-text="itemCount" class="bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"></span>
+          <div class="flex items-center space-x-2">
+            @if($userOrderNotificationCount > 0)
+            <span class="min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none">
+              {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+            </span>
+            @endif
+            <span x-show="itemCount > 0" x-text="itemCount" class="bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"></span>
+          </div>
         </div>
       </a>
       
@@ -292,11 +344,18 @@
       </a>
       @else
       <a href="{{ route('orders.history') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <span class="font-medium">Riwayat Pesanan</span>
+          </div>
+          @if($userOrderNotificationCount > 0)
+          <span class="min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none">
+            {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+          </span>
+          @endif
         </div>
       </a>
       @endif
@@ -374,6 +433,9 @@
 </div>
 
 <!-- Import navbar.js -->
+<script>
+  window.menuSearchItems = @json($menuSearchItems);
+</script>
 <script src="{{ asset('js/navbar.js') }}"></script>
 
 <!-- spacer to avoid content being hidden under the fixed navbar -->

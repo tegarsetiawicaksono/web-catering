@@ -24,6 +24,9 @@ class User extends Authenticatable
         'is_admin',
         'phone',
         'address',
+        'last_notification_read_at',
+        'last_schedule_notification_read_at',
+        'last_user_order_notification_read_at',
     ];
 
     /**
@@ -47,6 +50,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'last_notification_read_at' => 'datetime',
+            'last_schedule_notification_read_at' => 'datetime',
+            'last_user_order_notification_read_at' => 'datetime',
         ];
     }
 

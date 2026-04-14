@@ -13,6 +13,12 @@ class CartController extends Controller
 
     public function index()
     {
+        if (Auth::check()) {
+            Auth::user()->forceFill([
+                'last_user_order_notification_read_at' => now(),
+            ])->save();
+        }
+
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : [];
 

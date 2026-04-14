@@ -16,7 +16,8 @@ class MenuController extends Controller
             : [$normalizedSlug];
 
         $menus = Menu::whereIn('kategori', $menuCategorySlugs)
-            ->orderBy('harga')
+            ->orderBy('order')
+            ->orderBy('id')
             ->get();
 
         $category = Category::whereIn('slug', $menuCategorySlugs)->first();

@@ -9,68 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+
+  <script src="{{ asset('js/home-tailwind-config.js') }}"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            'playfair': ['Playfair Display', 'serif'],
-            'montserrat': ['Montserrat', 'sans-serif'],
-            'poppins': ['Poppins', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <style>
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    @keyframes scroll-left {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    .animate-scroll {
-      animation: scroll-left 40s linear infinite;
-    }
-
-    .animate-scroll-slow {
-      animation: scroll-left 50s linear infinite;
-    }
-
-    /* Custom scrollbar styling */
-    .overflow-x-auto::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .overflow-x-auto::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-    }
-
-    .overflow-x-auto::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 10px;
-    }
-
-    .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
-  </style>
 </head>
 
 <body class="bg-gray-50 font-sans text-gray-900 overflow-x-hidden overflow-y-auto">
@@ -110,7 +52,7 @@
         <div class="backdrop-blur-sm bg-white/20 rounded-lg shadow-lg overflow-hidden w-full flex flex-col md:flex-row">
           <div class="w-full md:w-1/2 flex flex-col justify-center p-6 sm:p-8 md:p-8 text-center md:text-left">
             <h2 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-3 sm:mb-4 leading-tight text-white">
-              Cari Catering Murah?<br />
+              Cari Catering Murah dan Berkualitas?<br />
               <span>Rejosari Catering Solusinya</span>
             </h2>
             <div class="mt-3 sm:mt-6 flex justify-center md:justify-start space-x-4">
@@ -156,7 +98,7 @@
                 <div class="relative">
                   <div class="text-black leading-relaxed space-y-3 sm:space-y-4 text-xs sm:text-sm md:text-base lg:text-xl" :class="{ 'max-h-32 overflow-hidden': !expanded }">
                     <p class="text-justify text-black text-xs sm:text-sm md:text-base lg:text-xl font-poppins">
-                      <span class="font-bold text-black">Rejosari Catering</span> didirikan pada Tahun <span class="font-bold text-black">2000</span> oleh Ibu H Suratmi dengan visi menjadi penyedia layanan catering terpercaya di Kota Weleri dan Sekitarnya.
+                      <span class="font-bold text-black">Rejosari Catering</span> didirikan pada Tahun <span class="font-bold text-black">2000</span> oleh Ibu Hj. Suratmi dengan visi menjadi penyedia layanan catering terpercaya di Kota Weleri dan Sekitarnya.
                       Berawal dari dapur rumah sederhana di Weleri, kini telah berkembang menjadi salah satu layanan catering terkemuka di Kabupaten Kendal dan Sekitarnya.
                       Penamaan Rejosari sendiri diambil dari kata <span class="font-bold text-gray-800">Rejo</span> dan <span class="font-bold text-gray-800">Sari</span> yang memiliki arti masing-masing. Nama Rejosari, <span class="font-bold text-gray-800">Rejo</span> istilahnya pusat kemewahan, sedangkan <span class="font-bold text-gray-800">Sari</span> berarti keindahan. Keunggulan dari Katering Rejosari adalah memiliki harga yang murah dan rasa yang enak dibandingkan katering lainnya.
                     </p>

@@ -52,6 +52,10 @@ class OrderController extends Controller
     public function history()
     {
         try {
+            auth()->user()->forceFill([
+                'last_user_order_notification_read_at' => now(),
+            ])->save();
+
             // Get orders for logged in user by user_id or email with payment verification relation
             $orders = Order::with('latestPaymentVerification')
                 ->where(function ($query) {

@@ -13,7 +13,7 @@ class PaymentVerificationController extends Controller
     public function store(Request $request, Order $order)
     {
         $request->validate([
-            'payment_type' => 'required|in:dp,full',
+            'payment_type' => 'required|in:dp,full,remaining',
             'payment_proof' => 'required|image|max:2048', // max 2MB
             'bank_name' => 'required|string',
             'account_number' => 'required|string',
@@ -25,10 +25,24 @@ class PaymentVerificationController extends Controller
 
         $paymentType = $request->payment_type;
         
-        // Calculate DP amount if payment type is DP
+        // Calculate amount expectations based on selected payment type
         $dpPercentage = 50; // Default 50%
         $dpAmount = round($order->total_price * ($dpPercentage / 100));
-        $expectedAmount = $paymentType === 'dp' ? $dpAmount : $order->total_price;
+        $expectedAmount = match ($paymentType) {
+            'dp' => $dpAmount,
+            'remaining' => $order->remaining_amount > 0
+                ? $order->remaining_amount
+                : max($order->total_price - $order->paid_amount, 0),
+            default => $order->total_price,
+        };
+
+        if ((float) $request->amount !== (float) $expectedAmount) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'amount' => 'Jumlah transfer tidak sesuai nominal yang harus dibayar.'
+                ]);
+        }
         
         // Update order DP fields
         if ($paymentType === 'dp') {
@@ -39,7 +53,7 @@ class PaymentVerificationController extends Controller
                 'remaining_amount' => $order->total_price,
                 'payment_status' => 'unpaid'
             ]);
-        } else {
+        } elseif ($paymentType === 'full') {
             // Full payment
             $order->update([
                 'dp_percentage' => 0,
@@ -86,9 +100,11 @@ class PaymentVerificationController extends Controller
             ]);
         }
 
-        $message = $paymentType === 'dp' 
-            ? 'Bukti pembayaran DP berhasil diunggah. Silakan bayar sisa pembayaran sebelum tanggal event.' 
-            : 'Bukti pembayaran lunas berhasil diunggah dan sedang diverifikasi. Terima kasih!';
+        $message = match ($paymentType) {
+            'dp' => 'Bukti pembayaran DP berhasil diunggah. Silakan bayar sisa pembayaran sebelum tanggal event.',
+            'remaining' => 'Bukti pembayaran pelunasan berhasil diunggah dan sedang diverifikasi. Terima kasih!',
+            default => 'Bukti pembayaran lunas berhasil diunggah dan sedang diverifikasi. Terima kasih!',
+        };
 
         return redirect()->route('orders.show', $order)
             ->with('success', $message);

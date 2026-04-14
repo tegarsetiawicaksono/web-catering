@@ -80,6 +80,90 @@ class AdminOrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function schedule(Request $request)
+    {
+        $monthInput = (string) $request->get('month', Carbon::now()->format('Y-m'));
+
+        try {
+            $monthDate = Carbon::createFromFormat('Y-m', $monthInput)->startOfMonth();
+        } catch (\Throwable $e) {
+            $monthDate = Carbon::now()->startOfMonth();
+        }
+
+        $monthStart = $monthDate->copy()->startOfMonth();
+        $monthEnd = $monthDate->copy()->endOfMonth();
+
+        // Include a 3-day buffer before month start so prepare markers stay accurate.
+        $queryStart = $monthStart->copy()->subDays(3);
+        $queryEnd = $monthEnd->copy();
+
+        $orders = Order::query()
+            ->whereNotNull('event_date')
+            ->whereIn('status', ['confirmed', 'processing', 'completed', 'cancelled'])
+            ->whereDate('event_date', '>=', $queryStart->toDateString())
+            ->whereDate('event_date', '<=', $queryEnd->toDateString())
+            ->orderBy('event_date')
+            ->get();
+
+        $ordersByEventDate = [];
+        $ordersByPrepareDate = [];
+
+        foreach ($orders as $order) {
+            if (!$order->event_date) {
+                continue;
+            }
+
+            $eventDate = Carbon::parse($order->event_date);
+            $eventKey = $eventDate->toDateString();
+            $prepareKey = $eventDate->copy()->subDays(3)->toDateString();
+
+            $ordersByEventDate[$eventKey][] = $order;
+            if (in_array($order->status, ['confirmed', 'processing'], true)) {
+                $ordersByPrepareDate[$prepareKey][] = $order;
+            }
+        }
+
+        $firstDayWeekIndex = (int) $monthStart->dayOfWeekIso;
+        $leadingBlankDays = $firstDayWeekIndex - 1;
+        $daysInMonth = (int) $monthStart->daysInMonth;
+
+        $calendarDays = [];
+
+        for ($i = 0; $i < $leadingBlankDays; $i++) {
+            $calendarDays[] = [
+                'is_blank' => true,
+            ];
+        }
+
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $date = $monthStart->copy()->day($day);
+            $dateKey = $date->toDateString();
+
+            $calendarDays[] = [
+                'is_blank' => false,
+                'date' => $date,
+                'event_orders' => $ordersByEventDate[$dateKey] ?? [],
+                'prepare_orders' => $ordersByPrepareDate[$dateKey] ?? [],
+            ];
+        }
+
+        $today = Carbon::today();
+        $todayPrepareOrders = Order::query()
+            ->whereNotNull('event_date')
+            ->whereIn('status', ['confirmed', 'processing'])
+            ->whereDate('event_date', $today->copy()->addDays(3)->toDateString())
+            ->orderBy('event_date')
+            ->get();
+
+        return view('admin.orders.schedule', [
+            'monthDate' => $monthDate,
+            'prevMonth' => $monthDate->copy()->subMonth()->format('Y-m'),
+            'nextMonth' => $monthDate->copy()->addMonth()->format('Y-m'),
+            'calendarDays' => $calendarDays,
+            'todayPrepareOrders' => $todayPrepareOrders,
+        ]);
+    }
+
     public function updateStatus(Order $order, Request $request)
     {
         $validated = $request->validate([
@@ -93,8 +177,17 @@ class AdminOrderController extends Controller
 
     public function reports(Request $request)
     {
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth());
-        $endDate = $request->get('end_date', Carbon::now()->endOfDay());
+        $validated = $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ]);
+
+        $startDate = $request->filled('start_date')
+            ? Carbon::parse((string) $validated['start_date'])->startOfDay()
+            : Carbon::now()->startOfMonth();
+        $endDate = $request->filled('end_date')
+            ? Carbon::parse((string) $validated['end_date'])->endOfDay()
+            : Carbon::now()->endOfDay();
 
         $orders = Order::whereBetween('created_at', [$startDate, $endDate])
             ->get();

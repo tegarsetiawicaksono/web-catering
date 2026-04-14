@@ -75,6 +75,20 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                 <div class="flex items-center space-x-3">
+                                    <form action="{{ route('admin.categories.move', $category) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="up">
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke atas">
+                                            ↑
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.categories.move', $category) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="down">
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke bawah">
+                                            ↓
+                                        </button>
+                                    </form>
                                     <a href="{{ route('admin.categories.edit', $category) }}"
                                         class="text-indigo-600 hover:text-indigo-900">
                                         Edit
@@ -141,6 +155,20 @@
                             <span class="text-sm text-gray-500">{{ $category->menus()->count() }} menu</span>
                         </div>
                         <div class="flex space-x-2">
+                            <form action="{{ route('admin.categories.move', $category) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="direction" value="up">
+                                <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                    ↑
+                                </button>
+                            </form>
+                            <form action="{{ route('admin.categories.move', $category) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="direction" value="down">
+                                <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                    ↓
+                                </button>
+                            </form>
                             <a href="{{ route('admin.categories.edit', $category) }}"
                                 class="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
                                 Edit

@@ -24,6 +24,10 @@
                     class="px-4 py-2 text-sm font-medium rounded-lg {{ !request('kategori') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
                     Semua
                 </a>
+                <a href="{{ route('admin.menus.index', ['custom_only' => 1]) }}"
+                    class="px-4 py-2 text-sm font-medium rounded-lg {{ request('custom_only') ? 'bg-amber-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    Menu Custom
+                </a>
                 @foreach($categories as $category)
                 <a href="{{ route('admin.menus.index', ['kategori' => $category->slug]) }}"
                     class="px-4 py-2 text-sm font-medium rounded-lg {{ request('kategori') === $category->slug ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
@@ -62,7 +66,12 @@
                                     </div>
                                     @endif
                                     <div>
-                                        <div class="text-sm font-medium text-gray-900">{{ $menu->nama }}</div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-sm font-medium text-gray-900">{{ $menu->nama }}</div>
+                                            @if($menu->is_custom)
+                                            <span class="inline-flex px-2 py-0.5 text-[10px] font-semibold text-amber-800 bg-amber-100 rounded-full">Custom</span>
+                                            @endif
+                                        </div>
                                         <div class="text-sm text-gray-500">{{ Str::limit($menu->deskripsi, 50) }}</div>
                                     </div>
                                 </div>
@@ -85,6 +94,20 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                 <div class="flex items-center space-x-3">
+                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="up">
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke atas">
+                                            ↑
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="down">
+                                        <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke bawah">
+                                            ↓
+                                        </button>
+                                    </form>
                                     <a href="{{ route('admin.menus.edit', $menu) }}"
                                         class="text-indigo-600 hover:text-indigo-900">
                                         Edit
@@ -134,7 +157,12 @@
                         <div class="flex-1">
                             <div class="flex items-start justify-between">
                                 <div>
-                                    <h3 class="text-base font-semibold text-gray-900">{{ $menu->nama }}</h3>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-base font-semibold text-gray-900">{{ $menu->nama }}</h3>
+                                        @if($menu->is_custom)
+                                        <span class="inline-flex px-2 py-0.5 text-[10px] font-semibold text-amber-800 bg-amber-100 rounded-full">Custom</span>
+                                        @endif
+                                    </div>
                                     <span class="inline-flex px-2 py-1 mt-1 text-xs font-semibold rounded-full
                                         {{ $menu->kategori === 'buffet' ? 'text-blue-800 bg-blue-100' : '' }}
                                         {{ $menu->kategori === 'tumpeng' ? 'text-green-800 bg-green-100' : '' }}
@@ -152,6 +180,20 @@
                                     <p class="text-xs text-gray-500">Min. {{ $menu->min_order }} porsi</p>
                                 </div>
                                 <div class="flex space-x-2">
+                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="up">
+                                        <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                            ↑
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="direction" value="down">
+                                        <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                            ↓
+                                        </button>
+                                    </form>
                                     <a href="{{ route('admin.menus.edit', $menu) }}"
                                         class="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
                                         Edit

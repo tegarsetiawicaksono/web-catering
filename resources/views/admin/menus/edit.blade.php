@@ -76,6 +76,15 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" name="is_custom" value="1" {{ old('is_custom', $menu->is_custom) ? 'checked' : '' }}
+                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <span class="text-sm font-medium text-gray-700">Tandai sebagai Menu Custom</span>
+                        </label>
+                        <p class="mt-1 text-xs text-gray-500">Jika aktif, menu ini akan muncul saat admin memfilter Menu Custom.</p>
+                    </div>
+
                     <!-- Gambar -->
                     <div>
                         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar Menu</label>

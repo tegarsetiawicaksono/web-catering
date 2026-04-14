@@ -326,6 +326,47 @@
 
                 </div>
             </div>
+            @elseif(in_array($order->status, ['confirmed', 'completed']))
+            <!-- Auto-Confirmed Payment Status -->
+            <div class="overflow-hidden bg-white border border-gray-200 rounded-xl border-green-300 bg-gradient-to-r from-green-50 to-emerald-50">
+                <div class="px-6 py-4 border-b border-gray-200 bg-green-50">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-10 h-10 mr-3 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-green-900">✅ Pembayaran Sudah Dikonfirmasi</h3>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="bg-white rounded-lg border-2 border-green-200 p-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"/>
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900">Status Pembayaran</p>
+                                    <p class="text-sm text-green-700">Pembayaran telah dikonfirmasi oleh sistem</p>
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-green-100">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Total:</span>
+                                    <span class="text-xl font-bold text-green-700">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                                </div>
+                                @if($order->paid_at)
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm text-gray-600">Dikonfirmasi pada:</span>
+                                    <span class="text-sm font-medium text-green-600">{{ $order->paid_at->format('d M Y, H:i') }}</span>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endif
 
             <!-- Notes -->

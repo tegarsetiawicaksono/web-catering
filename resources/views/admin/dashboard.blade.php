@@ -31,7 +31,12 @@
 
         <!-- Monthly Revenue -->
         <div class="relative overflow-hidden transition-transform duration-200 bg-white border border-gray-200 rounded-xl hover:shadow-lg hover:-translate-y-1">
-            <div class="p-6">
+            <div class="p-4">
+                @php
+                    $compactRevenue = $currentYearRevenue >= 1000000000
+                        ? number_format($currentYearRevenue / 1000000000, 1) . ' M'
+                        : number_format($currentYearRevenue / 1000000, 1) . ' Jt';
+                @endphp
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-green-600">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,10 +46,8 @@
                     <span class="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Tahun Ini</span>
                 </div>
                 <h3 class="mb-1 text-sm font-medium text-gray-600">Pendapatan</h3>
-                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($currentYearRevenue / 1000000, 1) }}jt</p>
-                <p class="mt-2 text-xs text-gray-500">
-                    <span class="text-green-600">↑ 8%</span> dari bulan lalu
-                </p>
+                <p class="text-2xl font-bold leading-tight text-gray-900">Rp {{ $compactRevenue }}</p>
+                <p class="mt-1 text-xs text-gray-500">Ringkasan tahun berjalan</p>
             </div>
             <div class="h-1 bg-gradient-to-r from-green-500 to-green-600"></div>
         </div>
@@ -258,7 +261,9 @@
                 </div>
                 @endforeach
             </div>
-            <canvas id="yearlyComparisonChart" height="100"></canvas>
+            <div class="h-56 md:h-64">
+                <canvas id="yearlyComparisonChart"></canvas>
+            </div>
         </div>
     </div>
 

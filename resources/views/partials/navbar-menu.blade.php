@@ -1,4 +1,37 @@
 <nav class="bg-white/95 shadow-md py-4 fixed top-0 left-0 right-0 z-50" x-data="{ mobileMenuOpen: false }">
+  @php
+    $userOrderNotificationCount = 0;
+    if (Auth::check() && !Auth::user()->is_admin) {
+      $lastUserOrderNotifReadAt = Auth::user()->last_user_order_notification_read_at;
+      $userOrderNotificationQuery = \App\Models\Order::query()
+        ->where(function ($query) {
+          $query->where('user_id', Auth::id())
+            ->orWhere('email', Auth::user()->email);
+        });
+
+      if ($lastUserOrderNotifReadAt) {
+        $userOrderNotificationQuery->where('updated_at', '>', $lastUserOrderNotifReadAt);
+      }
+
+      $userOrderNotificationCount = $userOrderNotificationQuery->count();
+    }
+
+    $searchCategories = \App\Models\Category::query()
+      ->where('is_active', true)
+      ->orderBy('order')
+      ->orderBy('id')
+      ->get(['nama', 'slug', 'deskripsi']);
+
+    $menuSearchItems = $searchCategories->map(function ($category) {
+      return [
+        'name' => $category->nama,
+        'slug' => $category->slug,
+        'category' => $category->nama,
+        'description' => $category->deskripsi ?: 'Buka menu ' . strtolower($category->nama),
+        'url' => route('menu.category', ['slug' => $category->slug]),
+      ];
+    })->values();
+  @endphp
   <div class="container mx-auto px-4">
     <div class="flex items-center">
       <!-- Hamburger Menu untuk Mobile -->
@@ -37,12 +70,17 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
+          @if($userOrderNotificationCount > 0)
+          <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none border border-white">
+            {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+          </span>
+          @endif
         </a>
         @endif
         @endauth
 
         <!-- Cart Button -->
-        <x-cart-button />
+        <x-cart-button :order-notification-count="$userOrderNotificationCount" />
 
         <!-- Search Button and Form -->
         <div class="relative" x-data="{ isOpen: false, searchQuery: '' }">
@@ -218,11 +256,18 @@
           Hi, {{ Auth::user()->name }}
         </div>
         <a href="{{ route('orders.history') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
-          <div class="flex items-center space-x-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span class="font-medium">Riwayat Pesanan</span>
+            </div>
+            @if($userOrderNotificationCount > 0)
+            <span class="min-w-[18px] h-[18px] px-1 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center font-bold leading-none">
+              {{ $userOrderNotificationCount > 99 ? '99+' : $userOrderNotificationCount }}
+            </span>
+            @endif
           </div>
         </a>
         <a href="{{ route('profile.edit') }}" @click="mobileMenuOpen = false" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">
@@ -305,64 +350,31 @@
 
 <!-- Search functionality -->
 <script>
-  // Daftar menu (dalam prakteknya, ini bisa diambil dari database)
-  const menuItems = {
-    'prasmanan': [{
-        name: 'Paket Prasmanan Standard',
-        price: 'Rp 35.000/pax',
-        description: 'Menu prasmanan lengkap 7 item',
-        category: 'Prasmanan'
-      },
-      {
-        name: 'Paket Prasmanan Premium',
-        price: 'Rp 45.000/pax',
-        description: 'Menu prasmanan lengkap 10 item',
-        category: 'Prasmanan'
-      }
-    ],
-    'tumpeng': [{
-        name: 'Tumpeng Mini',
-        price: 'Rp 250.000',
-        description: 'Untuk 7-10 orang',
-        category: 'Tumpeng'
-      },
-      {
-        name: 'Tumpeng Regular',
-        price: 'Rp 450.000',
-        description: 'Untuk 15-20 orang',
-        category: 'Tumpeng'
-      }
-    ],
-    'nasi-box': [{
-        name: 'Nasi Box Basic',
-        price: 'Rp 25.000',
-        description: '4 item menu',
-        category: 'Nasi Box'
-      },
-      {
-        name: 'Nasi Box Premium',
-        price: 'Rp 35.000',
-        description: '6 item menu',
-        category: 'Nasi Box'
-      }
-    ],
-    'snack': [{
-        name: 'Snack Box Mini',
-        price: 'Rp 15.000',
-        description: '3 macam snack',
-        category: 'Snack'
-      },
-      {
-        name: 'Snack Box Complete',
-        price: 'Rp 25.000',
-        description: '5 macam snack',
-        category: 'Snack'
-      }
-    ]
-  };
+  window.menuSearchItems = @json($menuSearchItems);
+
+  function normalizeSearchValue(value) {
+    return (value || '')
+      .toString()
+      .toLowerCase()
+      .replace(/[\s_-]+/g, '');
+  }
+
+  function closeSearchDropdown() {
+    const searchInput = document.querySelector('input[x-model="searchQuery"]');
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input'));
+    }
+  }
+
+  function selectMenuSearchItem(url) {
+    closeSearchDropdown();
+    window.location.href = url;
+  }
 
   function searchMenus() {
-    const searchQuery = document.querySelector('input[x-model="searchQuery"]').value.toLowerCase();
+    const searchInput = document.querySelector('input[x-model="searchQuery"]');
+    const searchQuery = normalizeSearchValue(searchInput ? searchInput.value : '');
     const resultsContainer = document.getElementById('searchResults');
 
     if (searchQuery.length === 0) {
@@ -370,15 +382,16 @@
       return;
     }
 
-    let results = [];
-    Object.values(menuItems).forEach(category => {
-      category.forEach(item => {
-        if (item.name.toLowerCase().includes(searchQuery) ||
-          item.category.toLowerCase().includes(searchQuery) ||
-          item.description.toLowerCase().includes(searchQuery)) {
-          results.push(item);
-        }
-      });
+    const results = (window.menuSearchItems || []).filter(item => {
+      const name = normalizeSearchValue(item.name);
+      const category = normalizeSearchValue(item.category);
+      const description = normalizeSearchValue(item.description);
+      const slug = normalizeSearchValue(item.slug);
+
+      return name.includes(searchQuery) ||
+        category.includes(searchQuery) ||
+        description.includes(searchQuery) ||
+        slug.includes(searchQuery);
     });
 
     if (results.length === 0) {
@@ -391,24 +404,20 @@
     }
 
     resultsContainer.innerHTML = results.map(item => `
-    <div class="py-2 px-4 hover:bg-gray-50 cursor-pointer" onclick="scrollToCategory('${item.category.toLowerCase()}')">
+    <button type="button" class="w-full text-left py-2 px-4 hover:bg-gray-50 cursor-pointer" data-menu-url="${item.url}">
       <div class="font-medium text-gray-800">${item.name}</div>
-      <div class="text-sm text-gray-500">${item.category} • ${item.price}</div>
+      <div class="text-sm text-gray-500">${item.category}</div>
       <div class="text-xs text-gray-400">${item.description}</div>
-    </div>
+    </button>
   `).join('');
-  }
-
-  function scrollToCategory(category) {
-    const section = document.getElementById(category);
-    if (section) {
-      section.scrollIntoView({
-        behavior: 'smooth'
+    
+    // Attach click handlers to all menu search result buttons
+    document.querySelectorAll('[data-menu-url]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        selectMenuSearchItem(this.getAttribute('data-menu-url'));
       });
-    }
-
-    // Close the search dropdown
-    const searchInput = document.querySelector('input[x-model="searchQuery"]');
+    });
     if (searchInput) {
       searchInput.value = '';
       searchInput.dispatchEvent(new Event('input'));

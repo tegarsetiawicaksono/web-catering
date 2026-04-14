@@ -10,12 +10,17 @@ class Menu extends Model
     use HasFactory;
     
     protected $fillable = [
-            'order',
+        'order',
         'nama',
         'kategori',
         'deskripsi',
         'harga',
         'min_order',
-        'gambar'
+        'gambar',
+        'is_custom',
+    ];
+
+    protected $casts = [
+        'is_custom' => 'boolean',
     ];
 }

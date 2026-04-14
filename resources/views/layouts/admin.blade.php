@@ -147,24 +147,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Kelola Menu
-
-                                <a href="{{ route('admin.ordering.categories') }}"
-                                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
-                                          @if(request()->routeIs('admin.ordering.categories')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
-                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                    Atur Urutan Kategori
-                                </a>
-
-                                <a href="{{ route('admin.ordering.menus') }}"
-                                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
-                                          @if(request()->routeIs('admin.ordering.menus')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
-                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                    Atur Urutan Menu
-                                </a>
                 </a>
 
                 <a href="{{ route('admin.gallery.index') }}"
@@ -307,6 +289,92 @@
 
                     <!-- Right side items -->
                     <div class="flex items-center space-x-4">
+                        @php
+                            $scheduleActiveOrders = \App\Models\Order::query()
+                                ->whereNotNull('event_date')
+                                ->whereIn('status', ['confirmed', 'processing'])
+                                ->orderBy('event_date')
+                                ->orderBy('event_time')
+                                ->take(10)
+                                ->get();
+
+                            $scheduleNotificationCount = \App\Models\Order::query()
+                                ->whereNotNull('event_date')
+                                ->whereIn('status', ['confirmed', 'processing'])
+                                ->count();
+                        @endphp
+
+                        <!-- Calendar Schedule Notification -->
+                        <div x-data="{ openSchedule: false }" @click.away="openSchedule = false" class="relative">
+                            <button
+                                @click="openSchedule = !openSchedule"
+                                class="relative text-gray-500 transition-colors hover:text-gray-700 focus:outline-none"
+                                title="Jadwal Prepare H-3"
+                            >
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                @if($scheduleNotificationCount > 0)
+                                    <span class="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-bold text-white bg-yellow-500 rounded-full">
+                                        {{ $scheduleNotificationCount > 99 ? '99+' : $scheduleNotificationCount }}
+                                    </span>
+                                @endif
+                            </button>
+
+                            <div x-show="openSchedule"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform scale-95"
+                                x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform scale-100"
+                                x-transition:leave-end="opacity-0 transform scale-95"
+                                class="absolute right-0 z-50 w-80 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5">
+
+                                <div class="px-4 py-3 border-b border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-semibold text-gray-900">Jadwal Aktif</h3>
+                                        <span class="px-2 py-1 text-xs font-medium text-yellow-900 bg-yellow-100 rounded-full">
+                                            {{ $scheduleNotificationCount }} Aktif
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="max-h-96 overflow-y-auto">
+                                    @forelse($scheduleActiveOrders as $order)
+                                        <a href="{{ route('admin.orders.show', $order->id) }}"
+                                            class="block px-4 py-3 transition-colors border-b border-gray-100 hover:bg-yellow-50">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0">
+                                                    <div class="flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-full">
+                                                        <svg class="w-5 h-5 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Pesanan #{{ $order->id }}</p>
+                                                    <p class="mt-1 text-xs text-gray-500">{{ $order->customer_name }}</p>
+                                                    <p class="mt-1 text-xs text-gray-400">Acara: {{ \Carbon\Carbon::parse($order->event_date)->format('d/m/Y') }} {{ $order->event_time ?: '' }}</p>
+                                                    <p class="mt-1 text-[11px] font-semibold text-blue-700">{{ $order->status === 'processing' ? 'Diproses' : 'Terverifikasi' }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="px-4 py-8 text-center">
+                                            <p class="text-sm text-gray-500">Tidak ada jadwal aktif.</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+
+                                <div class="px-4 py-3 border-t border-gray-200 bg-gray-50">
+                                    <a href="{{ route('admin.orders.schedule') }}" class="block text-sm font-medium text-center text-indigo-600 hover:text-indigo-700">
+                                        Lihat Kalender Jadwal
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Notifications -->
                         @php
                             $lastReadAt = auth()->user()->last_notification_read_at;

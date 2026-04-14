@@ -276,17 +276,6 @@
                     <!-- Payment Verification Status -->
                     @if($order->latestPaymentVerification)
                     <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
-                            <h3 class="text-base sm:text-lg font-semibold">Status Pembayaran</h3>
-                            @if($order->latestPaymentVerification->status === 'pending')
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">Menunggu Verifikasi</span>
-                            @elseif($order->latestPaymentVerification->status === 'verified')
-                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Terverifikasi</span>
-                            @else
-                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">Ditolak</span>
-                            @endif
-                        </div>
-
                         <!-- Payment Type Badge -->
                         @if($order->latestPaymentVerification->payment_type === 'dp')
                         <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -329,6 +318,21 @@
                             <p class="text-sm text-red-800"><strong>Catatan Penolakan:</strong> {{ $order->latestPaymentVerification->verification_notes }}</p>
                         </div>
                         @endif
+                    </div>
+                    @elseif(in_array($order->status, ['confirmed', 'completed']))
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-lg shadow-md mb-6 border-2 border-green-200">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-8 h-8 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-green-900">✅ Pembayaran Sudah Dikonfirmasi</h3>
+                                <p class="text-sm text-green-700 mt-1">Pesanan Anda telah dikonfirmasi dan sedang diproses oleh tim kami.</p>
+                                @if($order->paid_at)
+                                <p class="text-xs text-green-600 mt-2">Dikonfirmasi pada: {{ $order->paid_at->format('d M Y, H:i') }}</p>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     @endif
 

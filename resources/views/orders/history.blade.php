@@ -277,12 +277,6 @@
 
                                 <!-- Payment Status Info -->
                                 <div class="md:col-span-2 bg-white rounded-lg shadow-sm p-4 border-l-4 border-orange-400">
-                                    <h4 class="font-bold text-gray-900 mb-3 flex items-center">
-                                        <svg class="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                        </svg>
-                                        Status Pembayaran
-                                    </h4>
                                     @if($order->latestPaymentVerification)
                                         @if($order->latestPaymentVerification->status === 'pending')
                                         <div class="flex items-center space-x-3 bg-yellow-50 p-4 rounded-lg">
@@ -292,8 +286,8 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="font-medium text-gray-900">⏳ Bukti Pembayaran Sedang Diverifikasi</p>
-                                                <p class="text-sm text-gray-600">Admin sedang memverifikasi bukti pembayaran Anda. Mohon tunggu beberapa saat.</p>
+                                                <p class="font-medium text-gray-900">✓ Bukti Pembayaran Sudah Diupload</p>
+                                                <p class="text-sm text-gray-600">Bukti transfer Anda sudah masuk ke sistem.</p>
                                                 <a href="{{ route('orders.show', $order) }}" class="text-sm text-orange-600 hover:text-orange-700 font-medium mt-1 inline-block">Lihat Detail Bukti →</a>
                                             </div>
                                         </div>

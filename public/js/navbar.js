@@ -154,46 +154,46 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Daftar menu (dalam prakteknya, ini bisa diambil dari database)
-const menuItems = {
-  'prasmanan': [
-    { name: 'Paket Prasmanan Standard', price: 'Rp 35.000/pax', description: 'Menu prasmanan lengkap 7 item', category: 'Prasmanan' },
-    { name: 'Paket Prasmanan Premium', price: 'Rp 45.000/pax', description: 'Menu prasmanan lengkap 10 item', category: 'Prasmanan' }
-  ],
-  'tumpeng': [
-    { name: 'Tumpeng Mini', price: 'Rp 250.000', description: 'Untuk 7-10 orang', category: 'Tumpeng' },
-    { name: 'Tumpeng Regular', price: 'Rp 450.000', description: 'Untuk 15-20 orang', category: 'Tumpeng' }
-  ],
-  'nasi-box': [
-    { name: 'Nasi Box Basic', price: 'Rp 25.000', description: '4 item menu', category: 'Nasi Box' },
-    { name: 'Nasi Box Premium', price: 'Rp 35.000', description: '6 item menu', category: 'Nasi Box' }
-  ],
-  'snack': [
-    { name: 'Snack Box Mini', price: 'Rp 15.000', description: '3 macam snack', category: 'Snack' },
-    { name: 'Snack Box Complete', price: 'Rp 25.000', description: '5 macam snack', category: 'Snack' }
-  ]
-};
+function normalizeSearchValue(value) {
+  return (value || '')
+    .toString()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, '');
+}
 
+function closeSearchDropdown() {
+  const searchInput = document.querySelector('input[x-model="searchQuery"]');
+  if (searchInput) {
+    searchInput.value = '';
+    searchInput.dispatchEvent(new Event('input'));
+  }
+}
 
+function selectMenuSearchItem(url) {
+  closeSearchDropdown();
+  window.location.href = url;
+}
 
 function searchMenus() {
-  const searchQuery = document.querySelector('input[x-model="searchQuery"]').value.toLowerCase();
+  const searchInput = document.querySelector('input[x-model="searchQuery"]');
+  const searchQuery = normalizeSearchValue(searchInput ? searchInput.value : '');
   const resultsContainer = document.getElementById('searchResults');
-  
+
   if (searchQuery.length === 0) {
     resultsContainer.innerHTML = '';
     return;
   }
 
-  let results = [];
-  Object.values(menuItems).forEach(category => {
-    category.forEach(item => {
-      if (item.name.toLowerCase().includes(searchQuery) || 
-          item.category.toLowerCase().includes(searchQuery) ||
-          item.description.toLowerCase().includes(searchQuery)) {
-        results.push(item);
-      }
-    });
+  const results = (window.menuSearchItems || []).filter(item => {
+    const name = normalizeSearchValue(item.name);
+    const category = normalizeSearchValue(item.category);
+    const description = normalizeSearchValue(item.description);
+    const slug = normalizeSearchValue(item.slug);
+
+    return name.includes(searchQuery) ||
+      category.includes(searchQuery) ||
+      description.includes(searchQuery) ||
+      slug.includes(searchQuery);
   });
 
   if (results.length === 0) {
@@ -206,24 +206,20 @@ function searchMenus() {
   }
 
   resultsContainer.innerHTML = results.map(item => `
-    <div class="py-2 px-4 hover:bg-gray-50 cursor-pointer" onclick="scrollToCategory('${item.category.toLowerCase()}')">
+    <button type="button" class="w-full text-left py-2 px-4 hover:bg-gray-50 cursor-pointer" data-menu-url="${item.url}">
       <div class="font-medium text-gray-800">${item.name}</div>
-      <div class="text-sm text-gray-500">${item.category} • ${item.price}</div>
+      <div class="text-sm text-gray-500">${item.category}</div>
       <div class="text-xs text-gray-400">${item.description}</div>
-    </div>
+    </button>
   `).join('');
-}
-
-function scrollToCategory(category) {
-  const section = document.getElementById('menu');
-  section.scrollIntoView({ behavior: 'smooth' });
   
-  // Close the search dropdown
-  const searchInput = document.querySelector('input[x-model="searchQuery"]');
-  if (searchInput) {
-    searchInput.value = '';
-    searchInput.dispatchEvent(new Event('input'));
-  }
+  // Attach click handlers to all menu search result buttons
+  document.querySelectorAll('[data-menu-url]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      selectMenuSearchItem(this.getAttribute('data-menu-url'));
+    });
+  });
 }
 
 // Cart Management
