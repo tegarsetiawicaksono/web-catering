@@ -114,6 +114,7 @@ Route::get('/menu/nasibox', [MenuController::class, 'nasibox'])->name('menu.nasi
 Route::get('/menu/nasi-box', [MenuController::class, 'nasibox'])->name('menu.nasi-box');
 Route::get('/menu/hampers', [MenuController::class, 'hampers'])->name('menu.hampers');
 Route::get('/menu/snack', [MenuController::class, 'snack'])->name('menu.snack');
+Route::get('/menu/{slug}', [MenuController::class, 'category'])->name('menu.category');
 
 // Checkout routes - Multi-step
 Route::middleware(['auth'])->group(function () {
