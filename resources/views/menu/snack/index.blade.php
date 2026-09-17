@@ -40,7 +40,7 @@
 
     <!-- Packages Grid -->
     <div class="relative z-10">
-        <div class="container max-w-7xl mx-auto px-4 py-16">
+        <div class="container max-w-7xl mx-auto px-3 py-8 sm:px-4 sm:py-12 md:py-16">
             @if($menus->isEmpty())
             <div class="text-center py-12">
                 <p class="text-gray-600 text-lg">Belum ada menu snack tersedia</p>
@@ -61,24 +61,24 @@
             }">
                 <!-- Navigation Buttons -->
                 <button @click="scrollLeft"
-                    class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -ml-4">
+                    class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -ml-2 sm:-ml-4">
                     <svg class="w-6 h-6 text-[#86765a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
 
                 <button @click="scrollRight"
-                    class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -mr-4">
+                    class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -mr-2 sm:-mr-4">
                     <svg class="w-6 h-6 text-[#86765a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
 
                 <!-- Scroll Container -->
-                <div x-ref="scrollContainer" class="overflow-x-auto hide-scrollbar snap-x snap-mandatory px-2">
-                    <div class="flex gap-6 pb-4">
+                <div x-ref="scrollContainer" class="overflow-x-auto hide-scrollbar snap-x snap-mandatory px-1 sm:px-2">
+                    <div class="flex gap-3 sm:gap-6 pb-4">
                         @foreach($menus as $menu)
-                        <div class="flex-shrink-0 w-80 snap-center" x-data="{ showMenu: false }">
+                        <div class="w-[calc(100vw-3rem)] max-w-sm flex-shrink-0 snap-center" x-data="{ showMenu: false }">
                             <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden h-full border border-white/50">
                                 <div class="relative">
                                     @if($menu->gambar)
@@ -87,21 +87,21 @@
                                             ? $menu->gambar
                                             : 'foto/' . ltrim($menu->gambar, '/');
                                     @endphp
-                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
+                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="aspect-[4/3] w-full object-contain bg-gray-50 p-2 sm:h-64 md:h-72" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
                                     @else
                                     <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                                     @endif
-                                    <div class="absolute top-4 right-4 bg-gradient-to-r from-[#86765a] to-amber-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                                    <div class="absolute top-3 right-3 bg-gradient-to-r from-[#86765a] to-amber-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm sm:text-base font-bold shadow-lg">
                                         Rp {{ number_format($menu->harga, 0, ',', '.') }}/pax
                                     </div>
                                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                                        <h3 class="text-2xl font-bold text-white drop-shadow-lg">{{ $menu->nama }}</h3>
+                                        <h3 class="text-xl sm:text-2xl font-bold text-white drop-shadow-lg">{{ $menu->nama }}</h3>
                                     </div>
                                 </div>
-                                <div class="p-5">
+                                <div class="p-4 sm:p-5">
                                     <!-- Toggle Button -->
                                     <button @click="showMenu = !showMenu"
-                                        class="w-full mb-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2.5 rounded-lg font-medium flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all">
+                                        class="w-full mb-3 sm:mb-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2.5 rounded-lg text-sm sm:text-base font-medium flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                         </svg>
@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="mt-5 space-y-2">
+                                    <div class="mt-4 sm:mt-5 space-y-2">
                                         @auth
                                         <!-- Pesan Sekarang -->
                                         <a href="{{ route('checkout.show') }}?package=snack&name={{ urlencode($menu->nama) }}&price={{ $menu->harga }}&min={{ $menu->min_order }}&menu_id={{ $menu->id }}"
