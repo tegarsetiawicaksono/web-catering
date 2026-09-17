@@ -7,6 +7,7 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class CheckoutController extends Controller
 {
@@ -218,12 +219,18 @@ class CheckoutController extends Controller
             ->pluck('bank_name')
             ->toArray();
         
-        // Add 'cash' to valid payment methods
-        $validPaymentMethods = array_merge($activeBankNames, ['cash']);
+        // Accept legacy bank-name selections from the UI, but store them as transfer.
+        $validPaymentMethods = array_merge($activeBankNames, ['transfer', 'cash']);
         
         $validated = $request->validate([
-            'payment_method' => 'required|in:' . implode(',', $validPaymentMethods),
+            'payment_method' => ['required', Rule::in($validPaymentMethods)],
         ]);
+
+        $selectedBankName = null;
+        if (in_array($validated['payment_method'], $activeBankNames, true)) {
+            $selectedBankName = $validated['payment_method'];
+            $validated['payment_method'] = 'transfer';
+        }
 
         // Get all session data
         $step1 = session('checkout_step1');
@@ -280,6 +287,7 @@ class CheckoutController extends Controller
                 'total_price' => $totalPrice,
                 'notes' => $step2['notes'] ?? null,
                 'payment_method' => $validated['payment_method'],
+                'bank_name' => $selectedBankName,
                 'status' => 'pending',
                 'items' => $cart->items // Simpan detail items
             ]);
@@ -309,6 +317,7 @@ class CheckoutController extends Controller
                 'total_price' => $totalPrice,
                 'notes' => $step2['notes'] ?? null,
                 'payment_method' => $validated['payment_method'],
+                'bank_name' => $selectedBankName,
                 'status' => 'pending'
             ]);
 

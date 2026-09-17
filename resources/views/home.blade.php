@@ -317,6 +317,19 @@
                       </svg>
                       <span>Tersedia snack tradisional & modern</span>
                     </div>
+                    @else
+                    <div class="flex items-center text-[10px] sm:text-xs md:text-sm text-gray-600">
+                      <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-amber-500 mr-1 sm:mr-1.5 md:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Menu dibuat khusus sesuai kebutuhan acara</span>
+                    </div>
+                    <div class="flex items-center text-[10px] sm:text-xs md:text-sm text-gray-600">
+                      <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-amber-500 mr-1 sm:mr-1.5 md:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Bisa request kombinasi menu dan porsi</span>
+                    </div>
                     @endif
                   @endif
                 </div>
@@ -326,7 +339,12 @@
                       @if($category->slug === 'tumpeng')
                         Mulai Rp {{ number_format($category->harga_mulai, 0, ',', '.') }}
                       @else
-                        Mulai Rp {{ number_format($category->harga_mulai, 0, ',', '.') }}/{{ $category->slug === 'buffet' ? 'porsi' : 'box' }}
+                        @php
+                          $priceUnit = $category->slug === 'buffet'
+                            ? 'porsi'
+                            : (in_array($category->slug, ['nasibox', 'nasi-box'], true) ? 'box' : 'porsi');
+                        @endphp
+                        Mulai Rp {{ number_format($category->harga_mulai, 0, ',', '.') }}/{{ $priceUnit }}
                       @endif
                     @else
                       Hubungi kami

@@ -130,16 +130,11 @@ class PaymentVerificationController extends Controller
 
     public function adminIndex()
     {
-        $pendingOrders = Order::where('payment_status', 'pending')
-            ->whereNotNull('payment_proof')
+        $paymentOrders = Order::whereHas('latestPaymentVerification')
+            ->with('latestPaymentVerification')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $verifiedOrders = Order::whereIn('payment_status', ['verified', 'paid'])
-            ->orderBy('updated_at', 'desc')
-            ->limit(10)
-            ->get();
-
-        return view('admin.payment-verifications.index', compact('pendingOrders', 'verifiedOrders'));
+        return view('admin.payment-verifications.index', compact('paymentOrders'));
     }
 }

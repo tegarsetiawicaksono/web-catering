@@ -75,6 +75,97 @@ class AdminOrderController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
+    public function create()
+    {
+        return view('admin.orders.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:255'],
+            'province' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'district' => ['required', 'string', 'max:255'],
+            'street_address' => ['required', 'string'],
+            'event_date' => ['required', 'date', 'after_or_equal:today'],
+            'event_time' => ['required', 'date_format:H:i'],
+            'payment_method' => ['required', 'in:transfer,cash'],
+            'status' => ['required', 'in:pending,confirmed,completed,cancelled'],
+            'notes' => ['nullable', 'string'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.name' => ['required', 'string', 'max:255'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'items.*.price' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $normalizedItems = collect($validated['items'])
+            ->map(function (array $item): array {
+                return [
+                    'name' => trim((string) $item['name']),
+                    'quantity' => (int) $item['quantity'],
+                    'price' => (int) $item['price'],
+                ];
+            })
+            ->filter(function (array $item): bool {
+                return $item['name'] !== '';
+            })
+            ->values();
+
+        if ($normalizedItems->isEmpty()) {
+            return back()->withErrors([
+                'items' => 'Minimal harus ada satu item pesanan.',
+            ])->withInput();
+        }
+
+        $totalQuantity = $normalizedItems->sum('quantity');
+        $totalPrice = $normalizedItems->sum(function (array $item): int {
+            return $item['quantity'] * $item['price'];
+        });
+
+        $packageName = $normalizedItems->pluck('name')->join(', ');
+
+        $paymentStatus = 'pending';
+        $paidAt = null;
+        if ($validated['status'] === 'confirmed') {
+            $paymentStatus = 'verified';
+            $paidAt = Carbon::now();
+        }
+        if ($validated['status'] === 'completed') {
+            $paymentStatus = 'paid';
+            $paidAt = Carbon::now();
+        }
+
+        $order = Order::create([
+            'user_id' => null,
+            'customer_name' => $validated['customer_name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'province' => $validated['province'],
+            'city' => $validated['city'],
+            'district' => $validated['district'],
+            'street_address' => $validated['street_address'],
+            'event_date' => Carbon::parse($validated['event_date'])->toDateString(),
+            'event_time' => Carbon::parse($validated['event_time'])->format('H:i:s'),
+            'quantity' => $totalQuantity,
+            'notes' => $validated['notes'] ?? null,
+            'package_name' => $packageName,
+            'package_price' => 0,
+            'total_price' => $totalPrice,
+            'items' => $normalizedItems->all(),
+            'status' => $validated['status'],
+            'payment_method' => $validated['payment_method'],
+            'payment_status' => $paymentStatus,
+            'paid_at' => $paidAt,
+        ]);
+
+        return redirect()
+            ->route('admin.orders.show', $order)
+            ->with('success', 'Pesanan manual berhasil dibuat dan siap diproses.');
+    }
+
     public function show(Order $order)
     {
         return view('admin.orders.show', compact('order'));

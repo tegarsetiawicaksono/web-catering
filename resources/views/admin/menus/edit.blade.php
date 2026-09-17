@@ -1,7 +1,7 @@
 <x-admin-layout>
     <div class="max-w-3xl p-4 mx-auto sm:p-6 lg:p-8">
         <div class="mb-6">
-            <a href="{{ route('admin.menus.index') }}" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-700">
+            <a href="{{ route('admin.menus.index', $filters ?? []) }}" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-700">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -14,7 +14,7 @@
                 <h2 class="text-2xl font-bold text-gray-900">Edit Menu</h2>
                 <p class="mt-1 text-sm text-gray-600">Update informasi menu catering</p>
 
-                <form action="{{ route('admin.menus.update', $menu) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
+                <form action="{{ route('admin.menus.update', array_merge(['menu' => $menu], $filters ?? [])) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
                     @csrf
                     @method('PUT')
 
@@ -109,7 +109,7 @@
 
                     <!-- Buttons -->
                     <div class="flex justify-end pt-5 space-x-3 border-t border-gray-200">
-                        <a href="{{ route('admin.menus.index') }}"
+                        <a href="{{ route('admin.menus.index', $filters ?? []) }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Batal
                         </a>

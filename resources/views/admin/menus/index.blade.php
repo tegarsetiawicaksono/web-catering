@@ -7,12 +7,12 @@
                 <p class="mt-1 text-sm text-gray-600">Tambah, edit, dan hapus menu catering</p>
             </div>
             <div class="mt-4 sm:mt-0">
-                <a href="{{ route('admin.menus.create') }}"
+                <a href="{{ route('admin.menus.create', request('custom_only') ? ['custom_only' => 1] : []) }}"
                     class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Tambah Menu
+                    {{ request('custom_only') ? 'Tambah Menu Custom' : 'Tambah Menu' }}
                 </a>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="mb-6">
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('admin.menus.index') }}"
-                    class="px-4 py-2 text-sm font-medium rounded-lg {{ !request('kategori') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
+                    class="px-4 py-2 text-sm font-medium rounded-lg {{ !request('kategori') && !request('custom_only') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }}">
                     Semua
                 </a>
                 <a href="{{ route('admin.menus.index', ['custom_only' => 1]) }}"
@@ -94,25 +94,25 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                 <div class="flex items-center space-x-3">
-                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.menus.move', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST" class="inline">
                                         @csrf
                                         <input type="hidden" name="direction" value="up">
                                         <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke atas">
                                             ↑
                                         </button>
                                     </form>
-                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.menus.move', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST" class="inline">
                                         @csrf
                                         <input type="hidden" name="direction" value="down">
                                         <button type="submit" class="text-gray-600 hover:text-gray-900" title="Pindah ke bawah">
                                             ↓
                                         </button>
                                     </form>
-                                    <a href="{{ route('admin.menus.edit', $menu) }}"
+                                    <a href="{{ route('admin.menus.edit', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}"
                                         class="text-indigo-600 hover:text-indigo-900">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.menus.destroy', $menu) }}" method="POST"
+                                    <form action="{{ route('admin.menus.destroy', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus menu ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -180,25 +180,25 @@
                                     <p class="text-xs text-gray-500">Min. {{ $menu->min_order }} porsi</p>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST">
+                                    <form action="{{ route('admin.menus.move', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="direction" value="up">
                                         <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
                                             ↑
                                         </button>
                                     </form>
-                                    <form action="{{ route('admin.menus.move', $menu) }}" method="POST">
+                                    <form action="{{ route('admin.menus.move', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="direction" value="down">
                                         <button type="submit" class="px-2 py-1.5 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
                                             ↓
                                         </button>
                                     </form>
-                                    <a href="{{ route('admin.menus.edit', $menu) }}"
+                                    <a href="{{ route('admin.menus.edit', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}"
                                         class="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.menus.destroy', $menu) }}" method="POST"
+                                    <form action="{{ route('admin.menus.destroy', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST"
                                         onsubmit="return confirm('Yakin ingin menghapus menu ini?')">
                                         @csrf
                                         @method('DELETE')

@@ -58,6 +58,8 @@ class AdminMenuController extends Controller
             'direction' => 'required|in:up,down',
         ]);
 
+        $filters = $request->only(['kategori', 'custom_only']);
+
         $menusInCategory = Menu::where('kategori', $menu->kategori)
             ->orderBy('order')
             ->orderBy('id')
@@ -80,13 +82,13 @@ class AdminMenuController extends Controller
         $currentIndex = $orderedIds->search($menu->id);
 
         if ($currentIndex === false) {
-            return back();
+            return redirect()->route('admin.menus.index', $filters);
         }
 
         $targetIndex = $request->direction === 'up' ? $currentIndex - 1 : $currentIndex + 1;
 
         if (!isset($orderedIds[$targetIndex])) {
-            return back();
+            return redirect()->route('admin.menus.index', $filters);
         }
 
         $currentId = $orderedIds[$currentIndex];
@@ -95,17 +97,20 @@ class AdminMenuController extends Controller
         Menu::whereKey($currentId)->update(['order' => $targetIndex + 1]);
         Menu::whereKey($targetId)->update(['order' => $currentIndex + 1]);
 
-        return back()->with('success', 'Urutan menu berhasil diperbarui.');
+        return redirect()->route('admin.menus.index', $filters)
+            ->with('success', 'Urutan menu berhasil diperbarui.');
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::query()
             ->where('is_active', true)
             ->orderBy('nama')
             ->get(['nama', 'slug']);
 
-        return view('admin.menus.create', compact('categories'));
+        $customOnly = $request->boolean('custom_only');
+
+        return view('admin.menus.create', compact('categories', 'customOnly'));
     }
 
     public function store(Request $request)
@@ -135,18 +140,20 @@ class AdminMenuController extends Controller
 
         Menu::create($validated);
 
-        return redirect()->route('admin.menus.index')
+        return redirect()->route('admin.menus.index', $request->boolean('custom_only') ? ['custom_only' => 1] : [])
             ->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    public function edit(Menu $menu)
+    public function edit(Request $request, Menu $menu)
     {
         $categories = Category::query()
             ->where('is_active', true)
             ->orderBy('nama')
             ->get(['nama', 'slug']);
 
-        return view('admin.menus.edit', compact('menu', 'categories'));
+        $filters = $request->only(['kategori', 'custom_only']);
+
+        return view('admin.menus.edit', compact('menu', 'categories', 'filters'));
     }
 
     public function update(Request $request, Menu $menu)
@@ -179,11 +186,11 @@ class AdminMenuController extends Controller
 
         $menu->update($validated);
 
-        return redirect()->route('admin.menus.index')
+        return redirect()->route('admin.menus.index', $request->only(['kategori', 'custom_only']))
             ->with('success', 'Menu berhasil diupdate!');
     }
 
-    public function destroy(Menu $menu)
+    public function destroy(Request $request, Menu $menu)
     {
         // Hapus gambar
         if ($menu->gambar && file_exists(public_path('foto/' . $menu->gambar))) {
@@ -192,7 +199,7 @@ class AdminMenuController extends Controller
 
         $menu->delete();
 
-        return redirect()->route('admin.menus.index')
+        return redirect()->route('admin.menus.index', $request->only(['kategori', 'custom_only']))
             ->with('success', 'Menu berhasil dihapus!');
     }
 }

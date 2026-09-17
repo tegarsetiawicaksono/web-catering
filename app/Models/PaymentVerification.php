@@ -65,19 +65,17 @@ class PaymentVerification extends Model
             $order->update([
                 'paid_amount' => $order->paid_amount + $this->amount,
                 'remaining_amount' => 0,
-                'payment_status' => 'fully_paid'
+                'payment_status' => 'fully_paid',
+                'paid_at' => now()
             ]);
-            // Update order status to paid
-            $order->updatePaymentStatus('paid');
         } else {
             // Full payment verified
             $order->update([
                 'paid_amount' => $this->amount,
                 'remaining_amount' => 0,
-                'payment_status' => 'fully_paid'
+                'payment_status' => 'fully_paid',
+                'paid_at' => now()
             ]);
-            // Update order status to paid
-            $order->updatePaymentStatus('paid');
         }
 
         // Auto-send invoice to customer's WhatsApp when full payment is verified

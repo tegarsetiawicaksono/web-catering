@@ -21,7 +21,7 @@
                     <span class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full">Semua</span>
                 </div>
                 <h3 class="mb-1 text-sm font-medium text-gray-600">Total Pesanan</h3>
-                <p class="text-3xl font-bold text-gray-900">{{ $todayOrders }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $totalOrders }}</p>
                 <p class="mt-2 text-xs text-gray-500">
                     Keseluruhan pesanan masuk
                 </p>

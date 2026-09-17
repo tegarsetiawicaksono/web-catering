@@ -40,6 +40,7 @@ class Gallery extends Model
             'nasibox' => 'Nasi Box',
             'snack' => 'Snack',
             'hampers' => 'Hampers',
+            'wedding' => 'Wedding',
             default => ucfirst($this->category),
         };
     }

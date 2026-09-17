@@ -125,17 +125,42 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 border border-gray-200 rounded-lg">
-                                <p class="text-xs font-semibold text-gray-500">Jumlah Porsi</p>
+                                <p class="text-xs font-semibold text-gray-500">Total Porsi</p>
                                 <p class="mt-2 text-2xl font-bold text-gray-900">{{ $order->quantity }}</p>
                                 <p class="text-xs text-gray-500">porsi</p>
                             </div>
                             <div class="p-4 border border-gray-200 rounded-lg">
-                                <p class="text-xs font-semibold text-gray-500">Harga per Porsi</p>
+                                <p class="text-xs font-semibold text-gray-500">Rata-rata per Porsi</p>
                                 <p class="mt-2 text-2xl font-bold text-gray-900">
-                                    Rp {{ number_format($order->total_price / $order->quantity, 0, ',', '.') }}
+                                    Rp {{ $order->quantity > 0 ? number_format($order->total_price / $order->quantity, 0, ',', '.') : '0' }}
                                 </p>
                             </div>
                         </div>
+
+                        @if($order->items && count($order->items) > 0)
+                        <div class="overflow-hidden rounded-lg border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Item</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Qty</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Harga</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 bg-white">
+                                    @foreach($order->items as $item)
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-900">{{ $item['name'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">{{ $item['quantity'] ?? 0 }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">Rp {{ number_format($item['price'] ?? 0, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">Rp {{ number_format((($item['price'] ?? 0) * ($item['quantity'] ?? 0)), 0, ',', '.') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -215,7 +240,7 @@
             <!-- Transfer Payment Verification -->
             <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center">
                         <div class="flex items-center">
                             <div class="flex items-center justify-center w-10 h-10 mr-3 bg-blue-100 rounded-lg">
                                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,13 +249,6 @@
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900">Bukti Pembayaran</h3>
                         </div>
-                        @if($order->latestPaymentVerification->status === 'pending')
-                        <span class="px-3 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Menunggu Verifikasi</span>
-                        @elseif($order->latestPaymentVerification->status === 'verified')
-                        <span class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Terverifikasi</span>
-                        @else
-                        <span class="px-3 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">Ditolak</span>
-                        @endif
                     </div>
                 </div>
                 <div class="p-6">

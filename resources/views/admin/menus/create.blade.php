@@ -1,7 +1,7 @@
 <x-admin-layout>
     <div class="max-w-3xl p-4 mx-auto sm:p-6 lg:p-8">
         <div class="mb-6">
-            <a href="{{ route('admin.menus.index') }}" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-700">
+            <a href="{{ route('admin.menus.index', $customOnly ? ['custom_only' => 1] : []) }}" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-700">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -11,11 +11,14 @@
 
         <div class="overflow-hidden bg-white rounded-lg shadow">
             <div class="px-4 py-5 sm:p-6">
-                <h2 class="text-2xl font-bold text-gray-900">Tambah Menu Baru</h2>
+                <h2 class="text-2xl font-bold text-gray-900">{{ $customOnly ? 'Tambah Menu Custom' : 'Tambah Menu Baru' }}</h2>
                 <p class="mt-1 text-sm text-gray-600">Isi form di bawah untuk menambah menu catering</p>
 
                 <form action="{{ route('admin.menus.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
                     @csrf
+                    @if($customOnly)
+                    <input type="hidden" name="custom_only" value="1">
+                    @endif
 
                     <!-- Nama Menu -->
                     <div>
@@ -77,7 +80,7 @@
 
                     <div>
                         <label class="inline-flex items-center gap-2">
-                            <input type="checkbox" name="is_custom" value="1" {{ old('is_custom') ? 'checked' : '' }}
+                            <input type="checkbox" name="is_custom" value="1" {{ old('is_custom', $customOnly) ? 'checked' : '' }}
                                 class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                             <span class="text-sm font-medium text-gray-700">Tandai sebagai Menu Custom</span>
                         </label>
@@ -99,7 +102,7 @@
 
                     <!-- Buttons -->
                     <div class="flex justify-end pt-5 space-x-3 border-t border-gray-200">
-                        <a href="{{ route('admin.menus.index') }}"
+                        <a href="{{ route('admin.menus.index', $customOnly ? ['custom_only' => 1] : []) }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Batal
                         </a>

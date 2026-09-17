@@ -82,6 +82,7 @@
                             'nasi-box' => 'bg-yellow-500',
                             'snack' => 'bg-pink-500',
                             'hampers' => 'bg-rose-500',
+                            'wedding' => 'bg-red-500',
                         ];
                     @endphp
                     <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white cursor-pointer"

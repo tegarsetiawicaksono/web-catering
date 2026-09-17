@@ -82,7 +82,7 @@
 
                 <a href="{{ route('admin.menus.index') }}"
                     class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-lg group
-                          @if(request()->routeIs('admin.menus.*')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
+                          @if(request()->routeIs('admin.menus.*') && !request('custom_only')) bg-white bg-opacity-20 text-white @else text-indigo-100 hover:bg-white hover:bg-opacity-10 hover:text-white @endif">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>

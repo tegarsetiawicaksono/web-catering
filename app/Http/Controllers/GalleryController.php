@@ -39,7 +39,7 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'category' => 'required|in:buffet,tumpeng,nasibox,snack',
+            'category' => 'required|in:buffet,tumpeng,nasibox,snack,wedding',
             'caption' => 'nullable|string|max:255',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
@@ -71,7 +71,7 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery)
     {
         $validated = $request->validate([
-            'category' => 'required|in:buffet,tumpeng,nasibox,snack',
+            'category' => 'required|in:buffet,tumpeng,nasibox,snack,wedding',
             'caption' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);

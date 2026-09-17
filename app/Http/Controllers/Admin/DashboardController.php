@@ -37,6 +37,7 @@ class DashboardController extends Controller
         }
 
         return view('admin.dashboard', [
+            'totalOrders' => Order::count(),
             'todayOrders' => Order::whereDate('created_at', Carbon::today())->count(),
             'currentYearRevenue' => Order::whereYear('created_at', Carbon::now()->year)
                 ->sum('total_price'),
@@ -48,7 +49,8 @@ class DashboardController extends Controller
             'currentYear' => $currentYear,
             // DP Statistics
             'dpPaidOrders' => Order::where('payment_status', 'dp_paid')->count(),
-            'fullyPaidOrders' => Order::where('payment_status', 'fully_paid')->count(),
+            // Include legacy status values so old verified data is still counted.
+            'fullyPaidOrders' => Order::whereIn('payment_status', ['fully_paid', 'paid'])->count(),
             'dpReceivedAmount' => Order::where('payment_status', 'dp_paid')->sum('paid_amount'),
             'awaitingPayment' => Order::where('payment_status', 'dp_paid')->sum('remaining_amount'),
         ]);

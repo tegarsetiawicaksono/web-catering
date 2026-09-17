@@ -46,6 +46,13 @@ class CategorySeeder extends Seeder
                 'harga_mulai' => 15000,
                 'is_active' => true,
             ],
+            [
+                'nama' => 'Wedding',
+                'slug' => 'wedding',
+                'deskripsi' => 'Dokumentasi catering untuk acara pernikahan',
+                'gambar_url' => 'foto/buffet.jpg',
+                'is_active' => true,
+            ],
         ];
 
         foreach ($categories as $category) {

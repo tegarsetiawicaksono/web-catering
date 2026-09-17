@@ -282,13 +282,17 @@
 
             <div class="payment-info">
                 <h3>Informasi Pembayaran</h3>
-                <p><strong>Metode Pembayaran:</strong> {{ $order->payment_method ?? 'Transfer Bank' }}</p>
-                @if($order->payment_method && in_array($order->payment_method, ['BCA', 'BNI', 'BRI', 'Mandiri']))
-                <p><strong>Bank {{ $order->payment_method }}</strong><br>
-                    No. Rekening: 1234567890<br>
-                    a.n: PT Rejosari Catering</p>
+                <p><strong>Metode Pembayaran:</strong>
+                    @if($order->payment_method === 'cash')
+                    Tunai (Cash)
+                    @else
+                    Transfer Bank
+                    @endif
+                </p>
+                @if($order->payment_method === 'cash')
+                <p>Pembayaran dilakukan saat pengiriman pesanan.</p>
                 @else
-                <p><strong>Bank BCA</strong><br>
+                <p><strong>Bank {{ $order->bank_name ?: 'BCA' }}</strong><br>
                     No. Rekening: 1234567890<br>
                     a.n: PT Rejosari Catering</p>
                 @endif

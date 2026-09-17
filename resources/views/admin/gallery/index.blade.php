@@ -57,6 +57,7 @@
                                 'nasi-box' => 'bg-yellow-500',
                                 'snack' => 'bg-pink-500',
                                 'hampers' => 'bg-rose-500',
+                                'wedding' => 'bg-red-500',
                             ];
                         @endphp
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-white {{ $categoryColors[$gallery->category] ?? 'bg-gray-500' }} rounded-full">

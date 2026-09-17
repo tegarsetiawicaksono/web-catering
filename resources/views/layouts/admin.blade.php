@@ -142,11 +142,20 @@
 
                 <a href="{{ route('admin.menus.index') }}"
                     class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
-                          @if(request()->routeIs('admin.menus.*')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                          @if(request()->routeIs('admin.menus.*') && !request('custom_only')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Kelola Menu
+                </a>
+
+                <a href="{{ route('admin.menus.index', ['custom_only' => 1]) }}"
+                    class="flex items-center px-3 py-3 text-sm font-medium transition-all duration-200 rounded-lg group sm:px-4
+                          @if(request()->routeIs('admin.menus.*') && request('custom_only')) bg-white shadow-lg text-indigo-700 @else text-indigo-50 hover:bg-white hover:bg-opacity-10 hover:text-white hover:pl-5 @endif">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.02 3.138a1 1 0 00.95.69h3.298c.969 0 1.371 1.24.588 1.81l-2.668 1.939a1 1 0 00-.363 1.118l1.02 3.138c.3.921-.755 1.688-1.539 1.118l-2.668-1.939a1 1 0 00-1.176 0l-2.668 1.939c-.783.57-1.838-.197-1.539-1.118l1.02-3.138a1 1 0 00-.363-1.118L2.193 8.565c-.783-.57-.38-1.81.588-1.81h3.298a1 1 0 00.95-.69l1.02-3.138z" />
+                    </svg>
+                    Menu Custom
                 </a>
 
                 <a href="{{ route('admin.gallery.index') }}"
