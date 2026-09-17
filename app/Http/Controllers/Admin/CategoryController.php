@@ -8,6 +8,36 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    private function imageDirectory(): string
+    {
+        $directory = base_path('../public_html/foto');
+
+        if (!is_dir($directory)) {
+            $directory = public_path('foto');
+        }
+
+        return $directory;
+    }
+
+    private function deleteImage(?string $image): void
+    {
+        if (!$image) {
+            return;
+        }
+
+        $filename = basename($image);
+        $paths = [
+            public_path('foto/' . $filename),
+            $this->imageDirectory() . '/' . $filename,
+        ];
+
+        foreach (array_unique($paths) as $path) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
+
     public function index()
     {
         $categories = Category::orderBy('order')->orderBy('id')->paginate(20);
@@ -80,7 +110,7 @@ class CategoryController extends Controller
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
             $namaFile = time() . '_' . $gambar->getClientOriginalName();
-            $gambar->move(public_path('foto'), $namaFile);
+            $gambar->move($this->imageDirectory(), $namaFile);
             $gambarPath = 'foto/' . $namaFile;
         }
 
@@ -88,7 +118,7 @@ class CategoryController extends Controller
         if ($request->hasFile('gambar_background')) {
             $background = $request->file('gambar_background');
             $namaFile = time() . '_bg_' . $background->getClientOriginalName();
-            $background->move(public_path('foto'), $namaFile);
+            $background->move($this->imageDirectory(), $namaFile);
             $backgroundPath = 'foto/' . $namaFile;
         }
 
@@ -138,26 +168,22 @@ class CategoryController extends Controller
         // Handle gambar upload
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama
-            if ($category->gambar_url && file_exists(public_path($category->gambar_url))) {
-                unlink(public_path($category->gambar_url));
-            }
+            $this->deleteImage($category->gambar_url);
 
             $gambar = $request->file('gambar');
             $namaFile = time() . '_' . $gambar->getClientOriginalName();
-            $gambar->move(public_path('foto'), $namaFile);
+            $gambar->move($this->imageDirectory(), $namaFile);
             $gambarPath = 'foto/' . $namaFile;
         }
 
         // Handle gambar background upload
         if ($request->hasFile('gambar_background')) {
             // Hapus background lama
-            if ($category->gambar_background && file_exists(public_path($category->gambar_background))) {
-                unlink(public_path($category->gambar_background));
-            }
+            $this->deleteImage($category->gambar_background);
 
             $background = $request->file('gambar_background');
             $namaFile = time() . '_bg_' . $background->getClientOriginalName();
-            $background->move(public_path('foto'), $namaFile);
+            $background->move($this->imageDirectory(), $namaFile);
             $backgroundPath = 'foto/' . $namaFile;
         }
 

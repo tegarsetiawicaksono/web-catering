@@ -10,6 +10,36 @@ use Illuminate\Validation\Rule;
 
 class AdminMenuController extends Controller
 {
+    private function imageDirectory(): string
+    {
+        $directory = base_path('../public_html/foto');
+
+        if (!is_dir($directory)) {
+            $directory = public_path('foto');
+        }
+
+        return $directory;
+    }
+
+    private function deleteImage(?string $image): void
+    {
+        if (!$image) {
+            return;
+        }
+
+        $filename = basename($image);
+        $paths = [
+            public_path('foto/' . $filename),
+            $this->imageDirectory() . '/' . $filename,
+        ];
+
+        foreach (array_unique($paths) as $path) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+    }
+
     private function activeCategorySlugs(): array
     {
         $slugs = Category::query()
@@ -132,7 +162,7 @@ class AdminMenuController extends Controller
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
             $namaFile = time() . '_' . $gambar->getClientOriginalName();
-            $gambar->move(public_path('foto'), $namaFile);
+            $gambar->move($this->imageDirectory(), $namaFile);
             $validated['gambar'] = $namaFile;
         }
 
@@ -174,13 +204,11 @@ class AdminMenuController extends Controller
 
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama
-            if ($menu->gambar && file_exists(public_path('foto/' . $menu->gambar))) {
-                unlink(public_path('foto/' . $menu->gambar));
-            }
+            $this->deleteImage($menu->gambar);
 
             $gambar = $request->file('gambar');
             $namaFile = time() . '_' . $gambar->getClientOriginalName();
-            $gambar->move(public_path('foto'), $namaFile);
+            $gambar->move($this->imageDirectory(), $namaFile);
             $validated['gambar'] = $namaFile;
         }
 
@@ -193,9 +221,7 @@ class AdminMenuController extends Controller
     public function destroy(Request $request, Menu $menu)
     {
         // Hapus gambar
-        if ($menu->gambar && file_exists(public_path('foto/' . $menu->gambar))) {
-            unlink(public_path('foto/' . $menu->gambar));
-        }
+        $this->deleteImage($menu->gambar);
 
         $menu->delete();
 
