@@ -58,14 +58,14 @@
             }">
                 <!-- Navigation Buttons -->
                 <button @click="scrollLeft"
-                    class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -ml-2 sm:-ml-4">
+                    class="absolute left-1 top-1/3 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300">
                     <svg class="w-6 h-6 text-[#86765a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
 
                 <button @click="scrollRight"
-                    class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300 -mr-2 sm:-mr-4">
+                    class="absolute right-1 top-1/3 z-20 bg-white/90 backdrop-blur-sm p-2 sm:p-3 rounded-full shadow-xl hover:bg-white transition-all duration-300">
                     <svg class="w-6 h-6 text-[#86765a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
