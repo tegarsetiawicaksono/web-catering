@@ -32,19 +32,19 @@
       ];
     })->values();
   @endphp
-  <div class="container mx-auto px-4">
-    <div class="flex items-center">
+  <div class="container mx-auto px-3 sm:px-4">
+    <div class="flex min-h-12 items-center gap-2 sm:min-h-14 sm:gap-0">
       <!-- Hamburger Menu untuk Mobile -->
-      <button class="sm:hidden mr-4" @click="mobileMenuOpen = !mobileMenuOpen">
+      <button class="sm:hidden shrink-0 p-2" @click="mobileMenuOpen = !mobileMenuOpen">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
       <!-- KIRI: logo -->
-      <div class="flex-1">
-        <div class="flex items-center space-x-2">
-          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-12 md:h-16 w-auto object-contain">
-          <h1 class="font-bold text-lg md:text-xl leading-none">
+      <div class="min-w-0 flex-1">
+        <div class="flex min-w-0 items-center space-x-1.5 sm:space-x-2">
+          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-auto md:h-16">
+          <h1 class="min-w-0 truncate font-bold text-[13px] leading-tight sm:text-lg md:text-xl">
             <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
         </div>
@@ -62,9 +62,9 @@
       </div>
 
       <!-- KANAN: cart, search dan login/profile -->
-      <div class="flex-1 flex justify-end items-center space-x-4">
+      <div class="flex shrink-0 items-center justify-end gap-0.5 sm:flex-1 sm:gap-2 md:gap-4">
         @auth
-        @if(!Auth::user()->is_admin)
+        @if(!Auth::user()->is_admin && request()->routeIs('home'))
         <!-- Riwayat Pesanan Button -->
         <a href="{{ route('orders.history') }}" class="relative p-2 hover:bg-gray-100 rounded-full group" title="Riwayat Pesanan">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-[#86765a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,8 +79,9 @@
         @endif
         @endauth
 
-        <!-- Cart Button -->
+        @if(request()->routeIs('home'))
         <x-cart-button :order-notification-count="$userOrderNotificationCount" />
+        @endif
 
         <!-- Search Button and Form -->
         <div class="relative" x-data="{ isOpen: false, searchQuery: '' }">
