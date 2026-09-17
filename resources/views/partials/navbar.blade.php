@@ -34,19 +34,19 @@
       ];
     })->values();
   @endphp
-  <div class="container mx-auto px-3 sm:px-4">
-    <div class="flex min-h-12 items-center gap-2 sm:min-h-14 sm:gap-0">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center">
       <!-- Hamburger Menu untuk Mobile -->
-      <button @click="mobileMenuOpen = !mobileMenuOpen" class="sm:hidden shrink-0 p-2 hover:bg-gray-100 rounded-lg transition-colors">
+      <button @click="mobileMenuOpen = !mobileMenuOpen" class="sm:hidden mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
       </button>
       <!-- KIRI: logo -->
-      <div class="min-w-0 flex-1 sm:flex-1">
-        <div class="flex min-w-0 items-center space-x-1.5 sm:space-x-2">
-          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-auto md:h-14">
-          <h1 class="min-w-0 truncate font-bold text-[13px] leading-tight sm:text-lg md:text-xl">
+      <div class="flex-1">
+        <div class="flex items-center space-x-2">
+          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-10 md:h-14 w-auto object-contain">
+          <h1 class="font-bold text-lg md:text-xl leading-none">
             <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
         </div>
@@ -68,7 +68,7 @@
       </div>
 
       <!-- KANAN: cart dan login/profile -->
-      <div class="flex shrink-0 items-center justify-end gap-0.5 sm:flex-1 sm:gap-2 md:gap-4">
+      <div class="flex-1 flex justify-end items-center space-x-2 sm:space-x-4">
         @auth
         @if(!Auth::user()->is_admin)
         <!-- Riwayat Pesanan Button - Hidden on mobile -->
