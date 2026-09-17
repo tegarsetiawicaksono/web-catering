@@ -435,7 +435,7 @@
                       ? 'nasi-box'
                       : $gallery->category;
                   @endphp
-                  <a href="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" target="_blank" 
+                  <a href="{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}" target="_blank"
                      class="gallery-item group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 block transform hover:-translate-y-1" 
                      data-category="{{ $dataCategory }}" 
                      x-show="isVisible($el)" 
@@ -443,7 +443,7 @@
                      x-transition:enter-start="opacity-0 scale-95" 
                      x-transition:enter-end="opacity-100 scale-100" 
                      @click="if(window.innerWidth < 768) $event.preventDefault()">
-                    <img src="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
+                    <img src="{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}"
                          alt="{{ $gallery->caption ?? ucfirst($gallery->category) }}" 
                          class="w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 object-cover transition duration-500 transform group-hover:scale-110">
                     @if($gallery->caption)
