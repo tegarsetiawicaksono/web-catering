@@ -130,8 +130,7 @@ class PaymentVerificationController extends Controller
 
     public function adminIndex()
     {
-        $paymentOrders = Order::whereHas('latestPaymentVerification')
-            ->with('latestPaymentVerification')
+        $paymentOrders = Order::with('latestPaymentVerification')
             ->orderBy('created_at', 'desc')
             ->get();
 
