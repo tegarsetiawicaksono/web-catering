@@ -6,11 +6,45 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class GalleryController extends Controller
 {
+    private function galleryDirectory(): string
+    {
+        $directory = base_path('../public_html/foto/galeri');
+
+        if (!is_dir($directory)) {
+            $directory = public_path('foto/galeri');
+        }
+
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        return $directory;
+    }
+
+    private function deleteGalleryFile(?string $path): void
+    {
+        if (!$path) {
+            return;
+        }
+
+        $relativePath = ltrim($path, '/');
+        $paths = [
+            public_path($relativePath),
+            base_path('../public_html/' . $relativePath),
+            storage_path('app/public/' . $relativePath),
+        ];
+
+        foreach (array_unique($paths) as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+    }
+
     private function activeCategorySlugs(): array
     {
         $slugs = Category::query()
@@ -79,7 +113,10 @@ class GalleryController extends Controller
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $path = $request->file('photo')->store('foto/galeri', 'public');
+        $file = $request->file('photo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move($this->galleryDirectory(), $filename);
+        $path = 'foto/galeri/' . $filename;
         
         Gallery::create([
             'category' => $validated['category'],
@@ -120,17 +157,18 @@ class GalleryController extends Controller
 
         // Update photo if new one is uploaded
         if ($request->hasFile('photo')) {
-            if (! $request->file('photo')->isValid()) {
+            if (!$request->file('photo')->isValid()) {
                 return back()->withErrors([
                     'photo' => 'Upload foto gagal. Coba pilih file lain lalu simpan kembali.',
                 ])->withInput();
             }
 
             // Delete old photo
-            if ($gallery->path && Storage::disk('public')->exists($gallery->path)) {
-                Storage::disk('public')->delete($gallery->path);
-            }
-            $gallery->path = $request->file('photo')->store('foto/galeri', 'public');
+            $this->deleteGalleryFile($gallery->path);
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move($this->galleryDirectory(), $filename);
+            $gallery->path = 'foto/galeri/' . $filename;
         }
         
         // Update category and caption
@@ -149,9 +187,7 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         // Delete the photo file
-        if ($gallery->path && Storage::disk('public')->exists($gallery->path)) {
-            Storage::disk('public')->delete($gallery->path);
-        }
+        $this->deleteGalleryFile($gallery->path);
         
         $gallery->delete();
         

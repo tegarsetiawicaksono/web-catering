@@ -31,7 +31,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Foto Saat Ini</label>
                     <div class="relative aspect-video w-full max-w-md bg-gray-100 rounded-lg overflow-hidden">
-                        <img src="{{ asset('storage/'.$gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
+                        <img src="{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}"
                              alt="Current photo" 
                              class="w-full h-full object-cover">
                     </div>

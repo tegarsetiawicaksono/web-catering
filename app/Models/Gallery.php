@@ -25,7 +25,13 @@ class Gallery extends Model
      */
     public function getImageUrlAttribute(): string
     {
-        return asset('storage/' . $this->path);
+        $path = ltrim($this->path, '/');
+
+        if (is_file(public_path($path)) || is_file(base_path('../public_html/' . $path))) {
+            return asset($path);
+        }
+
+        return asset('storage/' . $path);
     }
 
     /**

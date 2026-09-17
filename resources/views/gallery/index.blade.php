@@ -86,9 +86,9 @@
                         ];
                     @endphp
                     <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white cursor-pointer"
-                        @click="openLightbox('{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}', '{{ $gallery->caption }}')">
+                        @click="openLightbox('{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}', '{{ $gallery->caption }}')">
                         <div class="aspect-square overflow-hidden">
-                           <img src="{{ asset('storage/' . $gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
+                           <img src="{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}"
                                  alt="{{ $gallery->caption }}" 
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         </div>

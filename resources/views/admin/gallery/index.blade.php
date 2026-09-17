@@ -45,7 +45,7 @@
         @forelse($galleries as $gallery)
             <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
                 <div class="relative aspect-video overflow-hidden bg-gray-100">
-                    <img src="{{ asset('storage/'.$gallery->path) }}?v={{ optional($gallery->updated_at)->timestamp }}" 
+                    <img src="{{ $gallery->image_url }}?v={{ optional($gallery->updated_at)->timestamp }}"
                          alt="{{ $gallery->caption }}" 
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute top-2 right-2">
