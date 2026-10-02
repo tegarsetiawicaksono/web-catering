@@ -30,17 +30,22 @@
           <!-- Image 1 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
             :class="{'opacity-100 scale-125': activeSlide === 1, 'opacity-0': activeSlide !== 1}">
-            <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background 1" class="w-full h-full object-cover">
+            <img src="{{ asset('foto/pondokan2.jpg') }}" alt="Background 1" class="w-full h-full object-cover">
           </div>
           <!-- Image 2 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
             :class="{'opacity-100 scale-125': activeSlide === 2, 'opacity-0': activeSlide !== 2}">
-            <img src="{{ asset('foto/buffet.jpg') }}" alt="Background 2" class="w-full h-full object-cover">
+            <img src="{{ asset('foto/pondokan.jpg') }}" alt="Background 2" class="w-full h-full object-cover">
           </div>
           <!-- Image 3 -->
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
             :class="{'opacity-100 scale-125': activeSlide === 3, 'opacity-0': activeSlide !== 3}">
-            <img src="{{ asset('foto/bg.jpg') }}" alt="Background 3" class="w-full h-full object-cover">
+            <img src="{{ asset('foto/vip.jpg') }}" alt="Background 3" class="w-full h-full object-cover">
+          </div>
+          <!-- Image 4 -->
+          <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110"
+            :class="{'opacity-100 scale-125': activeSlide === 4, 'opacity-0': activeSlide !== 4}">
+            <img src="{{ asset('foto/vip2.jpg') }}" alt="Background 4" class="w-full h-full object-cover">
           </div>
           <!-- Overlay -->
           <div class="absolute inset-0 bg-black opacity-60"></div>
@@ -72,7 +77,7 @@
     <section id="tentang" class="py-12 md:min-h-screen flex items-center relative">
       <!-- Background with overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover opacity-80">
+        <img src="{{ asset('foto/pondokan2.jpg') }}" alt="Background" class="w-full h-full object-cover opacity-80">
       </div>
 
       <!-- Content -->
@@ -216,7 +221,7 @@
     <section id="menu" class="py-12 md:min-h-screen flex items-center relative">
       <!-- Background image with overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover">
+        <img src="{{ asset('foto/pondokan.jpg') }}" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
@@ -235,14 +240,14 @@
               ? (\Illuminate\Support\Str::startsWith($category->gambar_url, ['foto/', 'http://', 'https://'])
                   ? $category->gambar_url
                   : 'foto/' . ltrim($category->gambar_url, '/'))
-              : 'foto/buffet.jpg';
+              : 'foto/vip2.jpg';
           @endphp
           <!-- {{ $category->nama }} -->
           <div class="group h-full">
             <a href="{{ route('menu.category', ['slug' => $category->slug]) }}" class="block h-full transition transform hover:-translate-y-1">
               <div class="bg-white/90 backdrop-blur-sm rounded-xl p-2 sm:p-3 md:p-5 shadow-lg group-hover:shadow-xl h-full border border-amber-100/80 flex flex-col">
                 <div class="relative overflow-hidden rounded-lg">
-                  <img src="{{ asset($categoryImage) }}" class="w-full h-36 sm:h-44 md:h-52 lg:h-60 object-contain bg-gradient-to-b from-amber-50 to-orange-50 p-2 transition duration-500 group-hover:scale-105" alt="Menu {{ $category->nama }}" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';" />
+                  <img src="{{ asset($categoryImage) }}" class="w-full h-36 sm:h-44 md:h-52 lg:h-60 object-contain bg-gradient-to-b from-amber-50 to-orange-50 p-2 transition duration-500 group-hover:scale-105" alt="Menu {{ $category->nama }}" onerror="this.onerror=null;this.src='{{ asset('foto/vip2.jpg') }}';" />
                 </div>
                 <h3 class="mt-2 sm:mt-3 md:mt-4 font-playfair font-bold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-amber-800 line-clamp-2 min-h-[2.8rem] sm:min-h-[3.2rem]">
                   {{ $category->nama }}
@@ -369,7 +374,7 @@
     <section id="galeri" class="py-12 md:min-h-screen flex flex-col relative">
       <!-- Background image with overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/buffet.jpg') }}" alt="Background" class="w-full h-full object-cover">
+        <img src="{{ asset('foto/vip2.jpg') }}" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
@@ -455,8 +460,8 @@
                 @endforeach
               @else
                 <!-- Fallback jika belum ada data di database -->
-                <a href="{{ asset('foto/buffet1.jpeg') }}" target="_blank" class="gallery-item group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 block transform hover:-translate-y-1" data-category="buffet" x-show="isVisible($el)">
-                  <img src="{{ asset('foto/buffet1.jpeg') }}" alt="Buffet 1" class="w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 object-cover transition duration-500 transform group-hover:scale-110">
+                <a href="{{ asset('foto/pondokan.jpg') }}" target="_blank" class="gallery-item group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 block transform hover:-translate-y-1" data-category="buffet" x-show="isVisible($el)">
+                  <img src="{{ asset('foto/pondokan.jpg') }}" alt="Buffet 1" class="w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 object-cover transition duration-500 transform group-hover:scale-110">
                 </a>
               @endif
             </div>
@@ -486,7 +491,7 @@
     <section id="kontak" class="py-12 md:min-h-screen flex items-start md:pt-20 relative">
       <!-- Background image with overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover">
+        <img src="{{ asset('foto/pondokan.jpg') }}" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
@@ -592,7 +597,7 @@
     <section id="klien" class="flex items-center relative py-8 md:py-16 overflow-hidden">
       <!-- Background with pattern overlay -->
       <div class="absolute inset-0 z-0">
-        <img src="{{ asset('foto/rjsbackground.jpg') }}" alt="Background" class="w-full h-full object-cover">
+        <img src="{{ asset('foto/pondokan2.jpg') }}" alt="Background" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black opacity-60"></div>
       </div>
 
@@ -942,7 +947,7 @@
           activeSlide: 1,
           init() {
             setInterval(() => {
-              this.activeSlide = this.activeSlide === 3 ? 1 : this.activeSlide + 1;
+              this.activeSlide = this.activeSlide === 4 ? 1 : this.activeSlide + 1;
             }, 3000);
           }
         }
