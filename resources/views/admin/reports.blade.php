@@ -2,7 +2,7 @@
     <div class="space-y-6">
         <!-- Filter Date -->
         <div class="bg-white shadow rounded-lg p-4">
-            <form action="{{ route('admin.reports') }}" method="GET" class="flex space-x-4">
+            <form action="{{ route('admin.reports') }}" method="GET" class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div class="flex-1">
                     <label for="start_date" class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
                     <input type="date" name="start_date" id="start_date" value="{{ $startDate->format('Y-m-d') }}"
@@ -14,7 +14,7 @@
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">
+                    <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">
                         Filter
                     </button>
                 </div>
@@ -54,7 +54,7 @@
 
         <!-- Detailed Orders -->
         <div class="bg-white shadow rounded-lg">
-            <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+            <div class="flex flex-col items-start gap-2 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                 <h3 class="text-lg font-medium text-gray-900">Detail Pesanan</h3>
                 <a href="#" onclick="window.print()" class="text-sm text-indigo-600 hover:text-indigo-900">
                     Download Laporan

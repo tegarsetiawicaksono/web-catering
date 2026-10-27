@@ -95,13 +95,13 @@
 
     <!-- Recent Orders Table -->
     <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div class="flex flex-col items-start gap-2 px-4 py-4 border-b border-gray-200 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <h3 class="text-lg font-semibold text-gray-900">Pesanan Terbaru</h3>
             <a href="{{ route('admin.orders.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">
                 Lihat Semua →
             </a>
         </div>
-        <div class="overflow-x-auto">
+        <div class="hidden overflow-x-auto md:block">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -177,6 +177,34 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div class="divide-y divide-gray-200 md:hidden">
+            @forelse($recentOrders as $order)
+            <article class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-gray-900">#{{ $order->id }}</p>
+                        <p class="mt-1 break-words text-sm text-gray-700">{{ $order->package_name }}</p>
+                        <p class="mt-1 break-words text-sm text-gray-900">{{ $order->customer_name }}</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ $order->event_date ? \Carbon\Carbon::parse($order->event_date)->format('d M Y') : '-' }}</p>
+                    </div>
+                    <span class="flex-shrink-0 text-sm font-semibold text-gray-900">
+                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                    </span>
+                </div>
+                <div class="flex items-center justify-between gap-3 pt-3 mt-3 border-t border-gray-100">
+                    <span class="text-xs font-medium text-gray-600">{{ ucfirst($order->status) }}</span>
+                    <a href="{{ route('admin.orders.show', $order) }}"
+                        class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+                        Detail
+                    </a>
+                </div>
+            </article>
+            @empty
+            <div class="px-6 py-12 text-center text-gray-500">
+                <p class="text-sm">Belum ada pesanan</p>
+            </div>
+            @endforelse
         </div>
     </div>
 </x-admin-layout>

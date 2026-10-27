@@ -240,7 +240,7 @@
             x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            class="inline-block w-full max-w-lg overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle">
             
             <!-- Modal Header -->
             <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700">
@@ -258,7 +258,7 @@
             </div>
 
             <!-- Modal Body -->
-            <div class="px-6 py-5">
+            <div class="px-4 py-5 sm:px-6">
                 <!-- User Avatar -->
                 <div class="flex justify-center mb-6">
                     <div class="flex items-center justify-center w-20 h-20 text-2xl font-bold text-white bg-indigo-600 rounded-full">
@@ -270,12 +270,12 @@
                 <div class="space-y-4">
                     <div class="pb-4 border-b border-gray-200">
                         <label class="block text-xs font-medium text-gray-500 uppercase">Nama Lengkap</label>
-                        <p class="mt-1 text-sm font-medium text-gray-900" x-text="user.name"></p>
+                        <p class="mt-1 break-words text-sm font-medium text-gray-900" x-text="user.name"></p>
                     </div>
 
                     <div class="pb-4 border-b border-gray-200">
                         <label class="block text-xs font-medium text-gray-500 uppercase">Email</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="user.email"></p>
+                        <p class="mt-1 break-all text-sm text-gray-900" x-text="user.email"></p>
                     </div>
 
                     <div class="pb-4 border-b border-gray-200">
@@ -293,7 +293,7 @@
 
                     <div class="pb-4 border-b border-gray-200">
                         <label class="block text-xs font-medium text-gray-500 uppercase">Alamat</label>
-                        <p class="mt-1 text-sm text-gray-900" x-text="user.address || '-'"></p>
+                        <p class="mt-1 break-words text-sm text-gray-900" x-text="user.address || '-'"></p>
                     </div>
 
                     <div class="pb-4 border-b border-gray-200">

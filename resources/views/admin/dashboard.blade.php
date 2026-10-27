@@ -423,7 +423,7 @@
         <!-- Recent Orders -->
         <div class="lg:col-span-2">
             <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-col items-start gap-2 px-4 py-4 border-b border-gray-200 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                     <h3 class="text-lg font-semibold text-gray-900">Pesanan Terbaru</h3>
                     <a href="{{ route('admin.orders.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-700">
                         Lihat Semua →

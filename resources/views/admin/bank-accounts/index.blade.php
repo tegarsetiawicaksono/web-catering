@@ -1,8 +1,8 @@
 <x-admin-layout>
     <div class="mb-6">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h1 class="text-2xl font-bold text-gray-800">Kelola Rekening Bank</h1>
-            <a href="{{ route('admin.bank-accounts.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <a href="{{ route('admin.bank-accounts.create') }}" class="inline-flex w-full justify-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition sm:w-auto">
                 + Tambah Rekening
             </a>
         </div>
