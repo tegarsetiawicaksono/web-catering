@@ -43,17 +43,17 @@
         </svg>
       </button>
       <!-- KIRI: logo -->
-      <div class="flex-1">
+      <div class="min-w-0 flex-1">
         <div class="flex items-center space-x-2">
           <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-10 md:h-14 w-auto object-contain">
-          <h1 class="font-bold text-lg md:text-xl leading-none">
+          <h1 class="whitespace-nowrap font-bold text-[11px] leading-none sm:text-lg md:text-xl">
             <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
         </div>
       </div>
 
       <!-- TENGAH: menu navigasi -->
-      <div class="flex-1 flex justify-center">
+      <div class="hidden flex-1 justify-center sm:flex">
         <div class="hidden sm:flex items-center space-x-6 md:space-x-8 lg:space-x-10">
           <a href="{{ url('/#beranda') }}" class="nav-link {{ Route::currentRouteName() == 'home' ? 'px-6 py-2 text-[#86765a] font-semibold' : 'px-6 py-2 hover:text-[#86765a] transition' }}">Beranda</a>
 

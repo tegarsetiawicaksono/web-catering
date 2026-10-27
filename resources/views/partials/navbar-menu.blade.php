@@ -43,15 +43,15 @@
       <!-- KIRI: logo -->
       <div class="min-w-0 flex-1">
         <div class="flex min-w-0 items-center space-x-1.5 sm:space-x-2">
-          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-auto md:h-16">
-          <h1 class="min-w-0 truncate font-bold text-[13px] leading-tight sm:text-lg md:text-xl">
+          <img src="{{ asset('foto/logo.jpeg') }}" alt="Rejosari Catering" class="h-8 w-8 shrink-0 object-contain sm:h-10 sm:w-auto md:h-16">
+          <h1 class="whitespace-nowrap font-bold text-[11px] leading-tight sm:text-lg md:text-xl">
             <span class="text-[#86765a]">REJOSARI CATERING</span>
           </h1>
         </div>
       </div>
 
       <!-- TENGAH: menu navigasi -->
-      <div class="flex-1 flex justify-center">
+      <div class="hidden flex-1 justify-center sm:flex">
         <div class="hidden sm:flex items-center space-x-6 md:space-x-8 lg:space-x-10">
           <a href="{{ route('home') }}#beranda" class="nav-link px-4 py-2 hover:text-[#86765a] transition">Beranda</a>
           <a href="{{ route('home') }}#tentang" class="nav-link px-4 py-2 hover:text-[#86765a] transition">Tentang</a>
