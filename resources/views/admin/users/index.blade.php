@@ -19,7 +19,7 @@
 
     <!-- Users Table -->
     <div class="overflow-hidden bg-white rounded-lg shadow">
-        <div class="overflow-x-auto">
+        <div class="hidden overflow-x-auto md:block">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -116,6 +116,80 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="divide-y divide-gray-200 md:hidden">
+            @forelse($users as $index => $user)
+                <article class="p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 font-semibold text-white bg-indigo-600 rounded-full">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-gray-900 break-words">
+                                        {{ ($users->currentPage() - 1) * $users->perPage() + $index + 1 }}. {{ $user->name }}
+                                    </p>
+                                    <p class="mt-1 text-sm text-gray-600 break-all">{{ $user->email }}</p>
+                                </div>
+                                <span class="flex-shrink-0 text-xs text-gray-500">#{{ $user->id }}</span>
+                            </div>
+
+                            <dl class="mt-3 space-y-2 text-sm">
+                                <div class="flex items-start gap-2">
+                                    <dt class="w-24 flex-shrink-0 text-gray-500">Terdaftar</dt>
+                                    <dd class="text-gray-700">{{ $user->created_at->format('d M Y, H:i') }}</dd>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <dt class="w-24 flex-shrink-0 text-gray-500">Role</dt>
+                                    <dd class="text-gray-700">{{ $user->is_admin ? 'Admin' : 'User' }}</dd>
+                                </div>
+                            </dl>
+
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <button
+                                    @click="$dispatch('open-user-detail', { user: {{ json_encode([
+                                        'id' => $user->id,
+                                        'name' => $user->name,
+                                        'email' => $user->email,
+                                        'phone' => $user->phone ?? '-',
+                                        'address' => $user->address ?? '-',
+                                        'role' => $user->is_admin ? 'Admin' : 'User',
+                                        'created_at' => $user->created_at->format('d M Y, H:i'),
+                                        'total_orders' => $user->orders()->count()
+                                    ]) }} })"
+                                    class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    Lihat detail
+                                </button>
+
+                                @if(!$user->is_admin && $user->id !== auth()->id())
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna {{ $user->name }}? Tindakan ini tidak dapat dibatalkan.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-1.5 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            @empty
+                <div class="px-6 py-12 text-center text-gray-500">
+                    <p class="text-sm">Belum ada pengguna terdaftar</p>
+                </div>
+            @endforelse
         </div>
 
         <!-- Pagination -->
