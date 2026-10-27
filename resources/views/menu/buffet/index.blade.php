@@ -79,12 +79,7 @@
                             <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden h-full border border-white/50">
                                 <div class="relative">
                                     @if($menu->gambar)
-                                    @php
-                                        $menuImage = \Illuminate\Support\Str::startsWith($menu->gambar, ['foto/', 'http://', 'https://'])
-                                            ? $menu->gambar
-                                            : 'foto/' . ltrim($menu->gambar, '/');
-                                    @endphp
-                                    <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
+                                    <img src="{{ $menu->image_url }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
                                     @else
                                     <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                                     @endif
@@ -197,11 +192,8 @@
                     <div class="relative">
                         @if($menu->gambar)
                         @php
-                            $menuImage = \Illuminate\Support\Str::startsWith($menu->gambar, ['foto/', 'http://', 'https://'])
-                                ? $menu->gambar
-                                : 'foto/' . ltrim($menu->gambar, '/');
                         @endphp
-                        <img src="{{ asset($menuImage) }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
+                        <img src="{{ $menu->image_url }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.onerror=null;this.src='{{ asset('foto/buffet.jpg') }}';">
                         @else
                         <img src="{{ asset('foto/buffet.jpg') }}" alt="{{ $menu->nama }}" class="w-full h-56 sm:h-64 md:h-72 object-contain bg-gray-50 p-2" onerror="this.style.display='none';">
                         @endif

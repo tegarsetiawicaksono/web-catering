@@ -92,7 +92,7 @@
                         @if($menu->gambar)
                         <div class="mt-2 mb-3">
                             <p class="mb-2 text-sm text-gray-600">Gambar saat ini:</p>
-                            <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}"
+                            <img src="{{ $menu->image_url }}" alt="{{ $menu->nama }}"
                                 class="object-cover w-32 h-32 rounded-lg">
                         </div>
                         @endif

@@ -56,7 +56,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     @if($menu->gambar)
-                                    <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}"
+                                    <img src="{{ $menu->image_url }}" alt="{{ $menu->nama }}"
                                         class="object-cover w-12 h-12 mr-4 rounded-lg">
                                     @else
                                     <div class="flex items-center justify-center w-12 h-12 mr-4 bg-gray-200 rounded-lg">
@@ -145,7 +145,7 @@
                 <div class="p-4">
                     <div class="flex items-start gap-3">
                         @if($menu->gambar)
-                        <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}"
+                        <img src="{{ $menu->image_url }}" alt="{{ $menu->nama }}"
                             class="object-cover w-16 h-16 flex-shrink-0 rounded-lg sm:w-20 sm:h-20">
                         @else
                         <div class="flex items-center justify-center flex-shrink-0 w-16 h-16 bg-gray-200 rounded-lg sm:w-20 sm:h-20">

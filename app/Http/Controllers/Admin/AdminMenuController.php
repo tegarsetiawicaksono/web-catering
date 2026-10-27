@@ -18,6 +18,10 @@ class AdminMenuController extends Controller
             $directory = public_path('foto');
         }
 
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
         return $directory;
     }
 
