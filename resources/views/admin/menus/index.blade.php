@@ -143,43 +143,41 @@
             @forelse($menus as $menu)
             <div class="overflow-hidden bg-white rounded-lg shadow">
                 <div class="p-4">
-                    <div class="flex items-start space-x-4">
+                    <div class="flex items-start gap-3">
                         @if($menu->gambar)
                         <img src="{{ asset('foto/' . $menu->gambar) }}" alt="{{ $menu->nama }}"
-                            class="object-cover w-20 h-20 rounded-lg">
+                            class="object-cover w-16 h-16 flex-shrink-0 rounded-lg sm:w-20 sm:h-20">
                         @else
-                        <div class="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-lg">
+                        <div class="flex items-center justify-center flex-shrink-0 w-16 h-16 bg-gray-200 rounded-lg sm:w-20 sm:h-20">
                             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
                         @endif
-                        <div class="flex-1">
-                            <div class="flex items-start justify-between">
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <h3 class="text-base font-semibold text-gray-900">{{ $menu->nama }}</h3>
+                        <div class="min-w-0 flex-1">
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="min-w-0 break-words text-base font-semibold text-gray-900">{{ $menu->nama }}</h3>
                                         @if($menu->is_custom)
                                         <span class="inline-flex px-2 py-0.5 text-[10px] font-semibold text-amber-800 bg-amber-100 rounded-full">Custom</span>
                                         @endif
-                                    </div>
-                                    <span class="inline-flex px-2 py-1 mt-1 text-xs font-semibold rounded-full
+                                </div>
+                                <span class="inline-flex px-2 py-1 mt-1 text-xs font-semibold rounded-full
                                         {{ $menu->kategori === 'buffet' ? 'text-blue-800 bg-blue-100' : '' }}
                                         {{ $menu->kategori === 'tumpeng' ? 'text-green-800 bg-green-100' : '' }}
                                         {{ in_array($menu->kategori, ['nasibox', 'nasi-box']) ? 'text-yellow-800 bg-yellow-100' : '' }}
                                         {{ $menu->kategori === 'snack' ? 'text-purple-800 bg-purple-100' : '' }}
                                         {{ $menu->kategori === 'hampers' ? 'text-rose-800 bg-rose-100' : '' }}">
                                         {{ ucfirst($menu->kategori) }}
-                                    </span>
-                                </div>
+                                </span>
                             </div>
-                            <p class="mt-2 text-sm text-gray-600">{{ Str::limit($menu->deskripsi, 60) }}</p>
-                            <div class="flex items-center justify-between mt-3">
+                            <p class="mt-2 break-words text-sm text-gray-600">{{ Str::limit($menu->deskripsi, 60) }}</p>
+                            <div class="flex flex-col items-start gap-3 mt-3 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <p class="text-lg font-bold text-indigo-600">Rp {{ number_format($menu->harga, 0, ',', '.') }}</p>
                                     <p class="text-xs text-gray-500">Min. {{ $menu->min_order }} porsi</p>
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex flex-wrap gap-2">
                                     <form action="{{ route('admin.menus.move', array_merge(['menu' => $menu], request()->only(['kategori', 'custom_only']))) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="direction" value="up">
