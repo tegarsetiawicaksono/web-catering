@@ -529,7 +529,7 @@
             </header>
 
             <!-- Main content -->
-            <main class="flex-1 overflow-y-auto bg-gray-50">
+            <main class="min-w-0 flex-1 overflow-y-auto bg-gray-50">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {{ $slot ?? '' }}
                     @yield('content')

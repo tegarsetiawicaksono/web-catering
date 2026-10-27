@@ -17,7 +17,7 @@
             @endif
 
             @if($order)
-            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
+            <div class="min-w-0 overflow-hidden bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
                 <!-- Order Status -->
                 <div class="mb-6 sm:mb-8">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
@@ -49,20 +49,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <!-- Order Details -->
-                    <div>
+                    <div class="min-w-0">
                         <h2 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Detail Pesanan</h2>
                         <dl class="space-y-4">
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">Nama</dt>
-                                <dd class="mt-1">{{ $order->customer_name }}</dd>
+                                <dd class="mt-1 break-words">{{ $order->customer_name }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">Email</dt>
-                                <dd class="mt-1">{{ $order->email }}</dd>
+                                <dd class="mt-1 break-words">{{ $order->email }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">No. Telepon</dt>
-                                <dd class="mt-1">{{ $order->phone }}</dd>
+                                <dd class="mt-1 break-words">{{ $order->phone }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">Tanggal Acara</dt>
@@ -70,7 +70,7 @@
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">Alamat Pengiriman</dt>
-                                <dd class="mt-1">
+                                <dd class="mt-1 break-words">
                                     {{ $order->street_address }}<br>
                                     Kecamatan {{ $order->district }}, {{ $order->city }}<br>
                                     {{ $order->province }}
@@ -79,7 +79,7 @@
                             @if($order->notes)
                             <div>
                                 <dt class="text-sm font-medium text-gray-600">Catatan</dt>
-                                <dd class="mt-1">{{ $order->notes }}</dd>
+                                <dd class="mt-1 break-words">{{ $order->notes }}</dd>
                             </div>
                             @endif
                         </dl>
@@ -96,7 +96,7 @@
                                     <h3 class="font-medium text-sm sm:text-base break-words">{{ $item['name'] }}</h3>
                                     <p class="text-gray-600 text-xs sm:text-sm">{{ $item['quantity'] }} pax</p>
                                 </div>
-                                <p class="font-medium text-sm sm:text-base whitespace-nowrap ml-2">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</p>
+                                <p class="shrink-0 font-medium text-sm sm:text-base whitespace-nowrap ml-2">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</p>
                             </div>
                             @endforeach
                             @else
@@ -300,9 +300,9 @@
                         <!-- Bukti Pembayaran yang Diupload -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <p class="text-sm text-gray-600">Bank: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->bank_name }}</span></p>
-                                <p class="text-sm text-gray-600">No. Rekening: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->account_number }}</span></p>
-                                <p class="text-sm text-gray-600">Nama: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->account_name }}</span></p>
+                                <p class="break-words text-sm text-gray-600">Bank: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->bank_name }}</span></p>
+                                <p class="break-words text-sm text-gray-600">No. Rekening: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->account_number }}</span></p>
+                                <p class="break-words text-sm text-gray-600">Nama: <span class="font-semibold text-gray-900">{{ $order->latestPaymentVerification->account_name }}</span></p>
                                 <p class="text-sm text-gray-600">Jumlah: <span class="font-semibold text-gray-900">Rp {{ number_format($order->latestPaymentVerification->amount, 0, ',', '.') }}</span></p>
                             </div>
                             <div>

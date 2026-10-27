@@ -3,16 +3,16 @@
 <x-admin-layout>
     <!-- Header with Action Buttons -->
     <div class="mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <div class="flex items-center space-x-3">
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0 w-full sm:w-auto">
+                <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
                     <a href="{{ route('admin.orders.index') }}"
                         class="text-gray-600 transition-colors hover:text-gray-900">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </a>
-                    <h1 class="text-2xl font-bold text-gray-900">Detail Pesanan #{{ $order->id }}</h1>
+                    <h1 class="min-w-0 text-xl font-bold text-gray-900 break-words sm:text-2xl">Detail Pesanan #{{ $order->id }}</h1>
                     @if($order->status === 'pending')
                     <span class="inline-flex items-center px-3 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">
                         <span class="w-1.5 h-1.5 mr-1.5 bg-yellow-500 rounded-full animate-pulse"></span>
@@ -37,16 +37,16 @@
                 </div>
                 <p class="mt-1 text-sm text-gray-600">Dipesan pada {{ $order->created_at->format('d M Y, H:i') }}</p>
             </div>
-            <div class="flex items-center space-x-3">
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:space-x-3 sm:gap-0">
                 <a href="{{ route('orders.download-invoice', $order) }}"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                    class="inline-flex w-full items-center justify-center px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50 sm:w-auto">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Download Invoice
                 </a>
                 <a href="{{ route('orders.send-invoice', $order) }}"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">
+                    class="inline-flex w-full items-center justify-center px-4 py-2 text-center text-sm font-medium text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700 sm:w-auto">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
@@ -58,7 +58,7 @@
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <!-- Main Content -->
-        <div class="space-y-6 lg:col-span-2">
+        <div class="min-w-0 space-y-6 lg:col-span-2">
             <!-- Customer Information -->
             <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -79,7 +79,7 @@
                         </div>
                         <div>
                             <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Email</label>
-                            <p class="mt-2 text-sm text-gray-900">{{ $order->email }}</p>
+                            <p class="mt-2 break-words text-sm text-gray-900">{{ $order->email }}</p>
                         </div>
                         <div>
                             <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">No. Telepon</label>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="md:col-span-2">
                             <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Alamat Pengiriman</label>
-                            <p class="mt-2 text-sm text-gray-700">
+                            <p class="mt-2 break-words text-sm text-gray-700">
                                 {{ $order->street_address }}<br>
                                 Kecamatan {{ $order->district }}, {{ $order->city }}<br>
                                 {{ $order->province }}
@@ -111,8 +111,8 @@
                 </div>
                 <div class="p-6">
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div>
+                        <div class="flex flex-col items-start gap-4 p-4 bg-gray-50 rounded-lg sm:flex-row sm:items-center sm:justify-between">
+                            <div class="min-w-0">
                                 <p class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Paket yang Dipesan</p>
                                 <p class="mt-1 text-lg font-bold text-gray-900">{{ $order->package_name }}</p>
                             </div>
@@ -123,7 +123,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div class="p-4 border border-gray-200 rounded-lg">
                                 <p class="text-xs font-semibold text-gray-500">Total Porsi</p>
                                 <p class="mt-2 text-2xl font-bold text-gray-900">{{ $order->quantity }}</p>
@@ -138,7 +138,7 @@
                         </div>
 
                         @if($order->items && count($order->items) > 0)
-                        <div class="overflow-hidden rounded-lg border border-gray-200">
+                        <div class="overflow-x-auto rounded-lg border border-gray-200">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -178,7 +178,7 @@
                         </div>
 
                         <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                            <div class="flex items-center justify-between">
+                            <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <span class="text-sm font-semibold text-gray-700">Total Pembayaran</span>
                                 <span class="text-2xl font-bold text-indigo-600">
                                     Rp {{ number_format($order->total_price, 0, ',', '.') }}
@@ -408,7 +408,7 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="space-y-6 lg:col-span-1">
+        <div class="min-w-0 space-y-6 lg:col-span-1">
             <!-- Update Status -->
             <div class="overflow-hidden bg-white border border-gray-200 rounded-xl">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
